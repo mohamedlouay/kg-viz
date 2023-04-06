@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WeKG-MF Visualisations</title>
+    <meta charset="utf-8" />
+    <!-- CSS only -->
+    <link rel="stylesheet" href="./css/leaflet.css" />
+    <link href="./css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <style>
+      body {
+        margin: 20px 50px;
+      }
+
+      p {
+        margin: 20px 20px;
+        text-align: justify;
+        text-justify: inter-word;
+      }
+
+      code {
+        background: #f1f1f1;
+      }
+
+      a:link,
+      a:visited {
+        color: blue;
+        background-color: transparent;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: red;
+        background-color: transparent;
+        text-decoration: underline;
+      }
+
+      .header {
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        background-color: rgb(75, 125, 190);
+        /* color: blueviolet; */
+        color: white;
+      }
+
+      .column {
+        float: left;
+      }
+
+      /* Middle column */
+      .column.middle {
+        width: 25%;
+      }
+
+      /* Left column */
+      .column.left {
+        width: 30%;
+      }
+
+      /* Right column */
+      .column.right {
+        width: 45%;
+      }
+
+      /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+      @media screen and (max-width: 600px) {
+        .column.left,
+        .column.middle,
+        .column.right {
+          width: 100%;
+        }
+      }
+
+      .row:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      .page-header {
+        border-radius: 6px;
+        padding: 5px 15px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+      }
+
+      h1.page-header {
+        background-color: rgb(75, 125, 190);
+        color: white;
+      }
+
+      h2.page-header {
+        background-color: rgb(218, 229, 241);
+      }
+
+      button.page-header {
+        background-color: rgb(75, 125, 190);
+        color: white;
+      }
+
+      h3.page-header {
+        background-color: rgb(238, 238, 238);
+      }
+
+      .footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 10px;
+      }
+
+      table {
+        width: 98%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 5px;
+        text-align: left;
+      }
+
+      table#t01 tr:nth-child(even) {
+        background-color: rgb(238, 238, 238);
+      }
+
+      table#t01 tr:nth-child(odd) {
+        background-color: transparent;
+      }
+
+      table#t01 th {
+        background-color: rgb(218, 229, 241);
+        color: black;
+      }
+    </style>
+
+    <style>
+      /* For the collapsible sections. */
+      .collapsible {
+        background-color: #777;
+        color: white;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+      }
+
+      .active,
+      .collapsible:hover {
+        background-color: #555;
+      }
+
+      .collapsible:after {
+        content: "\002B";
+        color: white;
+        font-weight: bold;
+        float: right;
+        margin-left: 5px;
+      }
+
+      .active:after {
+        content: "\2212";
+      }
+
+      .content {
+        padding: 0 18px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background-color: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>WeKG-MF Knowledge Graph Exploration and Navigation</h1>
+    </div>
+
+    <br />
+
+    <button type="button" class="collapsible">~~Description~~</button>
+    <div class="content" style="height: 30%; overflow: auto">
+      <p>
+        The recent trend of adopting linked-data principles to integrate and
+        publish semantically described open data using W3C standards has led to
+        a large amount of available resources. In particular, meteorological
+        sensor data have been uplifted into public weather-focused RDF graphs,
+        such as WeKG-MF which offers access to a large set of meteorological
+        variables described through spatial and temporal dimensions.
+        Nevertheless, these resources include huge numbers of raw observations
+        that are tedious to explore by lay users. In this article, we aim at
+        providing them with visual exploratory "tours", benefiting from RDF data
+        cubes to present high-level aggregated views together with on-demand
+        fine-grained details through a unified Web interface.
+      </p>
+    </div>
+
+    <!-- Beginning of the Demonstrator Collapsible-->
+    <button type="button" class="page-header collapsible">
+      ~~Explore WeKG-MF~~
+    </button>
+    <div class="content" style="height: 80%; overflow: auto">
+      <div class="dataviz">
+        <div class="dataviz-1">
+          <p>
+            The following map allows to visualise some of the information
+            available in or computed from the WeKG-MF RDF dataset. By Clicking a
+            French region, one can access weather stations and some of their
+            climatic records. On the right side, the top chart offers a brush
+            feature to zoom on a specific time span on the second chart. By
+            hovering the latter, one can see unaggregated details in a third
+            chart down below.
+          </p>
+          <div id="map"></div>
+        </div>
+
+        <div class="dataviz-2">
+          <div class="line-chart-div" style="width: 600px; height: 100px">
+            <svg id="brush-chart"></svg>
+          </div>
+
+          <div class="line-chart-div1" style="width: 600px; height: 400px">
+            <svg id="chart-legend-hour1" width="600" height="80"></svg>
+            <svg id="line-chart-hour1"></svg>
+          </div>
+
+          <div class="line-chart-div2" style="width: 600px; height: 200px">
+            <svg id="chart-legend-hour2" width="600" height="80"></svg>
+            <svg id="line-chart-hour2"></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-tooltip"></div>
+    </div>
+    <!-- End of the Demonstrator Collapsible-->
+
+    <footer>
+      <hr />
+      <div class="footer">Last update: August 2022</div>
+    </footer>
+
+    <!-- Adding necessary libraries -->
+    <script src="./js/d3.v5.min.js"></script>
+    <script src="./js/jquery-1.9.1.js"></script>
+    <script src="./js/leaflet.js"></script>
+    <script src="./js/colorbrewer.v1.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+
+    <!-- Setting up global variables: regions and departments -->
+    <script type="text/javascript" src="./js/departments.js"></script>
+    <script type="text/javascript" src="./js/regions.js"></script>
+    <script type="text/javascript" src="./js/queries.js"></script>
+
+    <!-- Block related to the collapsible sections -->
+    <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var i;
+
+      for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+          this.classList.toggle("active");
+          var content = this.nextElementSibling;
+          if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+          } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+          }
+        });
+      }
+
+      document.querySelector(".collapsible").click();
+    </script>
+
+    <script type="text/javascript">
+      SPARQL = function (o) {
+        this.query = function (q) {
+          return $.ajax({
+            url: o.endpoint,
+            accepts: { json: "application/sparql-results+json" },
+            data: { query: q, apikey: o.apikey },
+            dataType: "json",
+          });
+        };
+      };
+    </script>
+
+    <script>
+      var endpoint = new SPARQL({
+        apikey: "YOUR-API-KEY-HERE",
+        endpoint: "http://weakg.i3s.unice.fr/sparql",
+        //endpoint: "http://localhost:8890/sparql"
+      });
+
+      var map = L.map("map").setView([47, 2], 5);
+      mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; " + mapLink + " Contributors",
+        maxZoom: 18,
+      }).addTo(map);
+
+      // Add an SVG element to Leaflet’s overlay pane
+      var svg = d3.select(map.getPanes().overlayPane).append("svg");
+      var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+      var path;
+      var transform = d3.geoTransform({ point: projectPoint }),
+        path = d3.geoPath().projection(transform);
+
+      // create path elements for each of the features
+      d3_features = g
+        .selectAll("path")
+        .data(regions.features)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .classed("map-border", true)
+        .style("fill-opacity", 0.2)
+        .on("click", function (event, d) {
+          //console.log('clicked!')
+
+          //display stations for some region on the map
+          endpoint
+            .query(buildQuery_stations(regions.features[d].properties.code))
+            .done(onSuccessMember1);
+
+          //display air Temperatures Times Series on the map
+          endpoint
+            .query(buildQuery_slices1(regions.features[d].properties.code))
+            .done(function (json) {
+              console.log(
+                "new data = ",
+                regions.features[d].properties.code,
+                json
+              );
+              // onSuccessMember4(json, 'month', regions.features[d].properties.code)
+              //onSuccessMember4(json, 'hour', regions.features[d].properties.code)
+              drawCharts(json, regions.features[d].properties.code);
+            });
+        });
+
+      d3_features.attr("d", path).style("fill-opacity", 0.2);
+
+      map.on("viewreset", reset);
+      reset();
+
+      function onSuccessMember1(json) {
+        $(".leaflet-marker-icon").remove();
+        $(".leaflet-popup").remove();
+
+        var icon = new L.Icon.Default();
+        icon.options.shadowSize = [0, 0];
+
+        for (var b in json.results.bindings) {
+          var station = json.results.bindings[b][json.head.vars[0]];
+          var stationName = json.results.bindings[b][json.head.vars[1]];
+          var lat = json.results.bindings[b][json.head.vars[3]];
+          var long = json.results.bindings[b][json.head.vars[4]];
+
+          L.marker([lat["value"], long["value"]], { icon: icon })
+            .addTo(map)
+            .bindPopup(stationName["value"])
+            .openPopup();
+        }
+      }
+
+      let margin = { left: 40, right: 20, bottom: 20, top: 80 };
+      var color = d3.scaleOrdinal();
+      let scales = {
+        "brush-chart": {
+          x: d3.scaleTime(),
+          y: d3.scaleLinear(),
+        },
+        "line-chart-hour1": {
+          x: d3.scaleTime(),
+          y: d3.scaleLinear(),
+        },
+      };
+
+      function drawCharts(json, region) {
+        // drawBrush()
+        // onSuccessMember4(json, region)
+        let chartdata = getData(json); // compute data for charts
+
+        let stationnames = chartdata.map((d) => d.station); // ancien newdata
+        stationnames = stationnames.filter(
+          (d, i) => stationnames.indexOf(d) === i
+        );
+        console.log("names = ", stationnames);
+
+        color.domain(stationnames).range(colorbrewer.Set2[6]);
+
+        drawLineChart(chartdata, "brush-chart", region);
+
+        drawLineChart(chartdata, "line-chart-hour1", region);
+        drawLegend(stationnames, chartdata[0].region, "chart-legend-hour1");
+
+        drawBrush("brush-chart");
+
+        d3.select("svg#line-chart-hour2").selectAll("g").remove();
+        d3.select("svg#chart-legend-hour2").selectAll("g").remove();
+        d3.select("svg#line-chart-hour2").selectAll("text").remove();
+      }
+
+      function getData(json) {
+        let newdata = [];
+        let data = json.results.bindings;
+
+        for (let i = 0; i < data.length; i++) {
+          newdata.push({
+            date: data[i]["date"].value,
+            station: data[i]["Nstation"].value,
+            temp_avg: data[i]["temp_avg"].value,
+            region: data[i]["label"].value,
+          });
+        }
+
+        return newdata;
+      }
+
+      function drawBrush(id) {
+        var svgChart = d3.select(`svg#${id}`);
+
+        let width = svgChart.node().parentNode.clientWidth,
+          height = svgChart.node().parentNode.clientHeight;
+
+        console.log(width, height);
+
+        var brush = d3
+          .brushX() // Add th e brush feature using the d3.brush function
+          .extent([
+            [0, 0],
+            [width - margin.left, height - margin.bottom],
+          ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+          .on("brush", updateChart); // Each time the brush selection changes, trigger the 'updateChart'
+        //.on("brush", brushed)
+
+        const lastDate = scales["brush-chart"].x.domain()[1]; // get the last date of the axis
+
+        const firstDate = new Date(lastDate.getTime());
+        firstDate.setMonth(firstDate.getMonth() - 6); // subtract 3 months from the last date of the axis
+
+        const defaultSelection = [
+          scales["brush-chart"].x(firstDate),
+          scales["brush-chart"].x.range()[1],
+        ]; // give the positions of the first and last date which you want to include in the brush
+        console.log("defaultSelection:", defaultSelection);
+        let lineGroup = svgChart.select("g.lineGroup");
+
+        lineGroup
+          .attr("class", "brush")
+          .call(brush)
+          .call(brush.move, defaultSelection);
+
+        let targetChartSVG = d3.select(`svg#line-chart-hour1`);
+        var clipPath = targetChartSVG
+          .selectAll("g.lineGroup")
+          .append("defs")
+          .append("clipPath")
+          .attr("id", "clip")
+          .append("rect")
+          .attr("width", targetChartSVG.node().clientWidth)
+          .attr("height", targetChartSVG.node().clientHeight);
+
+        var idleTimeout;
+        function idled() {
+          idleTimeout = null;
+        }
+
+        function updateChart() {
+          extent = d3.event.selection;
+          // If no selection, back to initial coordinate. Otherwise, update X axis domain
+          if (!extent) {
+            if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)); // This allows to wait a little bit
+          } else {
+            scales["line-chart-hour1"].x.domain([
+              scales["brush-chart"].x.invert(extent[0]),
+              scales["brush-chart"].x.invert(extent[1]),
+            ]);
+            // This remove the grey brush area as soon as the selection has been done
+          }
+
+          // Update axis and circle position
+          d3.select("g#line-chart-hour1")
+            .transition()
+            .duration(2000)
+            .call(d3.axisBottom(scales["line-chart-hour1"].x));
+
+          d3.select("svg#line-chart-hour1")
+            .selectAll("g.lineGroup")
+            .selectAll("path")
+            .transition()
+            .duration(2000)
+            .attr("clip-path", "url(#clip)")
+            .attr("d", function (d) {
+              return d3
+                .line()
+                .curve(d3.curveCardinal)
+                .x(function (d) {
+                  return scales["line-chart-hour1"].x(new Date(d.date));
+                })
+                .y(function (d) {
+                  return scales["line-chart-hour1"].y(parseFloat(d.temp_avg));
+                })(d.values);
+            });
+        }
+      }
+
+      function drawLegend(StationName, region, id, date) {
+        d3.select("svg#" + id)
+          .selectAll("text")
+          .remove();
+
+        // add SVG legend
+        var svglegend = d3.select("svg#" + id);
+
+        svglegend.selectAll("g").remove();
+
+        let legendGroup = svglegend
+          .selectAll("g")
+          .data(StationName)
+          .enter()
+          .append("g");
+
+        legendGroup
+          .append("line")
+          .style("stroke", (d) => color(d))
+          .style("stroke-width", 3)
+          .attr("x1", 0)
+          .attr("y1", (d, i) => 10 + i * 15)
+          .attr("x2", 30)
+          .attr("y2", (d, i) => 10 + i * 15);
+
+        legendGroup
+          .append("text")
+          .attr("x", 40)
+          .attr("y", (d, i) => 10 + i * 17)
+          .style("font-size", "11px")
+          .text((d) => d);
+
+        if (id === "chart-legend-hour2") {
+          legendGroup
+            .append("text")
+            .attr("x", 350)
+            .attr("y", 20)
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px")
+            .html(
+              "Air Temperatures Per Station (Region: " +
+                region +
+                ")" +
+                "  " +
+                date +
+                "(J-1, J+1)"
+            );
+        } else {
+          legendGroup
+            .append("text")
+            .attr("x", 350)
+            .attr("y", 20)
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px")
+            .text(
+              "Daily Average Air Temperatures Per Station (Region: " +
+                region +
+                ")"
+            );
+        }
+      }
+
+      function drawLineChart(newdata, id, insee) {
+        let margin = { left: 40, right: 20, bottom: 20, top: 0 };
+        var svgChart = d3.select(`svg#${id}`);
+
+        let width = svgChart.node().parentNode.clientWidth,
+          height = svgChart.node().parentNode.clientHeight;
+
+        if (id != "brush-chart") height -= 80;
+
+        console.log(width, height);
+
+        svgChart.selectAll("g").remove();
+        svgChart.selectAll("text").remove();
+
+        svgChart
+          .attr("width", width)
+          .attr("height", height)
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" + margin.left + "," + margin.top + ")"
+          );
+
+        console.log("Region", newdata[0].region);
+        var region = newdata[0].region;
+
+        var sumstat = d3
+          .nest()
+          .key((d) => d.station)
+          .entries(newdata);
+
+        scales[id].x
+          .domain(d3.extent(newdata, (d) => new Date(d.date)))
+          .range([0, `${width - margin.left}`]);
+
+        var xAxis = svgChart
+          .append("g")
+          .attr("id", id) /// je le donne un id pour séléctionner ce groupe lors de la transition
+          .attr(
+            "transform",
+            `translate(${margin.left}, ${height - margin.bottom})`
+          )
+          .call(d3.axisBottom(scales[id].x));
+
+        // Add Y axis
+
+        scales[id].y
+          .domain(
+            d3.extent(newdata, function (d) {
+              return parseFloat(d.temp_avg);
+            })
+          )
+          .range([height - margin.bottom, 0]);
+
+        yAxis = d3.axisLeft().scale(scales[id].y);
+
+        if (id == "brush-chart") yAxis.ticks(0);
+
+        var year = new Date(newdata[0].date).getYear();
+
+        svgChart
+          .append("g")
+          .attr("transform", `translate(${margin.left}, ${margin.top})`)
+          .call(yAxis);
+
+        if (id != "brush-chart") {
+          svgChart
+            .append("text")
+            .attr("transform", `translate(10,${height / 2})rotate(-90)`)
+            .style("font-size", "12px")
+            .text("Air Temperature in °C");
+        }
+
+        let lineGroup = svgChart
+          .selectAll("g.lineGroup")
+          .data(sumstat)
+          .enter()
+          .append("g")
+          .attr("class", "lineGroup")
+          .attr("transform", `translate(${margin.left}, 0)`);
+
+        lineGroup
+          .append("path")
+          .attr("fill", "none") //.attr("fill", d => color(d.key))
+          .style("fill-opacity", 0.1)
+          .attr("stroke", (d) => color(d.key))
+          .attr("stroke-width", 1.5)
+          .attr("d", function (d) {
+            return d3
+              .line()
+              .curve(d3.curveCardinal)
+              .x(function (d) {
+                return scales[id].x(new Date(d.date));
+              })
+              .y(function (d) {
+                return scales[id].y(parseFloat(d.temp_avg));
+              })(d.values);
+          })
+          .on("mouseout", () =>
+            d3.select(".chart-tooltip").style("display", "none")
+          )
+          .on("mouseover", function (d) {
+            if (this.parentNode.parentNode.id == "brush-chart") return;
+
+            // console.log("data----here", d.key);
+            var mouse = d3.mouse(this);
+            var station = d.key;
+            // console.log(d3.event)
+            // console.log('mouse = ', mouse)
+
+            var tooltip = d3.select(".chart-tooltip");
+
+            tooltip
+              .style("display", "block")
+              .style("left", d3.event.pageX + 10 + "px")
+              .style("top", d3.event.pageY + 10 + "px");
+
+            var xDate = scales[id].x.invert(mouse[0]);
+            var yTemp = scales[id].y.invert(mouse[1]).toFixed(3);
+            // console.log("Temp----here", yTemp);
+            // console.log("Date----here", xDate);
+            tooltip.html(
+              "<b> Station: </b>" +
+                station +
+                "</br>" +
+                "<b>  Date:</b> " +
+                xDate.toISOString().split("T")[0] +
+                "</br>" +
+                "<b> Daily Avg. Temp.:</b> " +
+                yTemp
+            );
+
+            function doesChartExist() {
+              return new Promise((fulfill, reject) => {
+                // comparer donnée survol et donnée ligne
+                if (
+                  d3.select("#line-chart-hour2").selectAll("path.line").size() >
+                  0
+                ) {
+                  let oldData = d3
+                    .select("#line-chart-hour2")
+                    .select("path.line")
+                    .datum();
+                  let oldStation = d3
+                    .select("svg#chart-legend-hour2")
+                    .select("text")
+                    .node().innerHTML;
+
+                  //console.log('old station = ', oldStation)
+                  //console.log('old data = ', oldData)
+                  //console.log('new data =', station, xDate.toISOString().split('T')[0] , oldData[0].date.split('T')[0])
+
+                  if (oldStation != station) fulfill(false);
+
+                  if (
+                    xDate.toISOString().split("T")[0] !=
+                    oldData[0].date.split("T")[0]
+                  )
+                    fulfill(false);
+
+                  fulfill(true);
+                } else fulfill(false);
+              });
+            }
+
+            doesChartExist().then((value) => {
+              // console.log("resultat de la promise = ", value)
+              if (value) return;
+              var date = xDate.toISOString().split("T")[0];
+              endpoint
+                .query(
+                  QueryObservationsByDate(
+                    insee,
+                    xDate.toISOString().split("T")[0]
+                  )
+                )
+                .done((json) => {
+                  // legend exists
+                  if (
+                    d3.select("svg#chart-legend-hour2").selectAll("g").empty()
+                  ) {
+                    stationnames = json.results.bindings.map(
+                      (d) => d.station.value
+                    );
+                    drawLegend(
+                      stationnames,
+                      region,
+                      "chart-legend-hour2",
+                      date
+                    );
+                  } else {
+                    // change title
+                  }
+                  stationnames = json.results.bindings.map(
+                    (d) => d.station.value
+                  );
+                  stationnames = stationnames.filter(
+                    (d, i) => stationnames.indexOf(d) === i
+                  );
+                  drawLegend(stationnames, region, "chart-legend-hour2", date);
+                  onSuccessMember3HourlyTemp(json);
+                });
+            });
+          });
+      }
+
+      // function onSuccessLegend2
+
+      function onSuccessMember3HourlyTemp(json) {
+        //console.log("3Hourly Temperature", json)
+
+        let margin = { left: 70, right: 20, bottom: 20, top: 80 };
+        let width = 600,
+          height = 300;
+
+        var svgChart = d3.select("svg#line-chart-hour2");
+        // console.log(svgChart)
+
+        svgChart.selectAll("g").remove();
+        svgChart.select("text").remove();
+
+        svgChart
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.bottom + margin.top)
+          .append("g");
+
+        let newdata = [];
+        let data = json.results.bindings;
+
+        for (let i = 0; i < data.length; i++) {
+          newdata.push({
+            date: data[i]["t"].value,
+            temp: data[i]["temp"].value,
+            station: data[i]["station"].value,
+            region: data[i]["region"].value,
+          });
+        }
+        var datej1 = new Date(data[0]["t"].value.split("T")[0]);
+
+        var date = new Date();
+
+        // add a day
+        date.setDate(datej1.getDate() - 1);
+        console.log("dataj", date.toISOString());
+        date = date.toISOString().split("T")[0];
+        var sumstat = d3
+          .nest()
+          .key((d) => d.station)
+          .entries(newdata);
+
+        var StationName = sumstat.map(function (d) {
+          return d.key;
+        });
+        //console.log(StationName)
+
+        console.log("new--- 3Hours", sumstat);
+
+        var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S");
+
+        var x = d3
+          .scaleTime()
+          //.domain(d3.extent(newdata, d => new Date(d.date)))
+          .domain(d3.extent(newdata, (d) => new Date(d.date)))
+          .range([0, width]);
+
+        xAxis = d3.axisBottom().scale(x);
+
+        svgChart
+          .append("g")
+          .attr("transform", `translate(${margin.left}, ${height})`)
+          .call(xAxis);
+
+        // Add Y axis
+
+        var y = d3
+          .scaleLinear()
+          .domain(
+            d3.extent(newdata, function (d) {
+              return parseFloat(d.temp);
+            })
+          )
+          .range([height, 0]);
+
+        yAxis = d3.axisLeft().scale(y);
+
+        svgChart
+          .append("g")
+          .attr("transform", `translate(${margin.left}, 0)`)
+          .call(yAxis);
+
+        svgChart
+          .append("text")
+          .attr(
+            "transform",
+            `translate(15,${
+              (height + margin.bottom + margin.top) / 2
+            })rotate(-90)`
+          )
+          .style("font-size", "12px")
+          .text("Air Temperature in °C");
+
+        /*svgChart.append("text")
+                .attr("transform", "translate(30,200)rotate(-90)")
+                .text("Temperature");*/
+
+        var color = d3
+          .scaleOrdinal()
+          .domain(StationName)
+          .range(colorbrewer.Set2[6]);
+
+        let lineGroup = svgChart
+          .selectAll("g.lineGroup")
+          .data(sumstat)
+          .enter()
+          .append("g")
+          .attr("class", "lineGroup")
+          .attr("transform", `translate(${margin.left}, 0)`);
+
+        var valueline = d3
+          .line()
+          .curve(d3.curveCardinal)
+          .x(function (d) {
+            return x(new Date(d.date));
+          })
+          .y(function (d) {
+            return y(parseFloat(d.temp));
+          });
+
+        console.log("valueline", valueline);
+
+        lineGroup
+          .append("path")
+          .attr("class", "chart-line")
+          .attr("fill", "none") //.attr("fill", d => color(d.key))
+          .style("fill-opacity", 0.1)
+          .attr("stroke", (d) => color(d.key))
+          .attr("stroke-width", 1.5)
+          .attr("d", (d) => valueline(d.values));
+
+        var mouseG = svgChart.append("g").attr("class", "mouse-over-effects");
+
+        mouseG
+          .append("path") // this is the black vertical line to follow mouse
+          .attr("class", "mouse-line")
+          .style("stroke", "black")
+          .style("stroke-width", "1px")
+          .style("opacity", "0");
+
+        var lines = document.getElementsByClassName("chart-line");
+        //console.log("lines", lines)
+
+        var mousePerLine = mouseG
+          .selectAll(".mouse-per-line")
+          .data(StationName)
+          .enter()
+          .append("g")
+          .attr("class", "mouse-per-line");
+
+        mousePerLine
+          .append("circle")
+          .attr("r", 7)
+          .style("stroke", function (d) {
+            return color(d);
+          })
+          .style("fill", "none")
+          .style("stroke-width", "1px")
+          .style("opacity", "0");
+
+        mousePerLine.append("text").attr("transform", "translate(10,3)");
+
+        mouseG
+          .append("svg:rect") // append a rect to catch mouse movements on canvas
+          .attr("width", width) // can't catch mouse events on a g element
+          .attr("height", height)
+          .attr("transform", `translate(${margin.left}, 0)`)
+          .attr("fill", "none")
+          .attr("pointer-events", "all")
+          .on("mouseout", function () {
+            // on mouse out hide line, circles and text
+            d3.select(".mouse-line").style("opacity", "0");
+            d3.selectAll(".mouse-per-line circle").style("opacity", "0");
+            d3.selectAll(".mouse-per-line text").style("opacity", "0");
+          })
+          .on("mouseover", function () {
+            // on mouse in show line, circles and text
+            d3.select(".mouse-line").style("opacity", "1");
+            d3.selectAll(".mouse-per-line circle").style("opacity", "1");
+            d3.selectAll(".mouse-per-line text").style("opacity", "1");
+          })
+          .on("mousemove", function () {
+            // mouse moving over canvas
+            var mouse = d3.mouse(this);
+
+            d3.select(".mouse-line").attr("d", function () {
+              var d = "M" + mouse[0] + "," + height;
+              d += " " + mouse[0] + "," + 0;
+              return d;
+            });
+
+            var xDate = x.invert(mouse[0] - margin.left);
+            let roundedDate = roundMinutes(xDate);
+
+            console.log("-----------------------------");
+            console.log("selected date = ", roundedDate);
+
+            console.log("ex = ", new Date(newdata[0].date));
+
+            let values = newdata.filter(
+              (e) => new Date(e.date).getTime() === roundedDate.getTime()
+            );
+            console.log(values);
+
+            let circles = d3.selectAll(".mouse-per-line");
+            if (values.length) {
+              circles
+                .transition()
+                .duration(500)
+                .attr("opacity", 1)
+                .attr("transform", function (d, i) {
+                  let v = values.find((e) => e.station === d);
+
+                  d3.select(this)
+                    .select("text")
+                    .style("font-size", "11px")
+                    .text(v.temp);
+
+                  return `translate(${mouse[0]}, ${y(parseFloat(v.temp))})`;
+                });
+            } else {
+              circles.transition().duration(500).attr("opacity", 0);
+            }
+          });
+
+        function roundMinutes(date) {
+          date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
+          date.setMinutes(0, 0, 0); // Resets also seconds and milliseconds
+
+          return new Date(date);
+        }
+      }
+
+      // fit the SVG element to leaflet's map layer
+      function reset() {
+        bounds = path.bounds(regions);
+
+        var topLeft = bounds[0],
+          bottomRight = bounds[1];
+
+        svg
+          .attr("width", bottomRight[0] - topLeft[0])
+          .attr("height", bottomRight[1] - topLeft[1])
+          .style("left", topLeft[0] + "px")
+          .style("top", topLeft[1] + "px");
+
+        g.attr(
+          "transform",
+          "translate(" + -topLeft[0] + "," + -topLeft[1] + ")"
+        );
+
+        // initialize the path data
+        d3_features.attr("d", path).style("fill-opacity", 0.2);
+        //.attr('fill','blue');
+      }
+
+      // Use Leaflet to implement a D3 geometric transformation.
+      function projectPoint(x, y) {
+        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+        this.stream.point(point.x, point.y);
+      }
+    </script>
+  </body>
+</html>
