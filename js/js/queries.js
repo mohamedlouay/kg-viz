@@ -172,33 +172,67 @@ function buildQuery_slices1(insee) {
   return query;
 }
 
+function buildQuery_getAllStationsAvgTemp() {
+  var query = `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
+  PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
+  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+  PREFIX qb:  <http://purl.org/linked-data/cube#>
+  PREFIX wes-dimension: <http://ns.inria.fr/meteo/observationslice/dimension#>
+  PREFIX wes-measure: <http://ns.inria.fr/meteo/observationslice/measure#>
+  PREFIX wes-attribute: <http://ns.inria.fr/meteo/observationslice/attribute#>
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  PREFIX dct: <http://purl.org/dc/terms/>
+  PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+SELECT ?insee ?label ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg)   WHERE {
+      ?s a qb:Slice ; wes-dimension:station ?station;
+          qb:observation [
+              a qb:Observation ;
+              wes-attribute:observationDate ?date ;
+             wes-measure:avgDailyTemperature ?temp_avg 
+          ] .
+      ?station a weo:WeatherStation ; dct:spatial ?e ; rdfs:label ?Nstation.                            
+      ?e wdt:P131 ?item .
+      ?item rdfs:label ?label ; wdt:P2585 ?insee.
+?station geo:lat ?latitude .
+?station geo:long ?long.
+    FILTER (?date >= xsd:date('2022-05-01'))
+   FILTER (?date <= xsd:date('2022-05-30'))
+      }
+
+  GROUP BY ?label ?insee ?station ?latitude ?long
+ORDER BY ?temp_avg`;
+  return query;
+}
+
 function buildQuery_getAllDepsTempAvg() {
   var query = `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
-    PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
-    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    PREFIX qb:  <http://purl.org/linked-data/cube#>
-    PREFIX wes-dimension: <http://ns.inria.fr/meteo/observationslice/dimension#>
-    PREFIX wes-measure: <http://ns.inria.fr/meteo/observationslice/measure#>
-    PREFIX wes-attribute: <http://ns.inria.fr/meteo/observationslice/attribute#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX dct: <http://purl.org/dc/terms/>
-    PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+  PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
+  PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+  PREFIX qb:  <http://purl.org/linked-data/cube#>
+  PREFIX wes-dimension: <http://ns.inria.fr/meteo/observationslice/dimension#>
+  PREFIX wes-measure: <http://ns.inria.fr/meteo/observationslice/measure#>
+  PREFIX wes-attribute: <http://ns.inria.fr/meteo/observationslice/attribute#>
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  PREFIX dct: <http://purl.org/dc/terms/>
+  PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 
-    SELECT DISTINCT ?date ?Nstation ?temp_avg ?label ?insee WHERE {
-        ?s a qb:Slice ;
-            qb:observation [
-                a qb:Observation ;
-                wes-attribute:observationDate ?date ;
-                wes-measure:avgDailyTemperature ?temp_avg ;
-                wes-measure:rainfall24h ?rainfall24h
-            ] .
-        ?station a weo:WeatherStation ; dct:spatial ?e ; rdfs:label ?Nstation.                            
-        ?e wdt:P131 ?item .
-        ?item rdfs:label ?label ; wdt:P2585 .
-        }
+SELECT ?insee ?label ?station (AVG(?temp_avg) as ?temp_avg)   WHERE {
+      ?s a qb:Slice ; wes-dimension:station ?station;
+          qb:observation [
+              a qb:Observation ;
+              wes-attribute:observationDate ?date ;
+             wes-measure:avgDailyTemperature ?temp_avg 
+          ] .
+      ?station a weo:WeatherStation ; dct:spatial ?e ; rdfs:label ?Nstation.                            
+      ?e wdt:P131 ?item .
+      ?item rdfs:label ?label ; wdt:P2585 ?insee.
+    FILTER (?date >= xsd:date('2022-01-01'))
+   FILTER (?date <= xsd:date('2022-01-30'))
+      }
 
-    GROUP BY ?date ?Nstation ?label 
-    ORDER BY ?date
+  GROUP BY  ?label ?insee 
+ORDER BY ?temp_avg
     `;
   return query;
 }

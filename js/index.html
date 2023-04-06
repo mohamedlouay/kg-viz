@@ -197,6 +197,11 @@
         position: relative;
         z-index: 2;
       }
+
+      .hexbin-hexagon {
+        stroke: #000;
+        stroke-width: 1px;
+      }
     </style>
   </head>
   <body>
@@ -224,6 +229,7 @@
     >
       <b>~~Description~~</b>
     </button>
+
     <div class="content" style="height: 30%; overflow: auto">
       <p>
         The recent trend of adopting linked-data principles to integrate and
@@ -305,7 +311,14 @@
     <script type="text/javascript" src="./js/departments.js"></script>
     <script type="text/javascript" src="./js/regions.js"></script>
     <script type="text/javascript" src="./js/queries.js"></script>
-    <script type="text/javascript" src="./js/test.js"></script>
+
+    <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.4.0/leaflet.js"></script>
+    <script src="https://d3js.org/d3-hexbin.v0.2.min.js"></script>
+    <script
+      src="https://unpkg.com/@asymmetrik/leaflet-d3@4/dist/leaflet-d3.js"
+      charset="utf-8"
+    ></script>
 
     <!-- Block related to the collapsible sections -->
     <script>
@@ -361,10 +374,6 @@
       var path;
       var transform = d3.geoTransform({ point: projectPoint }),
         path = d3.geoPath().projection(transform);
-
-      // ------------ modif -----------------------------
-      drawDefaultMap(endpoint);
-      // ------------ modif -----------------------------
 
       // create path elements for each of the features
       d3_features = g
@@ -468,6 +477,22 @@
             station: data[i]["Nstation"].value,
             temp_avg: data[i]["temp_avg"].value,
             region: data[i]["label"].value,
+          });
+        }
+
+        return newdata;
+      }
+
+      function getStationsData(json) {
+        let newdata = [];
+        let data = json.results.bindings;
+
+        for (let i = 0; i < data.length; i++) {
+          newdata.push({
+            temp_avg: data[i]["temp_avg"].value,
+            region: data[i]["label"].value,
+            longitude: data[i]["long"].value,
+            latitude: data[i]["latitude"].value,
           });
         }
 
@@ -1137,6 +1162,52 @@
         var point = map.latLngToLayerPoint(new L.LatLng(y, x));
         this.stream.point(point.x, point.y);
       }
+      //---------------------query test---------------------
+      stationsData = [];
+      endpoint.query(buildQuery_getAllStationsAvgTemp()).done(function (json) {
+        stationsData = getStationsData(json);
+      });
+
+      // ---------------------query test---------------------
+      window.options = {
+        radius: 12,
+        opacity: 0.5,
+        duration: 500,
+      };
+      console.log(" LLLLL : ", L && L.hexbinLayer);
+      var hexLayer = L.hexbinLayer(options).addTo(map);
+      hexLayer.colorScale().range(["white", "red"]);
+
+      hexLayer
+        .radiusRange([6, 11])
+        .lng(function (d) {
+          return d[0];
+        })
+        .lat(function (d) {
+          return d[1];
+        })
+        .colorValue(function (d) {
+          return d[0]["o"][2];
+        })
+        .radiusValue(function (d) {
+          return 30;
+        });
+      var center = [46.2276, 2.2137];
+
+      function generateData() {
+        data = [];
+        for (i = 0; i < stationsData.length; i++) {
+          data.push([
+            stationsData[i]["longitude"],
+            stationsData[i]["latitude"],
+            stationsData[i]["temp_avg"],
+          ]);
+        }
+        hexLayer.data(data);
+        console.log("data", data);
+        console.log("datahex", hexLayer);
+      }
     </script>
+    <button onclick="generateData()">Generate Data</button>;
   </body>
 </html>
