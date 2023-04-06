@@ -1,0 +1,48 @@
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
+PREFIX wevp: <http://ns.inria.fr/meteo/vocab/weatherproperty/>
+PREFIX wes: <http://ns.inria.fr/meteo/weatherstation/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+prefix time:    <http://www.w3.org/2006/time#> 
+#@federate <http://weakg.i3s.unice.fr/sparql>
+#SELECT ((?sum_precipitation/7) as ?avg_week_precipitation) 
+#{
+SELECT distinct ?groupDate  (SUM(?vp)  as ?sum_precipitation) 
+WHERE {
+    ?obs a weo:MeteorologicalObservation;
+            sosa:observedProperty wevp:precipitationAmount;
+            sosa:hasSimpleResult ?vp;
+            sosa:resultTime ?date;
+            wep:madeByStation <http://ns.inria.fr/meteo/weatherstation/07434>.
+
+BIND (day(?date)  as ?day)
+BIND (month(?date) as ?month)
+BIND (year(?date)  as ?year)
+BIND (if (datatype(?year/4)=xsd:integer && ((?year/100)*100 != 0 || (?year/400)*400 = 0) , 1, 0) as ?bissexYear)
+
+BIND (
+if (?day = 1, 
+    if (?month in (1, 2, 4, 6, 8, 9, 11), 31, 
+    if (?month in (5, 7, 10, 12), 30, 
+    if (?bissexYear = 1, 29, 28))), 
+    ?day - 1) 
+AS ?previousDay)
+
+BIND (if (?day = 1, if (?month=1, 12, ?month - 1), ?month)   as ?previousMonth)
+
+BIND (if (?day = 1 && ?month=1, ?year - 1, ?year) as ?previousYear)
+
+BIND (
+    xsd:date(if(hours(?date)<=6,
+        concat(?previousYear, "-", if (?previousMonth<10, concat("0", ?previousMonth), ?previousMonth), "-", 
+            if (?previousDay<10, concat("0", ?previousDay), ?previousDay)), 
+        concat(?year, "-", if (?month<10, concat("0", ?month), ?month), "-",
+            if (?day<10, concat("0", ?day), ?day))))
+AS ?groupDate)
+}
+GROUP BY ?groupDate 
+order by ?groupDate 

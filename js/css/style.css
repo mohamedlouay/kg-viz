@@ -1,0 +1,125 @@
+#svg {
+  display: block;
+  width:250px;
+}
+
+.map-tooltip {
+  position: absolute;
+  text-align: center;
+  z-index: 1000;
+  color: black;
+  width: 275px;
+  height: 37px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: pink;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+#map { width: 100%; height: 600px; }
+
+.line-chart-div1{
+width:50%;
+padding: 15px;
+}
+
+.line-chart-div2{
+width:50%;
+padding: 15px;
+}
+.map-border {
+  fill: #000;
+  fill-opacity: .2;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.map-border:hover {
+  fill: brown;
+  fill-opacity: .7;
+}
+
+.header {
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  color: blueviolet;
+}
+
+.line-chart-div{
+width: 50%; 
+height: 400px; 
+position: relative;
+}
+
+.dataviz{
+width:100vw;
+/*height: 100vh;*/
+flex-direction: row;
+display: flex;
+justify-content: space-between;
+}
+
+.dataviz-1{
+display: flex;
+justify-content: space-around;
+width: 35%;
+position: relative;
+height: 80%;
+flex-direction:column;
+}
+
+.dataviz-2{
+display: flex;
+justify-content: space-between;
+width: 60%;
+position: relative;
+flex-direction:column;
+gap: 10px;
+}
+
+.separator{
+display: flex;
+justify-content: space-between;
+width: 100%;
+height: 25px;
+position: center;
+top: 50%;
+}
+
+.objecttable {
+border-collapse: collapse;
+}
+
+
+.table {
+--bs-table-color: var(--bs-gray-100);
+--bs-table-bg: var(--bs-gray-100);
+--bs-table-border-color: transparent;
+}
+.overlay {
+fill: none;
+pointer-events: all;
+}
+.chart-tooltip {                                                        /* NEW */
+background: #eee;                                               /* NEW */
+box-shadow: 0 0 5px #999999;                                    /* NEW */
+color: #333;                                                    /* NEW */
+display: none;                                                  /* NEW */
+font-size: 12px;                                                /* NEW */
+left: 400px;                                                    /* NEW */
+padding: 10px;                                                  /* NEW */
+position: absolute;                                             /* NEW */
+text-align: center;                                             /* NEW */
+top: 500px;                                                      /* NEW */
+width: 15%;                                                    /* NEW */
+z-index: 10;                                                    /* NEW */
+}     
+
+.line {
+fill: none;
+stroke: steelblue;
+stroke-width: 1.5px;
+}
