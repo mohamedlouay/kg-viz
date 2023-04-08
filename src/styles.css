@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~node_modules/leaflet/dist/leaflet.css";
+
+.legend {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  padding: 5px;
+  border-radius: 5px;
+}
