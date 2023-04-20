@@ -20,8 +20,6 @@ export class MapperService {
           station: binding.Nstation.value,
           date: binding.date.value
         };
-
-
         temperatures.push(temperature)
 
       }

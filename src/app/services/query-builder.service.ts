@@ -19,7 +19,7 @@ export class QueryBuilderService {
     return queryStations
 
   }
-   QueryObservationsByDate(insee:string, date:string) {
+   QueryObservationsByDate(insee:number, date:string) {
      let query = `
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     PREFIX sosa: <http://www.w3.org/ns/sosa/>
@@ -58,7 +58,6 @@ export class QueryBuilderService {
 
   }
    buildQuery_slices(insee:number) {
-    console.log('code = ', insee)
      let query = `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
             PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
             PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -73,7 +72,7 @@ export class QueryBuilderService {
     SELECT distinct ?date ?Nstation ?temp_avg ?label ?insee WHERE
     {
         VALUES ?insee  {'`+ insee +`' }
-        VALUES ?year  {"2021"^^xsd:gYear "2020"^^xsd:gYear "2019"^^xsd:gYear }
+        VALUES ?year  {"2021"^^xsd:gYear}
         ?s  a qb:Slice ;
         wes-dimension:station ?station ;
         wes-dimension:year ?year ;
