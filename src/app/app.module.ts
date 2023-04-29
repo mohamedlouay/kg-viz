@@ -8,12 +8,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDialogModule} from "@angular/material/dialog";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import { MapComponent } from './components/map/map.component';
+import { VisualisationPageComponent } from './components/visualisation-page/visualisation-page.component';
+import { ParameterFilterComponent } from './components/parameter-filter/parameter-filter.component';
+import { InformationLayerComponent } from './components/information-layer/information-layer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ChartModalComponent,
-    MapComponent
+    MapComponent,
+    VisualisationPageComponent,
+    ParameterFilterComponent,
+    InformationLayerComponent
   ],
   imports: [
     BrowserModule,
