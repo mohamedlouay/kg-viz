@@ -301,24 +301,20 @@
     </footer>
 
     <!-- Adding necessary libraries -->
-    <script src="./js/d3.v5.min.js"></script>
     <script src="./js/jquery-1.9.1.js"></script>
     <script src="./js/leaflet.js"></script>
     <script src="./js/colorbrewer.v1.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/d3.v5.min.js"></script>
+    <script src="./js/leaflet-d3.js"></script>
 
     <!-- Setting up global variables: regions and departments -->
     <script type="text/javascript" src="./js/departments.js"></script>
     <script type="text/javascript" src="./js/regions.js"></script>
     <script type="text/javascript" src="./js/queries.js"></script>
+    <script type="module" src="./js/test.js"></script>
 
-    <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.4.0/leaflet.js"></script>
-    <script src="https://d3js.org/d3-hexbin.v0.2.min.js"></script>
-    <script
-      src="https://unpkg.com/@asymmetrik/leaflet-d3@4/dist/leaflet-d3.js"
-      charset="utf-8"
-    ></script>
 
     <!-- Block related to the collapsible sections -->
     <script>
@@ -361,6 +357,16 @@
       });
 
       var map = L.map("map").setView([47, 2], 5);
+      var franceBounds = L.latLngBounds([
+        [41, -5],
+        [51, 10],
+      ]);
+      /*
+      var map = L.map("map", {
+        maxBounds: franceBounds, // Set maximum bounds of the map
+        maxBoundsViscosity: 1.0, // Make sure the user cannot drag the map out of bounds
+      }).setView([47, 2], 5);
+      */
       mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; " + mapLink + " Contributors",
@@ -375,6 +381,8 @@
       var transform = d3.geoTransform({ point: projectPoint }),
         path = d3.geoPath().projection(transform);
 
+      //map.on("moveend", restrictMapBounds);
+      //map.on("zoomend", restrictMapBounds);
       // create path elements for each of the features
       d3_features = g
         .selectAll("path")
@@ -385,8 +393,6 @@
         .classed("map-border", true)
         .style("fill-opacity", 0.3)
         .on("click", function (event, d) {
-          //console.log('clicked!')
-
           //display stations for some region on the map
           endpoint
             .query(buildQuery_stations(regions.features[d].properties.code))
@@ -396,7 +402,6 @@
           endpoint
             .query(buildQuery_slices1(regions.features[d].properties.code))
             .done(function (json) {
-              console.log("new data = ", getData(json)[0]["temp_avg"]);
               // onSuccessMember4(json, 'month', regions.features[d].properties.code)
               drawCharts(json, regions.features[d].properties.code);
             });
@@ -406,6 +411,13 @@
 
       map.on("viewreset", reset);
       reset();
+
+      function restrictMapBounds() {
+        var bounds = map.getBounds();
+        if (!franceBounds.contains(bounds)) {
+          map.fitBounds(franceBounds);
+        }
+      }
 
       function onSuccessMember1(json) {
         $(".leaflet-marker-icon").remove();
@@ -793,12 +805,11 @@
           )
           .on("click", function (event, d) {
             if (this.parentNode.parentNode.id == "brush-chart") return;
-
             // console.log("data----here", d.key);
             var mouse = d3.mouse(this);
             var station = d.key;
             // console.log(d3.event)
-            // console.log('mouse = ', mouse)
+            console.log("mouse = ", mouse);
 
             var tooltip = d3.select(".chart-tooltip");
 
@@ -1169,31 +1180,34 @@
       });
 
       // ---------------------query test---------------------
-      window.options = {
-        radius: 12,
-        opacity: 0.5,
+      var options = {
+        radius: 10,
+        opacity: 0.7,
         duration: 500,
       };
-      console.log(" LLLLL : ", L && L.hexbinLayer);
+
+      var colorScale = d3
+        .scaleLinear()
+        .domain([12, 15, 18, 28])
+        .range(["white", "yellow", "orange", "red", "darkred"]);
+
       var hexLayer = L.hexbinLayer(options).addTo(map);
-      hexLayer.colorScale().range(["white", "red"]);
+      hexLayer.colorScale(colorScale);
 
       hexLayer
-        .radiusRange([6, 11])
-        .lng(function (d) {
-          return d[0];
-        })
-        .lat(function (d) {
-          return d[1];
-        })
-        .colorValue(function (d) {
-          return d[0]["o"][2];
-        })
-        .radiusValue(function (d) {
-          return 30;
-        });
-      var center = [46.2276, 2.2137];
-
+              .radiusRange([5, 15])
+              .lng(function (d) {
+                return d[0];
+              })
+              .lat(function (d) {
+                return d[1];
+              })
+              .colorValue(function (d) {
+                return d[0]["o"][2];
+              })
+              .radiusValue(function (d) {
+                return 50;
+              });
       function generateData() {
         data = [];
         for (i = 0; i < stationsData.length; i++) {
@@ -1204,8 +1218,6 @@
           ]);
         }
         hexLayer.data(data);
-        console.log("data", data);
-        console.log("datahex", hexLayer);
       }
     </script>
     <button onclick="generateData()">Generate Data</button>;

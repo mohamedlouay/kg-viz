@@ -1,41 +1,8 @@
-window.drawDefaultMap = function (endpoint) {
+
+let drawDefaultMap;
+drawDefaultMap = function (endpoint) {
   endpoint.query(buildQuery_getAllDepsTempAvg()).done(function (json) {
     console.log("new data = ", getData(json));
     //drawCharts(json, regio<ns.features[d].properties.code);
   });
-};
-
-window.options = {
-  radius: 12,
-  opacity: 0.5,
-  duration: 500,
-};
-console.log(" LLLLL : ", L && L.hexbinLayer);
-var hexLayer = L.hexbinLayer(options).addTo(map);
-hexLayer.colorScale().range(["white", "blue"]);
-
-hexLayer
-  .radiusRange([6, 11])
-  .lng(function (d) {
-    return d[0];
-  })
-  .lat(function (d) {
-    return d[1];
-  })
-  .colorValue(function (d) {
-    return d.length;
-  })
-  .radiusValue(function (d) {
-    return d.length;
-  });
-
-var latFn = d3.randomNormal(center[0], 1);
-var longFn = d3.randomNormal(center[1], 1);
-
-window.generateData = function () {
-  var data = [];
-  for (i = 0; i < 1000; i++) {
-    data.push([longFn(), latFn()]);
-  }
-  hexLayer.data(data);
 };
