@@ -11,6 +11,8 @@ import { MapComponent } from './components/map/map.component';
 import { VisualisationPageComponent } from './components/visualisation-page/visualisation-page.component';
 import { ParameterFilterComponent } from './components/parameter-filter/parameter-filter.component';
 import { InformationLayerComponent } from './components/information-layer/information-layer.component';
+import {LeafletD3Module} from "@asymmetrik/ngx-leaflet-d3";
+import {LeafletModule} from "@asymmetrik/ngx-leaflet";
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { InformationLayerComponent } from './components/information-layer/inform
     HttpClientModule,
     BrowserAnimationsModule,
     MatDialogModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    LeafletD3Module,
+    LeafletModule
   ],
   providers: [],
   bootstrap: [AppComponent]

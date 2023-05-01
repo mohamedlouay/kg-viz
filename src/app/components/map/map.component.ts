@@ -1,7 +1,17 @@
 import { Component } from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import * as L from "leaflet";
+import * as d3 from 'd3';
+import * as hexbin from 'd3-hexbin';
+import { select } from 'd3-selection';
+import * as L from 'leaflet';
+import * as Ld3 from '@asymmetrik/leaflet-d3';
+
 import {ChartModalComponent} from "../chart-modal/chart-modal.component";
+import {map} from "d3";
+import {HexbinLayerConfig} from "leaflet";
+import {DataService} from "../../services/data.service";
+import {MapperService} from "../../services/mapper.service";
+import {Station} from "../../models/data";
 
 @Component({
   selector: 'app-map',
@@ -9,14 +19,28 @@ import {ChartModalComponent} from "../chart-modal/chart-modal.component";
   styleUrls: ['./map.component.css']
 })
 export class MapComponent {
+  franceBounds: any;
+  colorScale: any;
+  hexbinData: [ number, number ][] = [];
+  options: any;
+  hexLayer: any;
+  stationsData: Station[] = [];
 
+  private hexbinOptions!: HexbinLayerConfig;
 
-
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog, private dataService: DataService,
+              private mapperService: MapperService
+  ) {
 
   }
 
   ngOnInit(): void {
+    const hexLayout = hexbin.hexbin();
+    this.hexbinOptions = {
+      radius: 10,
+      opacity: 0.7,
+      duration: 500,
+    };
     // Création de la carte centrée sur la
     var mymap = L.map('map').setView([46.227638, 2.213749], 6);
 
@@ -26,9 +50,6 @@ export class MapComponent {
         'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
       maxZoom: 18
     }).addTo(mymap);
-
-
-
 
     // Chargement des données des régions
     fetch(
@@ -76,15 +97,63 @@ export class MapComponent {
             });
           }
 
-
         });
         // Ajout de la couche à la carte
         regionLayer.addTo(mymap);
 
       })
       .catch((error) => console.error(error));
-  }
 
+
+
+    // ---------------------query test---------------------
+      this.options = {
+        radius: 10,
+        opacity: 0.7,
+        duration: 500,
+      };
+
+    // @ts-ignore
+    this.franceBounds =
+      L.latLngBounds([
+      [41, -5],
+      [51, 10]]),
+    /*
+    var map = L.map("map", {
+      maxBounds: franceBounds, // Set maximum bounds of the map
+      maxBoundsViscosity: 1.0, // Make sure the user cannot drag the map out of bounds
+    }).setView([47, 2], 5);
+    */
+
+      this.colorScale =
+        d3
+      .scaleLinear()
+      .domain([12, 15, 18, 28])
+      .range([0, 5, 10, 15, 20]);
+
+
+      this.hexLayer = L.hexbinLayer(this.hexbinOptions).addTo(mymap);
+
+    this.hexLayer.colorScale(this.colorScale);
+    this.hexLayer
+      .radiusRange([5, 15])
+      .lng(function (d: Station) {
+        return d.longitude;
+      })
+      .lat(function (d: Station) {
+        return d.latitude;
+      })
+      .colorValue(function (d: Station) {
+        return d.temp_avg;
+      })
+      .radiusValue(function (d: any[]) {
+        return 50;
+      });
+    this.dataService.getTemperaturePerStation().subscribe((weather) => {
+      this.stationsData =this.mapperService.weatherToStation(weather);
+      this.hexLayer.data(this.stationsData);
+    });
+  }
 
   private openModal<G, P>(feature: any) {
     const dialogRef = this.dialog.open(ChartModalComponent, {
@@ -95,4 +164,5 @@ export class MapComponent {
       }
     });
   }
+
 }

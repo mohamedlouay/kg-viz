@@ -17,6 +17,19 @@ export interface IWeather {
   temp_avg: TempAvg;
   label: Label;
   insee: Insee;
+  longitude: longitude;
+   latitude: latitude;
+}
+
+interface longitude{
+type: string;
+datatype: string;
+value: number;
+}
+interface latitude{
+  type: string;
+  datatype: string;
+  value: number;
 }
  interface TempAvg {
   type: string;

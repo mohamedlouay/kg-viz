@@ -72,6 +72,7 @@ export class ChartModalComponent implements OnInit {
 
 
     // Define the line function
+    // @ts-ignore
     const line = d3.line<ITemperature>()
       .x(d => x(new Date(d.date)))
       .y(d => y(d.temp_avg));
