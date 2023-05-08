@@ -1,14 +1,23 @@
-app-parameter-filter {
-  /*z-index: 1;*/
-}
-app-map {
-  /*position: absolute;*/
-}
 .container{
-  position: relative;
 }
 
 #title{
-  display: flex;
-  justify-content: center;
+  position: absolute;
+  margin-left: 20%;
+  margin-right: 20%;
+  z-index: 1001;
+  text-align: center;
+}
+
+#map {
+  position:relative;
+  width:100% ;
+  height: 100%;
+}
+
+#filter {
+  position: absolute;
+  margin-top: 125px;
+  margin-left: 25px;
+  z-index: 1000
 }
