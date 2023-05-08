@@ -5,8 +5,6 @@ import * as hexbin from 'd3-hexbin';
 import { select } from 'd3-selection';
 import * as L from 'leaflet';
 import * as Ld3 from '@asymmetrik/leaflet-d3';
-import 'leaflet.heat';
-import 'leaflet.heat/src/HeatLayer.js';
 import { ChartModalComponent } from '../chart-modal/chart-modal.component';
 import { map } from 'd3';
 import { HexbinLayerConfig } from 'leaflet';
@@ -23,6 +21,17 @@ import { Observable, Subscriber } from 'rxjs';
 export class MapComponent {
   franceBounds: any;
   colorScale: any;
+  hexbinDataTest: any[] = [
+    [47.4132, -1.2194, 15], // [lat, lng] data points
+    [47.4156, -1.2437, 17],
+    [47.4222, -1.2244, 20],
+    [47.4267, -1.2281, 30],
+    [47.4268, -1.2199, 13],
+    [47.4286, -1.2405, 12],
+    [47.4312, -1.2211, 14],
+    [47.4375, -1.2264, 19],
+    [47.4472, -1.2553, 20]
+  ];
   hexbinData: any[] = [];
   options: any;
   hexLayer: any;
@@ -43,7 +52,8 @@ export class MapComponent {
       opacity: 0.7,
       duration: 500,
     };
-    // Création de la carte centrée sur la
+
+   // Création de la carte centrée sur la
     var mymap = L.map('map').setView([46.227638, 2.213749], 6);
 
     // Ajout du fond de carte OpenStreetMap
@@ -122,13 +132,13 @@ export class MapComponent {
       maxBoundsViscosity: 1.0, // Make sure the user cannot drag the map out of bounds
     }).setView([47, 2], 5);
     */
+      this.hexLayer = L.hexbinLayer(this.hexbinOptions).addTo(mymap);
 
       (this.colorScale = d3
         .scaleLinear()
         .domain([12, 15, 18, 28])
         .range([0, 5, 10, 15, 20]));
 
-    this.hexLayer = L.hexbinLayer(this.hexbinOptions).addTo(mymap);
 
     this.hexLayer.colorScale(this.colorScale);
     /*this.hexLayer
@@ -147,13 +157,17 @@ export class MapComponent {
         return 50;
       });
 */
+
+
     // Use the getData function to access the fully populated data
     this.getData().then((data) => {
+      console.log(' hexx ', data);
+
       this.hexbinData.push(data);
-      console.log(' hexx ', this.hexbinData);
       this.hexLayer._data = data;
     });
     console.log('hexlayer ', this.hexLayer._data);
+
   }
 
   async getData() {
@@ -165,7 +179,7 @@ export class MapComponent {
         data.push([station.longitude, station.latitude, station.temp_avg]);
       });
     });
-    return this.stationsData;
+    return data;
   }
 
   private openModal<G, P>(feature: any) {
@@ -177,5 +191,5 @@ export class MapComponent {
     });
   }
 
-  protected readonly hexbin = hexbin;
+  protected readonly console = console;
 }
