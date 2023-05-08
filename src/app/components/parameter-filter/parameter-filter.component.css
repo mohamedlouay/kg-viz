@@ -10,20 +10,17 @@
   margin-left: 15px;
   margin-right: 15px;
 }
-span {
-  color : white;
-  z-index:1;
-}
 
 button {
   background: transparent;
   border: none;
+  color : white;
   text-align: left;
 }
 
-/*span:hover {
+span:hover {
   color: #f89146;
-}*/
+}
 
 
 
