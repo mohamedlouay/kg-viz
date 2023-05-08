@@ -11,6 +11,7 @@ import { MapComponent } from './components/map/map.component';
 import { VisualisationPageComponent } from './components/visualisation-page/visualisation-page.component';
 import { ParameterFilterComponent } from './components/parameter-filter/parameter-filter.component';
 import { InformationLayerComponent } from './components/information-layer/information-layer.component';
+import {DropDownButtonModule} from "@syncfusion/ej2-angular-splitbuttons";
 
 @NgModule({
   declarations: [
@@ -21,13 +22,14 @@ import { InformationLayerComponent } from './components/information-layer/inform
     ParameterFilterComponent,
     InformationLayerComponent
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatDialogModule,
-    FlexLayoutModule
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatDialogModule,
+        FlexLayoutModule,
+        DropDownButtonModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

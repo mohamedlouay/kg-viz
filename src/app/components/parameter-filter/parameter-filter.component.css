@@ -1,6 +1,7 @@
 .box {
   background: rgba(0,0,0,0.75);
   justify-items: left;
+  margin-top:100px;
 }
 
 .line {
@@ -18,7 +19,4 @@ button {
   background: transparent;
   border: none;
   text-align: left;
-}
-span:focus {
-  color:red;
 }
