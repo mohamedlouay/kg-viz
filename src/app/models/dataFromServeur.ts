@@ -2,36 +2,36 @@ export interface IWeather {
   head: Head;
   results: Results;
 }
- interface Head {
-  link?: (null)[] | null;
-  vars?: (string)[] | null;
+interface Head {
+  link?: null[] | null;
+  vars?: string[] | null;
 }
- interface Results {
+interface Results {
   distinct: boolean;
   ordered: boolean;
-  bindings?: (BindingsEntity)[] | null;
+  bindings?: BindingsEntity[] | null;
 }
- interface BindingsEntity {
+interface BindingsEntity {
   date: Date;
   Nstation: Nstation;
   temp_avg: TempAvg;
   label: Label;
   insee: Insee;
-  longitude: longitude;
-   latitude: latitude;
+  long: longitude;
+  latitude: latitude;
 }
 
-interface longitude{
-type: string;
-datatype: string;
-value: number;
-}
-interface latitude{
+interface longitude {
   type: string;
   datatype: string;
   value: number;
 }
- interface TempAvg {
+interface latitude {
+  type: string;
+  datatype: string;
+  value: number;
+}
+interface TempAvg {
   type: string;
   datatype: string;
   value: number;
@@ -41,7 +41,7 @@ interface Date {
   datatype: string;
   value: string;
 }
- interface Nstation {
+interface Nstation {
   type: string;
   value: string;
 }
@@ -49,9 +49,8 @@ interface Insee {
   type: string;
   value: string;
 }
- interface Label {
+interface Label {
   type: string;
   'xml:lang': string;
   value: string;
 }
-
