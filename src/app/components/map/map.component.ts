@@ -21,11 +21,14 @@ export class MapComponent {
     var mymap = L.map('map').setView([46.227638, 2.213749], 6);
 
     // Ajout du fond de carte OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    const layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
       maxZoom: 18
     }).addTo(mymap);
+
+    //ajustement de la luminosité de la map
+    layer.getContainer()!.style.filter = 'brightness(75%)';
 
 
 
@@ -49,7 +52,7 @@ export class MapComponent {
         // Création d'une fonction de couleur pour la choropleth map
         function getColor(d: number) {
           return d > maxPopulationDensity * 0.8
-            ? '#bd0026'
+            ? '#bd0327'
             : d > maxPopulationDensity * 0.6
               ? '#f03b20'
               : d > maxPopulationDensity * 0.4
@@ -65,9 +68,9 @@ export class MapComponent {
             var populationDensity = feature!.properties.code;
             return {
               fillColor: getColor(populationDensity),
-              fillOpacity: 0.7,
+              fillOpacity: 0.75,
               weight: 1,
-              color: 'black'
+              color: 'black',
             };
           },
           onEachFeature:  (feature, layer ) => {
@@ -80,6 +83,7 @@ export class MapComponent {
         });
         // Ajout de la couche à la carte
         regionLayer.addTo(mymap);
+
 
       })
       .catch((error) => console.error(error));
