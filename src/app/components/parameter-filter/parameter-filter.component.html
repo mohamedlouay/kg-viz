@@ -1,19 +1,21 @@
 <div class="box" fxLayout="row" fxLayoutGap="50px">
   <div class="line" fxLayout="column" fxLayoutGap="50px">
-    <button>
+    <button (click)="selectParameter('temperature')" id="temperature">
       <span><i class="fa-solid fa-temperature-high fa-2xl"></i>  Temperature</span>
     </button>
-    <button>
+    <button (click)="selectParameter('rain')" id="rain">
       <span><i class="fa-solid fa-cloud-rain fa-2xl"></i>  Rain</span>
     </button>
   </div>
 
   <div class="line" fxLayout="column" fxLayoutGap="50px">
-    <button>
+    <button (click)="selectParameter('humidity')" id="humidity">
       <span><i class="fa-solid fa-droplet fa-2xl"></i>  Humidity</span>
     </button>
-    <button>
+    <button (click)="selectParameter('wind')" id="wind">
       <span><i class="fa-solid fa-wind fa-2xl"></i>  Wind</span>
     </button>
   </div>
 </div>
+
+
