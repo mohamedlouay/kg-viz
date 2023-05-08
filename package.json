@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^15.2.0",
     "@angular/platform-browser-dynamic": "^15.2.0",
     "@angular/router": "^15.2.0",
+    "@syncfusion/ej2-angular-splitbuttons": "^21.2.3-ngcc",
     "@asymmetrik/leaflet-d3": "^6.0.1",
     "@asymmetrik/ngx-leaflet": "^15.0.1",
     "@asymmetrik/ngx-leaflet-d3": "^15.0.0",

@@ -21,17 +21,6 @@ import { Observable, Subscriber } from 'rxjs';
 export class MapComponent {
   franceBounds: any;
   colorScale: any;
-  hexbinDataTest: any[] = [
-    [47.4132, -1.2194, 15], // [lat, lng] data points
-    [47.4156, -1.2437, 17],
-    [47.4222, -1.2244, 20],
-    [47.4267, -1.2281, 30],
-    [47.4268, -1.2199, 13],
-    [47.4286, -1.2405, 12],
-    [47.4312, -1.2211, 14],
-    [47.4375, -1.2264, 19],
-    [47.4472, -1.2553, 20]
-  ];
   hexbinData: any[] = [];
   options: any;
   hexLayer: any;
@@ -53,16 +42,21 @@ export class MapComponent {
       duration: 500,
     };
 
-   // Création de la carte centrée sur la
+    // Création de la carte centrée sur la
     var mymap = L.map('map').setView([46.227638, 2.213749], 6);
 
     // Ajout du fond de carte OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:
-        'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-      maxZoom: 18,
-    }).addTo(mymap);
+    const layer = L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        attribution:
+          'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+      }
+    ).addTo(mymap);
 
+    //ajustement de la luminosité de la map
+    layer.getContainer()!.style.filter = 'brightness(75%)';
     // Chargement des données des régions
     fetch(
       'https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions.geojson'
@@ -82,7 +76,7 @@ export class MapComponent {
         // Création d'une fonction de couleur pour la choropleth map
         function getColor(d: number) {
           return d > maxPopulationDensity * 0.8
-            ? '#bd0026'
+            ? '#bd0327'
             : d > maxPopulationDensity * 0.6
             ? '#f03b20'
             : d > maxPopulationDensity * 0.4
@@ -98,7 +92,7 @@ export class MapComponent {
             var populationDensity = feature!.properties.code;
             return {
               fillColor: getColor(populationDensity),
-              fillOpacity: 0.7,
+              fillOpacity: 0.75,
               weight: 1,
               color: 'black',
             };
@@ -132,13 +126,12 @@ export class MapComponent {
       maxBoundsViscosity: 1.0, // Make sure the user cannot drag the map out of bounds
     }).setView([47, 2], 5);
     */
-      this.hexLayer = L.hexbinLayer(this.hexbinOptions).addTo(mymap);
+      (this.hexLayer = L.hexbinLayer(this.hexbinOptions).addTo(mymap));
 
-      (this.colorScale = d3
-        .scaleLinear()
-        .domain([12, 15, 18, 28])
-        .range([0, 5, 10, 15, 20]));
-
+    this.colorScale = d3
+      .scaleLinear()
+      .domain([12, 15, 18, 28])
+      .range([0, 5, 10, 15, 20]);
 
     this.hexLayer.colorScale(this.colorScale);
     /*this.hexLayer
@@ -158,7 +151,6 @@ export class MapComponent {
       });
 */
 
-
     // Use the getData function to access the fully populated data
     this.getData().then((data) => {
       console.log(' hexx ', data);
@@ -167,7 +159,6 @@ export class MapComponent {
       this.hexLayer._data = data;
     });
     console.log('hexlayer ', this.hexLayer._data);
-
   }
 
   async getData() {
