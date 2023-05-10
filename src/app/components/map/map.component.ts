@@ -6,7 +6,6 @@ import { select } from 'd3-selection';
 import * as L from 'leaflet';
 import * as Ld3 from '@asymmetrik/leaflet-d3';
 import { ChartModalComponent } from '../chart-modal/chart-modal.component';
-import { map } from 'd3';
 import { HexbinLayerConfig } from 'leaflet';
 import { DataService } from '../../services/data.service';
 import { MapperService } from '../../services/mapper.service';
