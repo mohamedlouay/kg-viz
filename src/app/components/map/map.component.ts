@@ -153,9 +153,7 @@ export class MapComponent {
 
     // Use the getData function to access the fully populated data
     this.getData().then((data) => {
-      console.log(' hexx ', data);
-
-      this.hexbinData.push(data);
+      //this.hexbinData.push(data);
       this.hexLayer._data = data;
     });
     console.log('hexlayer ', this.hexLayer._data);
