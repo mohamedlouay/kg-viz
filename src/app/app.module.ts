@@ -12,6 +12,7 @@ import { VisualisationPageComponent } from './components/visualisation-page/visu
 import { ParameterFilterComponent } from './components/parameter-filter/parameter-filter.component';
 import { InformationLayerComponent } from './components/information-layer/information-layer.component';
 import {DropDownButtonModule} from "@syncfusion/ej2-angular-splitbuttons";
+import { TimeBrushComponent } from './components/time-brush/time-brush.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import {DropDownButtonModule} from "@syncfusion/ej2-angular-splitbuttons";
     MapComponent,
     VisualisationPageComponent,
     ParameterFilterComponent,
-    InformationLayerComponent
+    InformationLayerComponent,
+    TimeBrushComponent
   ],
     imports: [
         BrowserModule,
