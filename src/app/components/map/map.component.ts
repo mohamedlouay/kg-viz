@@ -62,7 +62,6 @@ export class MapComponent {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         // Calcul de la valeur maximale de la densité de population
         var maxPopulationDensity = 0;
         data.features.forEach((region: any) => {
@@ -84,7 +83,7 @@ export class MapComponent {
             ? '#feb24c'
             : '#fed976';
         }
-
+/*
         // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
         var regionLayer = L.geoJSON(data, {
           style: function (feature) {
@@ -103,7 +102,7 @@ export class MapComponent {
           },
         });
         // Ajout de la couche à la carte
-        regionLayer.addTo(mymap);
+        regionLayer.addTo(mymap);*/
       })
       .catch((error) => console.error(error));
 
@@ -131,28 +130,30 @@ export class MapComponent {
         .range([0, 5, 10, 30]);
 
       this.hexLayer = L.hexbinLayer(this.hexbinOptions).addTo(mymap);
-      this.hexLayer.colorRange(["white", "yellow", "orange", "red", "darkred"]);
-
-    const colorFn = (d: number) => {
-      if (d <= 2) {
-        return "#FF5733"; // Red
-      } else if (d <= 4) {
-        return "#FFFF66"; // Yellow
-      } else {
-        return "#66FF66"; // Green
-      }
-    };
-
     this.hexLayer
-      .radiusRange([5, 30])
-      .data(this.stationsData)
-      .colorValue((d: Station) => colorFn(d.temp_avg));
+      .colorScale(this.colorScale);
+    this.hexLayer.colorRange(["white", "yellow", "orange", "red", "darkred"]);
 
     // Use the getData function to access the fully populated data
     this.getData().then((data) => {
-      //this.hexbinData.push(data);
       this.hexLayer._data = data;
     });
+
+    this.hexLayer
+      .radiusRange([5, 15])
+      .lng(function (d: any[]) {
+        return d[0];
+      })
+      .lat(function (d: any[]) {
+        return d[1];
+      })
+      .colorValue(function (d: any[]) {
+        return parseInt(d[0]["o"][2]);
+      })
+      .radiusValue(function (d: any[]) {
+        return 50;
+      });
+
   }
 
   async getData() {
