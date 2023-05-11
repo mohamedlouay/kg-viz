@@ -62,8 +62,7 @@ export class QueryBuilderService {
     return query;
   }
 
-
-  buildQuery_airHumidity(insee: number) {
+  buildQuery_avgRainQtyPerStation(insee: number) {
     let query =
       `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
             PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
@@ -75,13 +74,9 @@ export class QueryBuilderService {
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX dct: <http://purl.org/dc/terms/>
             PREFIX wdt: <http://www.wikidata.org/prop/direct/>
-            PREFIX iri: <http://ns.inria.fr/meteo/vocab/weatherproperty/airRelativeHumidity>
 
-    SELECT distinct ?date ?Nstation ?temp_avg ?label ?insee WHERE
+SELECT distinct ?Nstation (AVG(?rainfall24h)) as ?rain ?label ?insee WHERE
     {
-        VALUES ?insee  {'` +
-      insee +
-      `' }
         VALUES ?year  {"2021"^^xsd:gYear}
         ?s  a qb:Slice ;
         wes-dimension:station ?station ;
@@ -89,17 +84,18 @@ export class QueryBuilderService {
         qb:observation [
         a qb:Observation ;
         wes-attribute:observationDate ?date ;
-        wes-measure:avgDailyTemperature ?temp_avg; wes-measure:rainfall24h ?rainfall24h] .
+        wes-measure:rainfall24h ?rainfall24h ].
 
         ?station a weo:WeatherStation ; dct:spatial ?e; rdfs:label ?Nstation.
         ?e wdt:P131 ?item .
         ?item rdfs:label ?label ; wdt:P2585  ?insee .
         #BIND(month(?date) as ?month)
     }
-    GROUP BY ?date ?Nstation ?label
-    ORDER BY ?date
+    GROUP BY ?Nstation ?label ?insee
+    ORDER BY ?Nstation
     `;
     return query;
+
   }
 
   buildQuery_slices(insee: number) {
@@ -164,7 +160,7 @@ SELECT ?insee ?label ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg)   WH
       ?item rdfs:label ?label ; wdt:P2585 ?insee.
 ?station geo:lat ?latitude .
 ?station geo:long ?long.
-    FILTER (?date >= xsd:date('2022-05-01'))
+    FILTER (?date >= xsd:date('2021-05-01'))
    FILTER (?date <= xsd:date('2022-05-30'))
       }
 
