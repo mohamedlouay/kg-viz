@@ -3,15 +3,14 @@
 
 #title{
   position: absolute;
-  margin-left: 20%;
-  margin-right: 20%;
   z-index: 1001;
   text-align: center;
+  margin-left: 35%;
 }
 
 #charts{
   position: absolute;
-  z-index: 1001;
+  z-index: 1005;
 }
 
 #map {
@@ -22,7 +21,7 @@
 
 #filter {
   position: absolute;
-  margin-top: 125px;
+  margin-top: 100px;
   margin-left: 25px;
   z-index: 1001
 }

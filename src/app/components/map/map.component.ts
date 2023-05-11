@@ -96,7 +96,11 @@ export class MapComponent {
       data: {
         regionName: feature.properties.nom,
         regionCode:feature.properties.code
-      }
-    });
+      },
+      position: {bottom:'0px'},
+      panelClass: 'custom-dialog'
+    }
+
+  );
   }
 }

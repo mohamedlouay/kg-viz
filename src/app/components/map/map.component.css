@@ -1,3 +1,6 @@
 #map {
   height: 100vh;
 }
+.custom-dialog >  mat-dialog-container {
+  background: blue;
+}
