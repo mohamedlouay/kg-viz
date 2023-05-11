@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./parameter-filter.component.css']
 })
 export class ParameterFilterComponent {
+  activeButton: string ="";
 
   private parameterList : string[] = [
     'wind',
@@ -24,4 +25,27 @@ export class ParameterFilterComponent {
       }
     }
   }
+
+
+  getButtonClass(name: string) {
+    return {
+      'active': this.activeButton === name
+    };
+  }
+  loadTemperature() {
+    this.activeButton = 'temperature';
+  }
+
+  loadWind() {
+    this.activeButton = 'wind';
+  }
+
+  loadRain() {
+    this.activeButton = 'rain';
+  }
+
+  loadHumidity() {
+    this.activeButton = 'humidity';
+  }
+
 }
