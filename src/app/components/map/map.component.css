@@ -5,6 +5,7 @@
   stroke: #000;
   stroke-width: 0.5px;
 }
-.custom-dialog >  mat-dialog-container {
+
+.custom-dialog .mat-dialog-container {
   background: blue;
 }

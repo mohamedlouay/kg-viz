@@ -14,7 +14,6 @@ import { InformationLayerComponent } from './components/information-layer/inform
 import { LeafletD3Module } from '@asymmetrik/ngx-leaflet-d3';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { TimeBrushComponent } from './components/time-brush/time-brush.component';
-import {DropDownButtonModule} from "@syncfusion/ej2-angular-splitbuttons";
 
 @NgModule({
   declarations: [
@@ -24,6 +23,7 @@ import {DropDownButtonModule} from "@syncfusion/ej2-angular-splitbuttons";
     VisualisationPageComponent,
     ParameterFilterComponent,
     InformationLayerComponent,
+    TimeBrushComponent
   ],
   imports: [
     BrowserModule,
@@ -32,8 +32,7 @@ import {DropDownButtonModule} from "@syncfusion/ej2-angular-splitbuttons";
     MatDialogModule,
     FlexLayoutModule,
     LeafletD3Module,
-    LeafletModule,
-    TimeBrushComponent
+    LeafletModule
   ],
   providers: [],
   bootstrap: [AppComponent],

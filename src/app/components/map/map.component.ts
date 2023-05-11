@@ -125,35 +125,32 @@ export class MapComponent {
       maxBoundsViscosity: 1.0, // Make sure the user cannot drag the map out of bounds
     }).setView([47, 2], 5);
     */
-      (this.hexLayer = L.hexbinLayer(this.hexbinOptions).addTo(mymap));
+      this.colorScale = d3
+        .scaleLinear()
+        .domain([5, 15, 18, 28])
+        .range([0, 5, 10, 30]);
 
-    this.colorScale = d3
-      .scaleLinear()
-      .domain([5, 15, 18, 28])
-      .rangeRound([0, 5, 10, 30]);
+      this.hexLayer = L.hexbinLayer(this.hexbinOptions).addTo(mymap);
+      this.hexLayer.colorRange(["white", "yellow", "orange", "red", "darkred"]);
 
-    this.hexLayer.colorScale(this.colorScale);
-    /*this.hexLayer
-      .radiusRange([5, 15])
-      .lng(function (d: Station) {
-        console.log("ddddd", d);
-        return d.longitude;
-      })
-      .lat(function (d: Station) {
-        return d.latitude;
-      })
-      .colorValue(function (d: Station) {
-        return d.temp_avg;
-      })
-      .radiusValue(function (d: any[]) {
-        return 50;
-      });
-*/
+    const colorFn = (d: number) => {
+      if (d <= 2) {
+        return "#FF5733"; // Red
+      } else if (d <= 4) {
+        return "#FFFF66"; // Yellow
+      } else {
+        return "#66FF66"; // Green
+      }
+    };
+
+    this.hexLayer
+      .radiusRange([5, 30])
+      .data(this.stationsData)
+      .colorValue((d: Station) => colorFn(d.temp_avg));
 
     // Use the getData function to access the fully populated data
     this.getData().then((data) => {
       //this.hexbinData.push(data);
-      console.log('DATAAAA3', data);
       this.hexLayer._data = data;
     });
   }
@@ -164,11 +161,7 @@ export class MapComponent {
       this.stationsData = this.mapperService.weatherToStation(weather);
 
       this.stationsData.forEach((station) => {
-        data.push([
-          station.longitude,
-          station.latitude,
-          String(parseInt(String(station.temp_avg))),
-        ]);
+        data.push([station.longitude, station.latitude, station.temp_avg]);
       });
     });
     return data;

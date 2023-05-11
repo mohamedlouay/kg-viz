@@ -5,6 +5,9 @@
   width: fit-content;
   opacity: 0.75;
 }
+.custom-dialog >  mat-dialog-container {
+  background: blue;
+}
 
 h2 {
   color: White;
