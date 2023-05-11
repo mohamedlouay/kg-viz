@@ -129,8 +129,8 @@ export class MapComponent {
 
     this.colorScale = d3
       .scaleLinear()
-      .domain([12, 15, 18, 28])
-      .range([0, 5, 10, 15, 20]);
+      .domain([5, 15, 18, 28])
+      .rangeRound([0, 5, 10, 30]);
 
     this.hexLayer.colorScale(this.colorScale);
     /*this.hexLayer
@@ -153,9 +153,9 @@ export class MapComponent {
     // Use the getData function to access the fully populated data
     this.getData().then((data) => {
       //this.hexbinData.push(data);
+      console.log("DATAAAA3", data);
       this.hexLayer._data = data;
     });
-    console.log('hexlayer ', this.hexLayer._data);
   }
 
   async getData() {
@@ -164,7 +164,7 @@ export class MapComponent {
       this.stationsData = this.mapperService.weatherToStation(weather);
 
       this.stationsData.forEach((station) => {
-        data.push([station.longitude, station.latitude, station.temp_avg]);
+        data.push([station.longitude, station.latitude, String(parseInt(String(station.temp_avg)))]);
       });
     });
     return data;
