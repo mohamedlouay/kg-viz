@@ -22,9 +22,9 @@ export class ChartModalComponent implements OnInit {
 
 
   // Set the dimensions of the chart
-   margin = {top: 20, right: 50, bottom: 30, left: 20};
-   width = 960 - this.margin.left - this.margin.right;
-   height = 450 - this.margin.top - this.margin.bottom;
+   margin = {top: 20, right: 80, bottom: 20, left: 30};
+   width = 1500 - this.margin.left - this.margin.right;
+   height = 300 - this.margin.top - this.margin.bottom;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               private dataService: DataService,
@@ -42,12 +42,6 @@ export class ChartModalComponent implements OnInit {
 
 
   }
-
-
-
-
-
-
 
   private createLineChart(): void {
 
@@ -118,6 +112,8 @@ export class ChartModalComponent implements OnInit {
 
     return [minTemp, maxTemp];
   }
+
+
   private extractListStation() {
     const listStation = this.regionData.map(item => item.station);
     return  Array.from(new Set(listStation));
@@ -128,7 +124,7 @@ export class ChartModalComponent implements OnInit {
 
     const legendGroup = svg.append('g')
       .attr('class', 'legend')
-      .attr('transform', `translate(${this.width - 50}, ${this.margin.top})`);
+      .attr('transform', `translate(${this.width - 100}, ${this.margin.top})`);
 
     const legendItems = legendGroup.selectAll('.legend-item')
       .data(this.listStations)
@@ -137,14 +133,14 @@ export class ChartModalComponent implements OnInit {
       .attr('transform', (d, i) => `translate(0, ${i * 20})`);
 
     legendItems.append('rect')
-      .attr('width', 15)
-      .attr('height', 15)
+      .attr('width', 10)
+      .attr('height', 10)
       .attr('fill', d => rgb(schemeCategory10[this.listStations.indexOf(d)]).toString());
 
     legendItems.append('text')
       .attr('x', 20)
-      .attr('y', 10)
-      .attr('dy', '.35em')
+      .attr('y', 5)
+      .attr('dy', '1.5em')
       .text(d => d);
   }
 

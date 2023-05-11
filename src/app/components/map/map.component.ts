@@ -153,7 +153,7 @@ export class MapComponent {
     // Use the getData function to access the fully populated data
     this.getData().then((data) => {
       //this.hexbinData.push(data);
-      console.log("DATAAAA3", data);
+      console.log('DATAAAA3', data);
       this.hexLayer._data = data;
     });
   }
@@ -164,7 +164,11 @@ export class MapComponent {
       this.stationsData = this.mapperService.weatherToStation(weather);
 
       this.stationsData.forEach((station) => {
-        data.push([station.longitude, station.latitude, String(parseInt(String(station.temp_avg)))]);
+        data.push([
+          station.longitude,
+          station.latitude,
+          String(parseInt(String(station.temp_avg))),
+        ]);
       });
     });
     return data;
@@ -173,9 +177,10 @@ export class MapComponent {
   private openModal<G, P>(feature: any) {
     const dialogRef = this.dialog.open(ChartModalComponent, {
       data: {
-        regionName: feature.properties.nom,
         regionCode: feature.properties.code,
       },
+      position: { bottom: '0px' },
+      panelClass: 'custom-dialog',
     });
   }
 

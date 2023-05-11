@@ -1,11 +1,9 @@
 
 #title {
-  padding: 3px 4px;
+  padding: 1.5px 2px;
 }
 .dropdown {
-  margin-left: 20%;
-  margin-right: 20%;
-  width: 700px;
+  width: 500px;
   background-color: black;
   color: white;
 }
@@ -16,9 +14,9 @@
   position: absolute;
   background-color: black;
   color: white;
-  width: 668px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  padding: 12px 16px;
+  width: 484px;
+  box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+  padding: 6px 8px;
   z-index: 1001;
 }
 
