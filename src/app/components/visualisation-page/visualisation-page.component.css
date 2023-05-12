@@ -8,9 +8,9 @@
   margin-left: 35%;
 }
 
-#charts{
-  position: absolute;
-  z-index: 1005;
+app-time-brush {
+  /*position: absolute;
+  z-index: 1001;*/
 }
 
 #map {

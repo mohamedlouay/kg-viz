@@ -1,5 +1,5 @@
 import {Component, OnInit, ElementRef, ViewChild, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import * as d3 from 'd3';
 import {ITemperature} from "../../models/data";
 import {DataService} from "../../services/data.service";
@@ -19,6 +19,7 @@ export class ChartModalComponent implements OnInit {
   private chartContainer!: ElementRef ;
   regionData!: ITemperature[] ;
   listStations !: string[];
+  message = '';
 
 
   // Set the dimensions of the chart
@@ -28,13 +29,15 @@ export class ChartModalComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               private dataService: DataService,
-              private mapperService: MapperService,) {
+              private mapperService: MapperService,
+              ) {
 
     this.dataService.getTemperaturePerRegion(data.regionCode).subscribe((weather) => {
       this.regionData =this.mapperService.weatherToTemperature(weather);
       this.listStations = this.extractListStation();
       this.createLineChart();
     })
+
 
 
   }
@@ -142,5 +145,7 @@ export class ChartModalComponent implements OnInit {
       .attr('dy', '1.5em')
       .text(d => d);
   }
+
+
 
 }
