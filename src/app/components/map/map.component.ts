@@ -21,18 +21,9 @@ import { Observable, Subscriber } from 'rxjs';
 export class MapComponent {
   franceBounds: any;
   colorScale: any;
-  hexbinData: any[] = [];
   options: any;
   hexLayer: any;
   stationsData: Station[] = [];
-  rainIcon = L.icon({
-    iconUrl: 'assets/rains',
-    iconSize: [38, 95],
-    iconAnchor: [22, 94],
-    popupAnchor: [-3, -76],
-    shadowSize: [68, 95],
-    shadowAnchor: [22, 94]
-  });
 
   private hexbinOptions!: HexbinLayerConfig;
 
@@ -162,18 +153,14 @@ export class MapComponent {
       .radiusValue(function (d: any[]) {
         return parseInt(d[0]["o"][2]);
       });
-    //this.createRainLayer(this.stationsData, mymap);
+    this.createRainLayer(this.stationsData, mymap);
 
-    this.stationsData.forEach(station => {
-      L.marker([station.latitude,station.longitude], { icon: this.rainIcon }).addTo(mymap);
-    });
   }
 
   async getData() {
     let data: any[][] = [];
     this.dataService.getTemperaturePerStation().subscribe((weather) => {
       this.stationsData = this.mapperService.weatherToStation(weather);
-
       this.stationsData.forEach((station) => {
         data.push([station.longitude, station.latitude, station.temp_avg]);
       });
@@ -181,20 +168,17 @@ export class MapComponent {
     return data;
   }
 
-  createRainLayer(stations: Station[], mymap:L.Map ){
+  async createRainLayer(stations: any[], mymap:L.Map ){
+    this.dataService.getTemperaturePerStation().subscribe((weather) => {
+      this.stationsData = this.mapperService.weatherToStation(weather);
+      this.stationsData.forEach((station) => {
 
-    console.log("RAAAIN", this.rainIcon);
-    stations.forEach(station => {
-      L.marker([0,0], { icon: L.icon({
-          iconUrl: 'assets/rains.png',
-          iconSize: [38, 95],
-          iconAnchor: [22, 94],
-          popupAnchor: [-3, -76],
-          shadowSize: [68, 95],
-          shadowAnchor: [22, 94]
-        }) }).addTo(mymap);
+        L.marker([station.latitude,station.longitude], { icon: L.icon({
+            iconUrl: 'assets/rains.png',
+            iconSize: [station.temp_avg*3, station.temp_avg*5],
+          })}).addTo(mymap)
+      });
     });
-    console.log("LAAAP" , mymap);
   }
   private openModal<G, P>(feature: any) {
     const dialogRef = this.dialog.open(ChartModalComponent, {
