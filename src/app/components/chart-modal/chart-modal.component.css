@@ -1,9 +1,9 @@
 #chart-box {
-  background-color: rgba(0,0,0,0.75);
+  background-color: rgba(0,0,0,0.95);
   color:white;
   height: fit-content;
   width: fit-content;
-  opacity: 0.75;
+  padding: 20px;
 }
 
 h2 {
