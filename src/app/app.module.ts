@@ -23,7 +23,7 @@ import { TimeBrushComponent } from './components/time-brush/time-brush.component
     VisualisationPageComponent,
     ParameterFilterComponent,
     InformationLayerComponent,
-    TimeBrushComponent
+    TimeBrushComponent,
   ],
   imports: [
     BrowserModule,

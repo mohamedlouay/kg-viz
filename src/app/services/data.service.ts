@@ -20,9 +20,6 @@ export class DataService {
   getData() {
     return this.mapperService.weatherToTemperature(DataJson);
   }
-  getStationsData() {
-    return this.mapperService.weatherToStation(DataJson);
-  }
 
   getTemperaturePerRegion(ResgionCode: number) {
     const query = this.queryBuilderService.buildQuery_slices(ResgionCode);

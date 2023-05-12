@@ -95,7 +95,6 @@ SELECT distinct ?Nstation (AVG(?rainfall24h)) as ?rain ?label ?insee WHERE
     ORDER BY ?Nstation
     `;
     return query;
-
   }
 
   buildQuery_slices(insee: number) {

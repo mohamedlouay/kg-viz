@@ -19,9 +19,16 @@ interface BindingsEntity {
   insee: Insee;
   long: longitude;
   latitude: latitude;
+  rain: rain;
 }
 
 interface longitude {
+  type: string;
+  datatype: string;
+  value: number;
+}
+
+interface rain {
   type: string;
   datatype: string;
   value: number;

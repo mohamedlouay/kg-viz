@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common'
 import { MatDialog } from '@angular/material/dialog';
 import * as d3 from 'd3';
 import * as hexbin from 'd3-hexbin';
@@ -24,6 +25,14 @@ export class MapComponent {
   options: any;
   hexLayer: any;
   stationsData: Station[] = [];
+  rainIcon = L.icon({
+    iconUrl: 'assets/rains',
+    iconSize: [38, 95],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+    shadowSize: [68, 95],
+    shadowAnchor: [22, 94]
+  });
 
   private hexbinOptions!: HexbinLayerConfig;
 
@@ -129,7 +138,7 @@ export class MapComponent {
         .domain([5, 15, 18, 28])
         .range([0, 5, 10, 30]);
 
-      this.hexLayer = L.hexbinLayer(this.hexbinOptions).addTo(mymap);
+      this.hexLayer = L.hexbinLayer(this.hexbinOptions);
     this.hexLayer
       .colorScale(this.colorScale);
     this.hexLayer.colorRange(["white", "yellow", "orange", "red", "darkred"]);
@@ -140,7 +149,7 @@ export class MapComponent {
     });
 
     this.hexLayer
-      .radiusRange([5, 15])
+      .radiusRange([10, 15, 20, 25, 30])
       .lng(function (d: any[]) {
         return d[0];
       })
@@ -151,9 +160,13 @@ export class MapComponent {
         return parseInt(d[0]["o"][2]);
       })
       .radiusValue(function (d: any[]) {
-        return 50;
+        return parseInt(d[0]["o"][2]);
       });
+    //this.createRainLayer(this.stationsData, mymap);
 
+    this.stationsData.forEach(station => {
+      L.marker([station.latitude,station.longitude], { icon: this.rainIcon }).addTo(mymap);
+    });
   }
 
   async getData() {
@@ -168,6 +181,21 @@ export class MapComponent {
     return data;
   }
 
+  createRainLayer(stations: Station[], mymap:L.Map ){
+
+    console.log("RAAAIN", this.rainIcon);
+    stations.forEach(station => {
+      L.marker([0,0], { icon: L.icon({
+          iconUrl: 'assets/rains.png',
+          iconSize: [38, 95],
+          iconAnchor: [22, 94],
+          popupAnchor: [-3, -76],
+          shadowSize: [68, 95],
+          shadowAnchor: [22, 94]
+        }) }).addTo(mymap);
+    });
+    console.log("LAAAP" , mymap);
+  }
   private openModal<G, P>(feature: any) {
     const dialogRef = this.dialog.open(ChartModalComponent, {
       data: {
