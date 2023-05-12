@@ -1,6 +1,6 @@
 #chart-box {
-  /*background-color: rgba(0,0,0,0.75);
-  color:white;*/
+  background-color: rgba(0,0,0,0.75);
+  color:white;
   height: fit-content;
   width: fit-content;
   opacity: 0.75;
@@ -8,8 +8,4 @@
 
 h2 {
   color: White;
-}
-
-.custom-dialog  .mat-dialog-container {
-  background: blue;
 }
