@@ -8,11 +8,6 @@
   margin-left: 35%;
 }
 
-app-time-brush {
-  /*position: absolute;
-  z-index: 1001;*/
-}
-
 #map {
   position:relative;
   width:100% ;
@@ -21,7 +16,7 @@ app-time-brush {
 
 #filter {
   position: absolute;
-  margin-top: 100px;
+  margin-top: 50px;
   margin-left: 25px;
   z-index: 1001
 }

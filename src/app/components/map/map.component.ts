@@ -97,7 +97,7 @@ export class MapComponent {
         regionName: feature.properties.nom,
         regionCode:feature.properties.code
       },
-      position: {bottom:'0px'},
+      position: {bottom:'0px', top:'20%'},
       panelClass: 'custom-dialog',
     }
 

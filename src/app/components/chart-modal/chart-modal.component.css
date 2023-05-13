@@ -1,11 +1,23 @@
 #chart-box {
-  background-color: rgba(0,0,0,0.75);
+  background-color: rgba(0,0,0,0.95);
   color:white;
   height: fit-content;
   width: fit-content;
-  opacity: 0.75;
+  padding: 20px;
 }
 
 h2 {
   color: White;
+}
+
+app-time-brush {
+  z-index: 1003;
+  position: absolute;
+}
+
+.box {
+  background-color: rgba(0,0,0,0.95);
+  color:white;
+  height: fit-content;
+  width: fit-content;
 }

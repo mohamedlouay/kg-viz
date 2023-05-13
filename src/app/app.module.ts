@@ -13,6 +13,7 @@ import { ParameterFilterComponent } from './components/parameter-filter/paramete
 import { InformationLayerComponent } from './components/information-layer/information-layer.component';
 import {DropDownButtonModule} from "@syncfusion/ej2-angular-splitbuttons";
 import { TimeBrushComponent } from './components/time-brush/time-brush.component';
+import {NpnSliderModule} from "npn-slider";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { TimeBrushComponent } from './components/time-brush/time-brush.component
         BrowserAnimationsModule,
         MatDialogModule,
         FlexLayoutModule,
-        DropDownButtonModule
+        DropDownButtonModule,
+        NpnSliderModule
     ],
   providers: [],
   bootstrap: [AppComponent]

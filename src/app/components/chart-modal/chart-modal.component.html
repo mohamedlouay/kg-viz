@@ -1,7 +1,13 @@
-<div id="chart-box">
-  <h2>{{ data.regionName }}</h2>
-  <div  fxLayout="column" fxLayoutGap="50px">
-    <div #chart></div>
-    <div class="legend-container"></div>
+
+<div class="box" fxLayout="row" fxLayoutGap="30px">
+  <app-time-brush></app-time-brush>
+
+  <div id="chart-box">
+    <h2>{{ data.regionName }}</h2>
+    <div  fxLayout="column" fxLayoutGap="50px">
+      <div #chart></div>
+      <div class="legend-container"></div>
+    </div>
   </div>
 </div>
+

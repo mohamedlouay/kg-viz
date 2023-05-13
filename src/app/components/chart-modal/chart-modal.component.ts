@@ -23,8 +23,8 @@ export class ChartModalComponent implements OnInit {
 
 
   // Set the dimensions of the chart
-   margin = {top: 20, right: 80, bottom: 20, left: 30};
-   width = 1500 - this.margin.left - this.margin.right;
+   margin = {top: 20, right: 80, bottom: 20, left: 80};
+   width = 1150 - this.margin.left - this.margin.right;
    height = 300 - this.margin.top - this.margin.bottom;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
@@ -47,8 +47,6 @@ export class ChartModalComponent implements OnInit {
   }
 
   private createLineChart(): void {
-
-
     // Append the SVG to the chart container
     const svg = d3.select(this.chartContainer.nativeElement).append('svg')
       .attr('width', this.width + this.margin.left + this.margin.right)
@@ -121,12 +119,14 @@ export class ChartModalComponent implements OnInit {
     return  Array.from(new Set(listStation));
   }
 
+
   private addLegend() {
     const svg = d3.select(this.chartContainer.nativeElement).select('svg');
 
     const legendGroup = svg.append('g')
+      .style("fill", "white")
       .attr('class', 'legend')
-      .attr('transform', `translate(${this.width - 100}, ${this.margin.top})`);
+      .attr('transform', `translate(${this.width-50}, ${this.margin.top-50})`);
 
     const legendItems = legendGroup.selectAll('.legend-item')
       .data(this.listStations)
