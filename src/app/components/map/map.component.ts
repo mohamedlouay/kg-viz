@@ -83,7 +83,7 @@ export class MapComponent {
             ? '#feb24c'
             : '#fed976';
         }
-/*
+
         // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
         var regionLayer = L.geoJSON(data, {
           style: function (feature) {
@@ -102,7 +102,7 @@ export class MapComponent {
           },
         });
         // Ajout de la couche à la carte
-        regionLayer.addTo(mymap);*/
+        regionLayer.addTo(mymap);
       })
       .catch((error) => console.error(error));
 

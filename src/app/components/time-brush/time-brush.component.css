@@ -1,0 +1,17 @@
+.slider-container {
+
+  min-width: 97vw;
+  padding:5px 20px;
+  margin: 10px 5px;
+  border-radius: 20px;
+  position: fixed;
+  bottom: 10px;
+  display: flex;
+  justify-content: center;
+
+}
+mat-slider{
+  min-width: 100%;
+
+}
+

@@ -14,6 +14,10 @@ import { InformationLayerComponent } from './components/information-layer/inform
 import { LeafletD3Module } from '@asymmetrik/ngx-leaflet-d3';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { TimeBrushComponent } from './components/time-brush/time-brush.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatInputModule} from "@angular/material/input";
+import {MatSliderModule} from "@angular/material/slider";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -32,7 +36,11 @@ import { TimeBrushComponent } from './components/time-brush/time-brush.component
     MatDialogModule,
     FlexLayoutModule,
     LeafletD3Module,
-    LeafletModule
+    LeafletModule,
+    MatTooltipModule,
+    MatInputModule,
+    MatSliderModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],

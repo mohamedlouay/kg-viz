@@ -1,41 +1,16 @@
+<div class="slider-container transparent-bg">
+  <mat-slider
+    [min]="minValue"
+    [max]="maxValue"
+    (input)="onSliderChange()"
+    [discrete]="true"
+    [displayWith]="display"
+    [step]="86400000"
+    [showTickMarks]="true"
+  >
 
-  <div id="charts">
+    <input matSliderStartThumb [(ngModel)]="sliderValues[0]" >
+    <input matSliderEndThumb    [(ngModel)]="sliderValues[1]">
+  </mat-slider>
 
-    <!-- Double range slider with different CSS variables & all possible values printed across -->
-    <div class="range-slider overlay" style='--min:0; --max:10; --value-a:2; --value-b:5; --text-value-a:"2"; --text-value-b:"5";'>
-      <input type="range" min="0" max="10" value="2" oninput="this.parentNode.style.setProperty('--value-a',this.value); this.parentNode.style.setProperty('--text-value-a', JSON.stringify(this.value))">
-      <input type="range" min="0" max="10" value="5" oninput="this.parentNode.style.setProperty('--value-b',this.value); this.parentNode.style.setProperty('--text-value-b', JSON.stringify(this.value))">
-      <div class='range-slider__values'>0 1 2 3 4 5 6 7 8 9 10</div>
-      <div class='range-slider__progress'></div>
-    </div>
-
-  </div>
-
-  <script>
-    $("#flat-slider")
-      .slider({
-        max: 50,
-        min: 0,
-        range: true,
-        values: [15, 35]
-      })
-      .slider("pips", {
-        first: "pip",
-        last: "pip"
-      });
-
-    $("#flat-slider-vertical-1, #flat-slider-vertical-2, #flat-slider-vertical-3")
-      .slider({
-        max: 25,
-        min: 0,
-        range: "min",
-        value: 20,
-        orientation: "vertical"
-      })
-      .slider("pips", {
-        first: "pip",
-        last: "pip"
-      })
-      .slider("float");
-  </script>
-
+</div>
