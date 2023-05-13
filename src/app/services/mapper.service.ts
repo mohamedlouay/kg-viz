@@ -1,14 +1,12 @@
-import {Injectable} from '@angular/core';
-import {ITemperature} from "../models/data";
-import {IWeather} from "../models/dataFromServeur";
+import { Injectable } from '@angular/core';
+import { ITemperature, Station } from '../models/data';
+import { IWeather } from '../models/dataFromServeur';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MapperService {
-
-  constructor() {
-  }
+  constructor() {}
 
   weatherToTemperature(weatherJson: IWeather): ITemperature[] {
     const temperatures: ITemperature[] = [];
@@ -18,16 +16,33 @@ export class MapperService {
           region: binding.label.value,
           temp_avg: binding.temp_avg.value,
           station: binding.Nstation.value,
-          date: binding.date.value
+          date: binding.date.value,
         };
-        temperatures.push(temperature)
-
+        temperatures.push(temperature);
       }
     }
 
-    return temperatures
-
+    return temperatures;
   }
 
+  weatherToStation(weatherJson: IWeather): Station[] {
+    let stations: Station[] = [];
+    if (weatherJson.results.bindings) {
+      for (let binding of weatherJson.results.bindings) {
+        let latitude = binding.latitude ? binding.latitude.value : null;
+        let longitude = binding.long ? binding.long.value : null;
+        let temp_avg = binding.temp_avg ? binding.temp_avg.value : null;
+        let rain = binding.rain ? binding.rain.value : null;
 
+        let data: Station = {
+          latitude: latitude as number,
+          longitude: longitude as number,
+          temp_avg: temp_avg as number,
+          rain: rain as number
+        };
+        stations.push(data);
+      }
+    }
+    return stations;
+  }
 }

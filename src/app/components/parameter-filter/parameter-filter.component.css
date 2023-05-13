@@ -16,12 +16,14 @@ button {
   border: none;
   color : white;
   text-align: left;
+  cursor: pointer;
 }
 
 span:hover {
   color: #f89146;
 }
+.active{
+  color: #f89146;
 
-
-
+}
 

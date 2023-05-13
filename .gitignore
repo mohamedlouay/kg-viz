@@ -5,12 +5,12 @@
 /tmp
 /out-tsc
 /bazel-out
-
+package-lock.json
 # Node
 /node_modules
 npm-debug.log
 yarn-error.log
-
+/angular
 # IDEs and editors
 .idea/
 .project
@@ -37,6 +37,7 @@ yarn-error.log
 testem.log
 /typings
 
+package-lock.json
 # System files
 .DS_Store
 Thumbs.db

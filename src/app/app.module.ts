@@ -11,6 +11,8 @@ import { MapComponent } from './components/map/map.component';
 import { VisualisationPageComponent } from './components/visualisation-page/visualisation-page.component';
 import { ParameterFilterComponent } from './components/parameter-filter/parameter-filter.component';
 import { InformationLayerComponent } from './components/information-layer/information-layer.component';
+import { LeafletD3Module } from '@asymmetrik/ngx-leaflet-d3';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import {DropDownButtonModule} from "@syncfusion/ej2-angular-splitbuttons";
 import { TimeBrushComponent } from './components/time-brush/time-brush.component';
 import {NpnSliderModule} from "npn-slider";
@@ -32,8 +34,11 @@ import {NpnSliderModule} from "npn-slider";
         MatDialogModule,
         FlexLayoutModule,
         DropDownButtonModule,
-        NpnSliderModule
+        NpnSliderModule,
+        LeafletD3Module,
+        LeafletModule
     ],
+
   providers: [],
   bootstrap: [AppComponent]
 })
