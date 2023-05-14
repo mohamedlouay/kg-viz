@@ -1,10 +1,13 @@
 .box {
   /*justify-items: left;*/
-  margin-top:100px;
+  width: fit-content;
+  height: fit-content;
   border-radius: 30px;
+  margin-left: 45px;
 }
 
 mat-button-toggle-group{
+
   border-radius: 30px;
 }
 

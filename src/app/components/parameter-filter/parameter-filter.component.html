@@ -1,12 +1,10 @@
+<mat-button-toggle-group [(ngModel)]="layerType" appearance="legacy">
+  <mat-button-toggle value="station">Station</mat-button-toggle>
+  <mat-button-toggle value="région">Région</mat-button-toggle>
+</mat-button-toggle-group>
 
-<div class="box transparent-bg" fxLayout="row" fxLayoutGap="50px">
-
+<div class="box transparent-bg" fxLayout="row">
   <div class="line" fxLayout="column" fxLayoutGap="10px">
-    <mat-button-toggle-group [(ngModel)]="layerType" appearance="legacy">
-      <mat-button-toggle value="station">Station</mat-button-toggle>
-      <mat-button-toggle value="région">Région</mat-button-toggle>
-    </mat-button-toggle-group>
-
     <button
       [ngClass]="getButtonClass('temperature')"
       (click)="loadTemperature()"
