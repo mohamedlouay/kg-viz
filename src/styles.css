@@ -9,7 +9,13 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
 mat-dialog-container{
   opacity: 0.8;
+}
+.transparent-bg{
+  background: rgba(0,0,0,0.75);
+}
+.mdc-slider__value-indicator-text {
+  white-space: nowrap;
+ padding-top: 150px;
 }

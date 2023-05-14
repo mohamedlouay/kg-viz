@@ -1,7 +1,7 @@
 .box {
-  background: rgba(0,0,0,0.75);
-  justify-items: left;
+  /*justify-items: left;*/
   margin-top:100px;
+  border-radius: 30px;
 }
 
 mat-button-toggle {
@@ -19,25 +19,25 @@ mat-button-toggle {
 }
 
 .line {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  margin-left: 15px;
-  margin-right: 15px;
+  margin: 10px;
+
 }
 
 button {
-  background: transparent;
+  background: rgba(0,0,0,0.30);
   border: none;
   color : white;
-  text-align: left;
   cursor: pointer;
+  border-radius: 100%;
+  padding: 15px;
 }
 
-span:hover {
-  color: #f89146;
+button:hover {
+  background: #f89146;
 }
 .active{
-  color: #f89146;
+  color: black;
+  background: #f89146;
 
 }
 

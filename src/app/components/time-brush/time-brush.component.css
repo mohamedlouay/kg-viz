@@ -1,0 +1,24 @@
+.slider-container {
+
+  /*min-width: 97vw;*/
+  padding:5px 20px;
+  background: black;
+  opacity: 1;
+  /*position: fixed;*/
+  /*bottom: 10px;*/
+  /*display: flex;*/
+  /*justify-content: center;*/
+
+}
+mat-slider{
+  min-width: 100%;
+
+}
+
+.custom-slider .mat-slider-thumb-label {
+  position: absolute;
+  /* Adjust the top and left values according to your desired position */
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
