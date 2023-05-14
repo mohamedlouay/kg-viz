@@ -102,11 +102,10 @@ export class MapComponent {
             layer.bindTooltip(
               feature.properties.nom,
               {
-                permanent:true,
+                permanent:false,
                 direction:'center',
                 className: 'regionLabel'
-              }
-            );
+              });
           },
         });
         // Ajout de la couche à la carte
@@ -185,12 +184,17 @@ export class MapComponent {
         this.stationsData = this.mapperService.weatherToStation(weather);
         stationsCoordinates.forEach((st) => {
         this.stationsData.forEach((station) => {
-          L.marker([st.latitude, st.longitude], {
-            icon: L.icon({
-              iconUrl: 'assets/rains.png',
-              iconSize: [station.rain * 3, station.rain* 4],
-            })
-          }).addTo(mymap)
+          var marker = L.marker([st.latitude, st.longitude]).bindTooltip(
+            "station-name",
+              {
+                permanent: false,
+                direction: 'center'
+              });
+          marker.setIcon(L.icon({
+            iconUrl:'assets/rains.png',
+            iconSize:[station.rain * 3, station.rain* 4]
+          }));
+          marker.addTo(mymap);
         });})
       });
     });
