@@ -5,22 +5,7 @@
   width: fit-content;
   padding: 20px;
 }
-.custom-dialog >  mat-dialog-container {
-  background: blue;
-}
 
 h2 {
   color: White;
-}
-
-app-time-brush {
-  z-index: 1003;
-  position: absolute;
-}
-
-.box {
-  background-color: rgba(0,0,0,0.95);
-  color:white;
-  height: fit-content;
-  width: fit-content;
 }
