@@ -62,7 +62,7 @@ export class QueryBuilderService {
     return query;
   }
 
-  buildQuery_avgRainQtyPerStation(insee: number) {
+  buildQuery_avgRainQtyPerStation() {
     let query =
       `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
             PREFIX weo: <http://ns.inria.fr/meteo/ontology/>

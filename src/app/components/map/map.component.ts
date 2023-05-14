@@ -169,14 +169,21 @@ export class MapComponent {
   }
 
   async createRainLayer(stations: any[], mymap:L.Map ){
-    this.dataService.getTemperaturePerStation().subscribe((weather) => {
-      this.stationsData = this.mapperService.weatherToStation(weather);
-      this.stationsData.forEach((station) => {
+   var stationsCoordinates : Station[];
 
-        L.marker([station.latitude,station.longitude], { icon: L.icon({
-            iconUrl: 'assets/rains.png',
-            iconSize: [station.temp_avg*3, station.temp_avg*5],
-          })}).addTo(mymap)
+    this.dataService.getTemperaturePerStation().subscribe((weather) => {
+      stationsCoordinates = this.mapperService.weatherToStation(weather);
+      this.dataService.getRainPerStation().subscribe((weather) => {
+        this.stationsData = this.mapperService.weatherToStation(weather);
+        stationsCoordinates.forEach((st) => {
+        this.stationsData.forEach((station) => {
+          L.marker([st.latitude, st.longitude], {
+            icon: L.icon({
+              iconUrl: 'assets/rains.png',
+              iconSize: [station.rain * 3, station.rain* 4],
+            })
+          }).addTo(mymap)
+        });})
       });
     });
   }
