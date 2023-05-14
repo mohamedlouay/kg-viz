@@ -108,6 +108,14 @@ export class MapComponent {
             layer.on('click', () => {
               this.openModal(feature);
             });
+            layer.bindTooltip(
+              feature.properties.nom,
+              {
+                permanent:false,
+                direction:'center',
+                className: 'regionLabel'
+              }
+            );
           },
         });
         // Ajout de la couche à la carte

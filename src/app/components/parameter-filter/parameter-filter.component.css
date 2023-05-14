@@ -1,21 +1,34 @@
 .box {
   /*justify-items: left;*/
-  margin-top:100px;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 30px;
+  margin-left: 45px;
+}
+
+mat-button-toggle-group{
+
   border-radius: 30px;
 }
 
 mat-button-toggle {
   color: white;
+  border-radius: 30px;
+  cursor: pointer;
   border: transparent;
   background-color: rgba(0,0,0,0.2);
-  /*font-family: 'Nunito Semibold', sans-serif;*/
   font-size: 14px;
+  width: fit-content;
+  height: fit-content;
 }
 
 .mat-button-toggle-checked {
   color: white;
   border: transparent;
+  border-radius: 30px;
+  cursor: pointer;
   background-color: #f89146;
+  font-size: 14px;
 }
 
 .line {
@@ -24,12 +37,14 @@ mat-button-toggle {
 }
 
 button {
-  background: rgba(0,0,0,0.30);
+  background: rgba(0,0,0,0.3);
   border: none;
   color : white;
   cursor: pointer;
   border-radius: 100%;
   padding: 15px;
+  width: fit-content;
+  height: fit-content;
 }
 
 button:hover {
