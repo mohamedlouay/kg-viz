@@ -25,8 +25,8 @@ export class MapComponent {
   options: any;
   hexLayer: any;
   stationsData: Station[] = [];
-  mymap: L.Map;
-  layer: L.TileLayer;
+  //mymap: L.Map;
+
   regionLayer: any;
 
   @Input() activeButton: string | undefined;
@@ -38,20 +38,10 @@ export class MapComponent {
     private dataService: DataService,
     private mapperService: MapperService
   ) {
-    this.mymap = L.map('map').setView([46.227638, 2.213749], 6);
-    this.layer = L.tileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      {
-        attribution:
-          'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-        maxZoom: 18,
-      }
-    ).addTo(this.mymap);
   }
 
   ngOnInit(): void {
-    console.log('LAYER ', this.layer);
-    console.log('mymaponinit', this.mymap);
+
     this.hexbinOptions = {
       radius: 10,
       opacity: 0.7,
@@ -59,12 +49,67 @@ export class MapComponent {
     };
     // Création de la carte centrée sur la
     // Ajout du fond de carte OpenStreetMap
+    var mymap = L.map('map').setView([46.227638, 2.213749], 6);
+    //this.mymap = mymap;
+    var layer = L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        attribution:
+          'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+      }
+    ).addTo(mymap);
 
     //ajustement de la luminosité de la map
-    this.layer.getContainer()!.style.filter = 'brightness(75%)';
+    layer.getContainer()!.style.filter = 'brightness(75%)';
     // Chargement des données des régions
 
-    this.addRegionLayer().then(() => {
+    fetch(
+      'https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions.geojson'
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // Calcul de la valeur maximale de la densité de population
+        var maxPopulationDensity = 0;
+        data.features.forEach((region: any) => {
+          var populationDensity = region.properties.code;
+          if (populationDensity > maxPopulationDensity) {
+            maxPopulationDensity = populationDensity;
+          }
+        });
+        // Création d'une fonction de couleur pour la choropleth map
+        function getColor(d: number) {
+          return d > maxPopulationDensity * 0.8
+            ? '#bd0327'
+            : d > maxPopulationDensity * 0.6
+              ? '#f03b20'
+              : d > maxPopulationDensity * 0.4
+                ? '#fd8d3c'
+                : d > maxPopulationDensity * 0.2
+                  ? '#feb24c'
+                  : '#fed976';
+        }
+
+        // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
+        this.regionLayer = L.geoJSON(data, {
+          style: function (feature) {
+            var populationDensity = feature!.properties.code;
+            return {
+              fillColor: getColor(populationDensity),
+              fillOpacity: 0.75,
+              weight: 1,
+              color: 'black',
+            };
+          },
+          onEachFeature: (feature, layer) => {
+            layer.on('click', () => {
+              this.openModal(feature);
+            });
+          },
+        });
+        // Ajout de la couche à la carte
+        this.regionLayer.addTo(mymap);
+      }).then(() => {
       console.log('region ', this.regionLayer);
 
       // ---------------------query test---------------------
@@ -106,10 +151,11 @@ export class MapComponent {
         .radiusValue(function (d: any[]) {
           return parseInt(d[0]['o'][2]);
         });
+      //this.regionLayer.addTo(this.layerGroup);
+      //this.hexLayer.addTo(this.layerGroup);
       //this.createRainLayer(this.stationsData, mymap);
-      // @ts-ignore
-      //this.switchLayer();
     });
+    //L.layerGroup( [ this.regionLayer, this.hexLayer]).addTo(this.mymap);
   }
   async addRegionLayer() {
     return fetch(
@@ -156,7 +202,7 @@ export class MapComponent {
           },
         });
         // Ajout de la couche à la carte
-        this.regionLayer.addTo(this.mymap);
+       // this.regionLayer.addTo(this.mymap);
       });
   }
   async getData() {
@@ -171,11 +217,10 @@ export class MapComponent {
   }
 
   switchLayer($event: string) {
-    console.log('event', $event);
+    console.log('event: ', $event);
     switch ($event) {
       case 'temperature':
         console.log('temp ? : ', this.regionLayer);
-        this.mymap = this.mymap.addLayer(this.regionLayer);
     }
   }
   async createRainLayer(stations: any[], mymap: L.Map) {
