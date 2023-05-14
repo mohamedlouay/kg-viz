@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input, SimpleChanges} from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import * as d3 from 'd3';
@@ -13,6 +13,7 @@ import { MapperService } from '../../services/mapper.service';
 import { Station } from '../../models/data';
 import { Observable, Subscriber } from 'rxjs';
 import { ParameterFilterComponent } from '../parameter-filter/parameter-filter.component';
+import {VisualisationPageComponent} from "../visualisation-page/visualisation-page.component";
 
 @Component({
   selector: 'app-map',
@@ -29,7 +30,9 @@ export class MapComponent {
 
   regionLayer: any;
 
-  @Input() activeButton: string | undefined;
+  mymap: any;
+
+  @Input() layer: string | undefined;
 
   private hexbinOptions!: HexbinLayerConfig;
 
@@ -49,7 +52,7 @@ export class MapComponent {
     };
     // Création de la carte centrée sur la
     // Ajout du fond de carte OpenStreetMap
-    var mymap = L.map('map').setView([46.227638, 2.213749], 6);
+    this.mymap = L.map('map').setView([46.227638, 2.213749], 6);
     //this.mymap = mymap;
     var layer = L.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -58,7 +61,7 @@ export class MapComponent {
           'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
         maxZoom: 18,
       }
-    ).addTo(mymap);
+    ).addTo(this.mymap);
 
     //ajustement de la luminosité de la map
     layer.getContainer()!.style.filter = 'brightness(75%)';
@@ -108,9 +111,8 @@ export class MapComponent {
           },
         });
         // Ajout de la couche à la carte
-        this.regionLayer.addTo(mymap);
+        this.regionLayer.addTo(this.mymap);
       }).then(() => {
-      console.log('region ', this.regionLayer);
 
       // ---------------------query test---------------------
       this.options = {
@@ -155,7 +157,7 @@ export class MapComponent {
       //this.hexLayer.addTo(this.layerGroup);
       //this.createRainLayer(this.stationsData, mymap);
     });
-    //L.layerGroup( [ this.regionLayer, this.hexLayer]).addTo(this.mymap);
+
   }
   async addRegionLayer() {
     return fetch(
@@ -215,12 +217,19 @@ export class MapComponent {
     });
     return data;
   }
-
-  switchLayer($event: string) {
-    console.log('event: ', $event);
-    switch ($event) {
-      case 'temperature':
-        console.log('temp ? : ', this.regionLayer);
+  ngOnChanges() {
+      this.switchLayer();
+  }
+  switchLayer() {
+    switch (this.layer) {
+      case 'station':
+        this.mymap.addLayer(this.hexLayer);
+        this.mymap.removeLayer(this.regionLayer);
+        break;
+      case 'région':
+        this.mymap.removeLayer(this.hexLayer);
+        this.mymap.addLayer(this.regionLayer);
+        break;
     }
   }
   async createRainLayer(stations: any[], mymap: L.Map) {
@@ -245,7 +254,7 @@ export class MapComponent {
                 iconSize: [station.rain * 3, station.rain * 4],
               })
             );
-            marker.addTo(mymap);
+            marker.addTo(this.mymap);
           });
         });
       });
@@ -260,6 +269,7 @@ export class MapComponent {
       position: { bottom: '0px' },
       panelClass: 'full-width-dialog',
     });
+
   }
 
   protected readonly console = console;

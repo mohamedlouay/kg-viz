@@ -6,7 +6,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
   styleUrls: ['./parameter-filter.component.css']
 })
 export class ParameterFilterComponent {
-  activeButton: string = "";
+  @Output() activeButton: string = "";
   @Output() parameterSelected = new EventEmitter<string>();
 
   private parameterList : string[] = [
@@ -28,15 +28,18 @@ export class ParameterFilterComponent {
     this.activeButton = 'region'
   }
 
+
   getButtonClass(name: string) {
     return {
       'active': this.activeButton === name
     };
   }
+  regionStation(input: string) {
+    this.parameterSelected.emit(input);
+  }
   loadTemperature() {
     this.activeButton = 'temperature';
-    this.parameterSelected.emit('temperature');
-    console.log("temp loaded ");
+    this.parameterSelected.emit(this.activeButton);
   }
 
   loadWind() {
