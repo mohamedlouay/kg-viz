@@ -45,6 +45,7 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     MatSliderModule,
     FormsModule,
+    MatButtonToggleModule,
   ],
 
   providers: [],
