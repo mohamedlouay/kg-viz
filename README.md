@@ -48,6 +48,22 @@ Assurez-vous de disposer des versions spécifiées de Node.js et d'Angular CLI p
 - Utilisez la commande `ng serve` pour exécuter le projet en mode développement.
 - Ouvrez votre navigateur et accédez à `http://localhost:4200` pour voir l'application en cours d'exécution.
 
+
+## Déploiement
+
+Pour déployer le projet sur GitHub Pages, nous avons ajouté un script personnalisé dans le fichier `package.json`. Vous pouvez exécuter ce script en utilisant la commande suivante :
+
+```
+npm run deploy
+```
+
+Assurez-vous d'avoir configuré correctement les paramètres de déploiement dans le fichier `angular.json`. Vous devrez spécifier le nom du référentiel GitHub dans la propriété `"outputPath"` du `"deploy"` dans `"architect"`. Dans notre cas, pour ce projet, le dossier de sortie est configuré sur  `Docs`.
+
+Une fois le script exécuté avec succès, le projet sera déployé sur GitHub Pages et vous pourrez y accéder via le lien suivant : `https://votre-utilisateur-github.github.io/votre-repo/` . Dans le cas spécifique de ce projet, le lien de déploiement est : `https://mohamedlouay.github.io/kg-viz/`
+
+
+
+
 ## Contribution
 
 1. Créez une branche (`git checkout -b ma-branche`)
