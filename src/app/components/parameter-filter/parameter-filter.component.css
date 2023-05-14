@@ -1,11 +1,11 @@
 .box {
-  justify-items: left;
+  /*justify-items: left;*/
   margin-top:100px;
   border-radius: 30px;
 }
 
 .line {
-  margin: 15px;
+  margin: 10px;
 
 }
 
@@ -14,8 +14,8 @@ button {
   border: none;
   color : white;
   cursor: pointer;
-  border-radius: 30px;
-  padding: 10px;
+  border-radius: 100%;
+  padding: 15px;
 }
 
 button:hover {

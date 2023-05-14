@@ -1,20 +1,20 @@
 <div class="box transparent-bg" fxLayout="row" fxLayoutGap="50px">
-  <div class="line" fxLayout="column" fxLayoutGap="50px">
+  <div class="line" fxLayout="column" fxLayoutGap="10px">
     <button [ngClass]="getButtonClass('temperature')" (click)="loadTemperature()"
             id="temperature" matTooltip="Temperature" matTooltipPosition="right" >
-      <span><i class="fa-solid fa-temperature-high fa-2xl"></i></span>
+      <span><i class="fa-solid fa-temperature-high "></i></span>
     </button>
     <button [ngClass]="getButtonClass('rain')" (click)="loadRain()"
             id="rain" matTooltip="Rain" matTooltipPosition="right" >
-      <span><i class="fa-solid fa-cloud-rain fa-2xl"></i></span>
+      <span><i class="fa-solid fa-cloud-rain "></i></span>
     </button>
     <button [ngClass]="getButtonClass('humidity')" (click)="loadHumidity()"
             id="humidity" matTooltip="Humidity" matTooltipPosition="right" >
-      <span><i class="fa-solid fa-droplet fa-2xl"></i></span>
+      <span><i class="fa-solid fa-droplet "></i></span>
     </button>
     <button [ngClass]="getButtonClass('wind')" (click)="loadWind()"
             id="wind" matTooltip="Wind" matTooltipPosition="right">
-      <span><i class="fa-solid fa-wind fa-2xl"></i></span>
+      <span><i class="fa-solid fa-wind "></i></span>
     </button>
   </div>
 </div>
