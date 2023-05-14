@@ -185,7 +185,7 @@ export class MapComponent {
         stationsCoordinates.forEach((st) => {
         this.stationsData.forEach((station) => {
           var marker = L.marker([st.latitude, st.longitude]).bindTooltip(
-            "station-name",
+            station.nom,
               {
                 permanent: false,
                 direction: 'center'
