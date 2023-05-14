@@ -21,6 +21,11 @@ interface BindingsEntity {
   latitude: latitude;
   rain: rain;
 }
+interface nom {
+  type: string;
+  datatype: string;
+  value: string;
+}
 
 interface longitude {
   type: string;

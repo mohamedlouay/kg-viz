@@ -6,6 +6,7 @@ export interface ITemperature {
 }
 
 export interface Station {
+  nom: string;
   longitude: number;
   latitude: number;
   temp_avg: number;
