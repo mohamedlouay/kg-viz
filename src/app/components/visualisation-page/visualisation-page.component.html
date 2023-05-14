@@ -2,12 +2,12 @@
   <div id="title">
     <app-information-layer></app-information-layer>
   </div>
-  <div id="map">
-    <app-map></app-map>
-  </div>
-  <div id="filter">
-    <app-parameter-filter></app-parameter-filter>
-  </div>
 
+  <div id="filter">
+    <app-parameter-filter (parameterSelected)="switchLayer($event)"></app-parameter-filter>
+  </div>
+  <div id="map">
+    <app-map [layer]="activeLayer"></app-map>
+  </div>
 </div>
 
