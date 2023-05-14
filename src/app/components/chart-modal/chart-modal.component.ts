@@ -17,8 +17,12 @@ import {rgb, scaleOrdinal, schemeCategory10} from "d3";
 export class ChartModalComponent implements OnInit {
   @ViewChild('chart', { static: false })
   private chartContainer!: ElementRef ;
+  regionDataFromServer!: ITemperature[] ;
   regionData!: ITemperature[] ;
   listStations !: string[];
+
+  startDate =0;
+  endDate = 0;
 
 
   // Set the dimensions of the chart
@@ -31,7 +35,9 @@ export class ChartModalComponent implements OnInit {
               private mapperService: MapperService,) {
 
     this.dataService.getTemperaturePerRegion(data.regionCode).subscribe((weather) => {
-      this.regionData =this.mapperService.weatherToTemperature(weather);
+      this.regionDataFromServer =this.mapperService.weatherToTemperature(weather);
+      this.regionData =this.regionDataFromServer;
+      [this.startDate,this.endDate] = this.getMinMaxDate(this.regionData);
       this.listStations = this.extractListStation();
       this.createLineChart();
     })
@@ -103,15 +109,6 @@ export class ChartModalComponent implements OnInit {
 
   }
 
-  getMinMaxTemperatures( datas: ITemperature[]): [number, number] {
-    const temperatureValues = datas.map(item => item.temp_avg);
-
-    const minTemp = Math.min(...temperatureValues) ;
-
-    const maxTemp =  Math.max(...temperatureValues) ;
-
-    return [minTemp, maxTemp];
-  }
 
 
   private extractListStation() {
@@ -144,4 +141,44 @@ export class ChartModalComponent implements OnInit {
       .text(d => d);
   }
 
+  handleRangeChangedEvent(range: Date[]) {
+    this.regionData =  this.filterDataByDateRange(range[0],range[1]);
+    this.reCreateLineChart();
+
+
+
+  }
+
+  private filterDataByDateRange(startDate: Date, endDate: Date) {
+    return  this.regionDataFromServer.filter((item) => {
+      const itemDate = new Date(item.date);
+      return itemDate >= startDate && itemDate <= endDate;
+    });
+
+  }
+
+  private reCreateLineChart() {
+    d3.select(this.chartContainer.nativeElement).select('svg').remove();
+    this.createLineChart();
+  }
+  private getMinMaxTemperatures( datas: ITemperature[]): [number, number] {
+    const temperatureValues = datas.map(item => item.temp_avg);
+
+    const minTemp = Math.min(...temperatureValues) ;
+
+    const maxTemp =  Math.max(...temperatureValues) ;
+
+    return [minTemp, maxTemp];
+  }
+
+  private getMinMaxDate(datas: ITemperature[]) {
+    const DateValues = datas.map(item =>new Date(item.date).getTime() );
+
+    const startDate = Math.min(...DateValues) ;
+
+    const endDate =  Math.max(...DateValues) ;
+    console.log("getMinMaxDate")
+    console.log([startDate, endDate])
+    return [startDate, endDate];
+  }
 }

@@ -1,7 +1,7 @@
-<div class="slider-container transparent-bg">
-  <mat-slider
-    [min]="minValue"
-    [max]="maxValue"
+<div class="slider-container" *ngIf="startDate > 0">
+  <mat-slider class="custom-slider"
+    [min]="startDate"
+    [max]="endDate"
     (input)="onSliderChange()"
     [discrete]="true"
     [displayWith]="display"

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatSliderChange} from "@angular/material/slider";
 
 @Component({
@@ -6,18 +6,22 @@ import {MatSliderChange} from "@angular/material/slider";
   templateUrl: './time-brush.component.html',
   styleUrls: ['./time-brush.component.css']
 })
-export class TimeBrushComponent {
-  // @Output() rangeChanged = new EventEmitter<Date[]>();
-  minValue: number;
-  maxValue: number;
+export class TimeBrushComponent implements OnInit{
+  @Output() rangeChanged = new EventEmitter<Date[]>();
+
+  @Input() startDate=0;
+
+  @Input() endDate=0;
   sliderValues: number[] = [];
 
 
   constructor() {
-    this.minValue = new Date('2023-05-01').getTime();
-    this.maxValue = new Date('2023-05-25').getTime();
-    // Initialiser les valeurs du curseur (début et fin) avec les valeurs minimales et maximales
-    this.sliderValues = [this.minValue, this.maxValue];
+
+  }
+
+  ngOnInit(): void {
+    console.log( [this.startDate, this.endDate]);
+    this.sliderValues = [this.startDate, this.endDate];
   }
 
 
@@ -25,8 +29,7 @@ export class TimeBrushComponent {
     const startDate = new Date(this.sliderValues[0]);
     const endDate = new Date(this.sliderValues[1]);
 
-    console.log('Début :', this.sliderValues[0]);
-    console.log('Fin :', this.sliderValues[1]);
+    this.rangeChanged.emit([startDate,endDate]);
 
   }
 

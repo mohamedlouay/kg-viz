@@ -8,10 +8,7 @@
   margin-left: 35%;
 }
 
-#charts{
-  position: absolute;
-  z-index: 1005;
-}
+
 
 #map {
   position:relative;
