@@ -14,18 +14,13 @@ export class ParameterFilterComponent {
     'rain',
     'temperature'
   ]
+   public layerType: string | undefined;
 
-  selectParameter(parameter: string) {
-    console.log("clicked on: ", parameter);
-    //var color = document.getElementById(parameter)!.style.setProperty('color','red');// .color;
-    document.body.style.background = 'yellow';
-    for (const param in this.parameterList) {
-      if(this.parameterList[param] != parameter) {
-        document.getElementById(parameter)!.style.color = 'white';
-      }
-    }
+  ngOnInit(){
+    this.loadRain();
+    this.getButtonClass('rain');
+    this.layerType = "station";
   }
-
 
   getButtonClass(name: string) {
     return {

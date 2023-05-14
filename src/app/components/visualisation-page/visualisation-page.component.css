@@ -1,6 +1,11 @@
 .container{
 }
 
+mat-button-toggle {
+  position: absolute;
+  z-index: 1001;
+}
+
 #title{
   position: absolute;
   z-index: 1001;
@@ -19,4 +24,14 @@
   margin-top: 50px;
   margin-left: 25px;
   z-index: 1001
+}
+
+#brush {
+  margin-top: 500px;
+  padding-left: 20px;
+  padding-right: 20px;
+  position: absolute;
+  z-index: 1001;
+  background: transparent;
+  border: transparent;
 }

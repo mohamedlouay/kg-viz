@@ -1,5 +1,12 @@
-<div class="box" fxLayout="row" fxLayoutGap="30px">
-  <div class="line" fxLayout="column" fxLayoutGap="30px">
+
+<div class="box" fxLayout="column" fxLayoutGap="15px">
+  <div fxFlexAlign="center">
+    <mat-button-toggle-group [(ngModel)]="layerType" appearance="legacy">
+      <mat-button-toggle value="station">Station</mat-button-toggle>
+      <mat-button-toggle value="région">Région</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <div class="line" fxLayout="row" fxLayoutGap="30px">
     <button [ngClass]="getButtonClass('temperature')" (click)="loadTemperature()" id="temperature">
       <span><i class="fa-solid fa-temperature-high fa-xl"></i>  Temperature</span>
     </button>
@@ -8,7 +15,7 @@
     </button>
   </div>
 
-  <div class="line" fxLayout="column" fxLayoutGap="30px">
+  <div class="line" fxLayout="row" fxLayoutGap="30px">
     <button [ngClass]="getButtonClass('humidity')" (click)="loadHumidity()" id="humidity">
       <span><i class="fa-solid fa-droplet fa-xl"></i>  Humidity</span>
     </button>

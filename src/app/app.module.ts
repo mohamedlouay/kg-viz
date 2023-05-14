@@ -16,6 +16,9 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import {DropDownButtonModule} from "@syncfusion/ej2-angular-splitbuttons";
 import { TimeBrushComponent } from './components/time-brush/time-brush.component';
 import {NpnSliderModule} from "npn-slider";
+import {Ng5SliderModule} from "ng5-slider";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -35,8 +38,11 @@ import {NpnSliderModule} from "npn-slider";
         FlexLayoutModule,
         DropDownButtonModule,
         NpnSliderModule,
+        Ng5SliderModule,
         LeafletD3Module,
-        LeafletModule
+        LeafletModule,
+        MatButtonToggleModule,
+        FormsModule
     ],
 
   providers: [],

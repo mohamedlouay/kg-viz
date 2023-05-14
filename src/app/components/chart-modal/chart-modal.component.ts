@@ -37,13 +37,9 @@ export class ChartModalComponent implements OnInit {
       this.listStations = this.extractListStation();
       this.createLineChart();
     })
-
-
-
   }
+
   ngOnInit() {
-
-
   }
 
   private createLineChart(): void {
@@ -53,9 +49,6 @@ export class ChartModalComponent implements OnInit {
       .attr('height', this.height + this.margin.top + this.margin.bottom)
       .append('g')
       .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
-
-
-
 
 
     // Set the scales
@@ -144,9 +137,8 @@ export class ChartModalComponent implements OnInit {
       .attr('x', 20)
       .attr('y', 5)
       .attr('dy', '1.5em')
-      .text(d => d);
+      .text((d) => d);
   }
-
 
 
 }
