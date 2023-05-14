@@ -55,5 +55,13 @@ Assurez-vous de disposer des versions spécifiées de Node.js et d'Angular CLI p
 3. Poussez les modifications vers la branche (`git push origin ma-branche`)
 4. Soumettez une demande d'extraction (Pull Request).
 
-Veuillez vous assurer de respecter les normes de codage, les conventions de dénomination et d'inclure la
+Veuillez vous assurer de respecter les normes de codage, les conventions de dénomination et d'inclure la documentation appropriée pour toutes les modifications apportées.
+
+## Ressources utiles
+
+- [Documentation officielle d'Angular](https://angular.io/docs)
+- [Tutoriels Angular](https://angular.io/tutorial)
+
+N'hésitez pas à nous contacter en cas de questions ou de problèmes.
+
 
