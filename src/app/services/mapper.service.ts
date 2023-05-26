@@ -34,13 +34,19 @@ export class MapperService {
         let longitude = binding.long ? binding.long.value : null;
         let temp_avg = binding.temp_avg ? binding.temp_avg.value : null;
         let rain = binding.rain ? binding.rain.value : null;
+        let speed = binding.speed ? binding.speed : null;
+        let angle = binding.angle ? binding.angle: null;
+        let humidity = binding.humidity ? binding.humidity: null;
 
         let data: Station = {
           nom: nom as string,
           latitude: latitude as number,
           longitude: longitude as number,
           temp_avg: temp_avg as number,
-          rain: rain as number
+          rain: rain as number,
+          speed: speed as number,
+          angle: angle as number,
+          humidity: humidity as number
         };
         stations.push(data);
       }

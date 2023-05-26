@@ -167,4 +167,92 @@ SELECT ?insee ?label ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg)   WH
 ORDER BY ?temp_avg`;
     return query;
   }
+
+  buildQuery_getAllStationsAvgWindSpeed() {
+    var query = `PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wd:   <http://www.wikidata.org/entity/>
+prefix weo:  <http://ns.inria.fr/meteo/ontology/>
+prefix wevf: <http://ns.inria.fr/meteo/vocab/meteorologicalfeature/>
+prefix wevp: <http://ns.inria.fr/meteo/vocab/weatherproperty/>
+select  ?stationID ?StationName ?time ?speed where
+{
+  ?obs a  weo:MeteorologicalObservation;
+sosa:observedProperty
+              wevp:windAverageSpeed ;
+sosa:hasSimpleResult ?speed;
+wep:madeByStation ?station ;
+sosa:resultTime ?time .
+?station rdfs:label ?StationName ; weo:stationID ?stationID .
+FILTER(?time>= xsd:date("2021-01-01"))
+FILTER(?time < xsd:date("2021-12-31"))
+}
+ORDER BY ?time;`
+    return query;
+  }
+
+  buildQuery_getAllStationsAvgWindDirection() {
+    var query = `PREFIX sosa: <http://www.w3.org/ns/sosa/>
+    PREFIX qudt: <http://qudt.org/schema/qudt/>
+    PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX sosa: <http://www.w3.org/ns/sosa/>
+    PREFIX qudt: <http://qudt.org/schema/qudt/>
+    PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX wd:   <http://www.wikidata.org/entity/>
+    prefix weo:  <http://ns.inria.fr/meteo/ontology/>
+    prefix wevf: <http://ns.inria.fr/meteo/vocab/meteorologicalfeature/>
+    prefix wevp: <http://ns.inria.fr/meteo/vocab/weatherproperty/>
+    select  ?stationID ?StationName ?time ?angle ?speed where
+      {
+        ?obs a  weo:MeteorologicalObservation;
+    sosa:observedProperty
+    wevp:windAverageDirection;
+    sosa:hasSimpleResult ?angle;
+    wep:madeByStation ?station ;
+    sosa:resultTime ?time .
+      ?station rdfs:label ?StationName ; weo:stationID ?stationID .
+      FILTER(?time>= xsd:date("2021-01-01"))
+      FILTER(?time < xsd:date("2021-12-31"))
+  }
+    ORDER BY ?time`
+    return query;
+  }
+
+  buildQuery_getAllStationsAvgHumidity() {
+    var query = `PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wd:   <http://www.wikidata.org/entity/>
+prefix weo:  <http://ns.inria.fr/meteo/ontology/>
+prefix wevf: <http://ns.inria.fr/meteo/vocab/meteorologicalfeature/>
+prefix wevp: <http://ns.inria.fr/meteo/vocab/weatherproperty/>
+select  ?stationID ?StationName ?time ?humidity where
+{
+  ?obs a  weo:MeteorologicalObservation;
+sosa:observedProperty
+              wevp:airRelativeHumidity ;
+sosa:hasSimpleResult ?humidity;
+wep:madeByStation ?station ;
+sosa:resultTime ?time .
+?station rdfs:label ?StationName ; weo:stationID ?stationID .
+FILTER(?time>= xsd:date("2021-01-01"))
+FILTER(?time < xsd:date("2021-12-31"))
+}
+ORDER BY ?time`
+    return query;
+  }
+
 }

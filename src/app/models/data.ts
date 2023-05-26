@@ -11,4 +11,7 @@ export interface Station {
   latitude: number;
   temp_avg: number;
   rain: number;
+  speed: number;
+  angle: number;
+  humidity: number;
 }
