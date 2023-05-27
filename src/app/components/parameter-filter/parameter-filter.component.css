@@ -6,6 +6,10 @@
   margin-left: 45px;
 }
 
+.root{
+  --color: #f89146;
+}
+
 mat-button-toggle-group{
   border-radius: 30px;
 }
@@ -26,7 +30,7 @@ mat-button-toggle {
   border: transparent;
   border-radius: 30px;
   cursor: pointer;
-  background-color: #f89146;
+  background-color: var(--color);
   font-size: 14px;
 }
 
@@ -46,11 +50,11 @@ button {
 }
 
 button:hover {
-  background: #f89146;
+  background: var(--color);
 }
 .active{
   color: black;
-  background: #f89146;
+  background: var(--color);
 
 }
 

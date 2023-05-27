@@ -3,7 +3,7 @@
     <app-information-layer></app-information-layer>
   </div>
   <div id="filter">
-    <app-parameter-filter (parameterSelected)="switchParameter($event)"  (layerSelected)="switchLayer($event)"></app-parameter-filter>
+    <app-parameter-filter [buttonColor]="color3" (parameterSelected)="switchParameter($event)"  (layerSelected)="switchLayer($event)"></app-parameter-filter>
   </div>
   <div id="map">
     <app-map [parameterSelected]="parameterChosen" [layerSelected]="activeLayer"></app-map>

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'app-parameter-filter',
@@ -9,6 +9,7 @@ export class ParameterFilterComponent {
   @Output() activeButton: string = "";
   @Output() parameterSelected = new EventEmitter<string>();
   @Output() layerSelected = new EventEmitter<string>();
+  @Input() buttonColor!:string;
 
   private parameterList : string[] = [
     'wind',
@@ -24,9 +25,14 @@ export class ParameterFilterComponent {
   ngOnInit(){
     this.loadTemperature();
     this.getButtonClass('temperature');
+    document.documentElement.style.setProperty('--color', this.buttonColor+''); //suffix may be px or ''
     this.layerType = "région";
     this.activeButton = 'temperature';
     this.regionStation('région');
+  }
+
+  ngOnChanges(){
+    document.documentElement.style.setProperty('--color', this.buttonColor+''); //suffix may be px or ''
   }
 
   getButtonClass(name: string) {

@@ -37,8 +37,8 @@ export class VisualisationPageComponent {
   legendColorGetter(activeLayerParameter: string){
    if(activeLayerParameter == 'rain'){
      this.color5 = 'white';
-     this.color4 = '#7DF9FF';
-     this.color3 = '#ADD8E6';
+     this.color4 = '#ADD8E6';
+     this.color3 = '#7DF9FF';
      this.color2 = '#0000FF';
      this.color1 = '#00008B'
    }
