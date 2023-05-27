@@ -8,6 +8,7 @@ import {Component, EventEmitter, Output} from '@angular/core';
 export class ParameterFilterComponent {
   @Output() activeButton: string = "";
   @Output() parameterSelected = new EventEmitter<string>();
+  @Output() layerSelected = new EventEmitter<string>();
 
   private parameterList : string[] = [
     'wind',
@@ -18,25 +19,26 @@ export class ParameterFilterComponent {
    public layerType: string | undefined;
 
   constructor() {
-
   }
 
   ngOnInit(){
-    this.loadRain();
-    this.getButtonClass('rain');
-    this.layerType = "station";
-    this.activeButton = 'region'
+    this.loadTemperature();
+    this.getButtonClass('temperature');
+    this.layerType = "région";
+    this.activeButton = 'temperature';
+    this.regionStation('région');
   }
-
 
   getButtonClass(name: string) {
     return {
       'active': this.activeButton === name
     };
   }
+
   regionStation(input: string) {
-    this.parameterSelected.emit(input);
+    this.layerSelected.emit(input);
   }
+
   loadTemperature() {
     this.activeButton = 'temperature';
     this.parameterSelected.emit(this.activeButton);

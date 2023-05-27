@@ -32,18 +32,24 @@ export class LegendColorChartComponent {
     //creating space between each indicator text legend
     for (let x = 0; x < numberOfIndicators; x++) {
       let topValue = this.counter + "px";
-      this.indicators[x].setAttribute("style", "top:"+topValue);
+      this.indicators[x].setAttribute("style", "top:" + topValue);
       this.counter += barHeight / numberOfIndicators + 3;
-      console.log("counter: ",this.counter);
+      console.log("counter: ", this.counter);
     }
+    this.changeColor();
+  }
+
+  ngOnChanges(){
+    this.changeColor();
+  }
 
     //changing gradient colors
-    document.documentElement.style.setProperty('--color1', this.color1+''); //suffix may be px or ''
-    document.documentElement.style.setProperty('--color2', this.color2+''); //suffix may be px or ''
-    document.documentElement.style.setProperty('--color3', this.color3+''); //suffix may be px or ''
-    document.documentElement.style.setProperty('--color4', this.color4+''); //suffix may be px or ''
-    document.documentElement.style.setProperty('--color5', this.color5+''); //suffix may be px or ''
-
+  changeColor(){
+      document.documentElement.style.setProperty('--color1', this.color1+''); //suffix may be px or ''
+      document.documentElement.style.setProperty('--color2', this.color2+''); //suffix may be px or ''
+      document.documentElement.style.setProperty('--color3', this.color3+''); //suffix may be px or ''
+      document.documentElement.style.setProperty('--color4', this.color4+''); //suffix may be px or ''
+      document.documentElement.style.setProperty('--color5', this.color5+''); //suffix may be px or ''
   }
 
 

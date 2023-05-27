@@ -26,27 +26,22 @@ export class MapComponent {
   options: any;
   hexLayer: any;
   hexLayerRain: any;
-
   stationsData: Station[] = [];
-  //mymap: L.Map;
-
   regionLayer: any;
-
   mymap: any;
 
-  @Input() layer: string | undefined;
+  @Input() layerSelected: string | undefined;
+  @Input() parameterSelected!:string;
   @Output() colors : string[] | undefined;
 
   private hexbinOptions!: HexbinLayerConfig;
 
-  constructor(
-    private dialog: MatDialog,
-    private dataService: DataService,
-    private mapperService: MapperService
-  ) {
-    this.colors = ['white', 'yellow', 'orange', 'red'];
-  }
+  constructor(private dialog: MatDialog, private dataService: DataService, private mapperService: MapperService) {
+    this.colors = ['white', 'yellow', 'orange', 'red'];}
 
+  /**
+   *
+   */
   ngOnInit(): void {
 
     this.hexbinOptions = {
@@ -191,7 +186,13 @@ export class MapComponent {
       //this.createRainLayer(this.stationsData, mymap);
     });
 
+    this.switchLayer();
+
   }
+
+  /**
+   *
+   */
   async addRegionLayer() {
     return fetch(
       'https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions.geojson'
@@ -240,6 +241,10 @@ export class MapComponent {
        // this.regionLayer.addTo(this.mymap);
       });
   }
+
+  /**
+   *
+   */
   async getData() {
     let data: any[][] = [];
       this.dataService.getTemperaturePerStation().subscribe((weather) => {
@@ -250,6 +255,10 @@ export class MapComponent {
       });
     return data;
   }
+
+  /**
+   *
+   */
   async getRainData(){
     let data: any[][] = [];
     this.dataService.getRainPerStation().subscribe((weather) => {
@@ -261,6 +270,9 @@ export class MapComponent {
     return data;
   }
 
+  /**
+   *
+   */
   async getWindData(){
     let data: any[][] = [];
     let tempData : Station[];
@@ -276,6 +288,9 @@ export class MapComponent {
     return data;
     };
 
+  /**
+   *
+   */
     async getWindDirectionData(){
       let data: any[][] = [];
       let tempData : Station[];
@@ -288,7 +303,10 @@ export class MapComponent {
         return data;
     }
 
-    async combineWindSpeedDirection(){
+  /**
+   *
+   */
+  async combineWindSpeedDirection(){
       let data: any[][] = [];
       setTimeout(() => {
 
@@ -310,16 +328,23 @@ export class MapComponent {
       }
       })
       });
-    console.log(" combine ? ", data);
-return data;   }, 2000);
+      console.log(" combine ? ", data);
+      return data;   }, 2000);
     }
 
-
+  /**
+   *
+   */
   ngOnChanges() {
       this.switchLayer();
   }
+
+  /**
+   *
+   */
   switchLayer() {
-    switch (this.layer) {
+    console.log(this.layerSelected)
+    switch (this.layerSelected) {
       case 'station':
         this.colors = ['white', 'yellow', 'orange', 'red'];
         if(this.mymap.hasLayer(this.hexLayerRain)){
@@ -328,18 +353,20 @@ return data;   }, 2000);
         if(this.mymap.hasLayer(this.regionLayer)){
           this.mymap.removeLayer(this.regionLayer);
         }
-        this.mymap.addLayer(this.hexLayer);
-        break;
-      case 'temperature':
-        this.colors = ['white', 'yellow', 'orange', 'red'];
-        if(this.mymap.hasLayer(this.hexLayerRain)){
-          this.mymap.removeLayer(this.hexLayerRain);
+        if(this.mymap.hasLayer(this.hexLayer)){
+          this.mymap.removeLayer(this.hexLayer);
         }
-        if(this.mymap.hasLayer(this.regionLayer)){
-          this.mymap.removeLayer(this.regionLayer);
+        if(this.parameterSelected == 'temperature'){
+          this.colors = ['white', 'yellow', 'orange', 'red'];
+          this.mymap.addLayer(this.hexLayer);
         }
-        this.mymap.addLayer(this.hexLayer);
+        if(this.parameterSelected == 'rain'){
+          this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B'];
+          this.mymap.addLayer(this.hexLayerRain);
+        }
+        //this.switchParameter(this.parameterSelected);
         break;
+
       case 'région':
         if(this.mymap.hasLayer(this.hexLayerRain)){
           this.mymap.removeLayer(this.hexLayerRain);
@@ -347,20 +374,29 @@ return data;   }, 2000);
         if(this.mymap.hasLayer(this.hexLayer)){
           this.mymap.removeLayer(this.hexLayer);
         }
-        this.mymap.addLayer(this.regionLayer);
-        break;
-      case 'rain':
-        this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B'];
         if(this.mymap.hasLayer(this.regionLayer)){
           this.mymap.removeLayer(this.regionLayer);
         }
-        if(this.mymap.hasLayer(this.hexLayer)){
-          this.mymap.removeLayer(this.hexLayer);
+        if(this.parameterSelected == 'temperature'){
+          this.colors = ['white', 'yellow', 'orange', 'red'];
+          this.mymap.addLayer(this.regionLayer);
         }
-        this.mymap.addLayer(this.hexLayerRain);
+        if(this.parameterSelected == 'rain'){
+          this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B'];
+          this.mymap.addLayer(this.hexLayerRain);
+        }
+        //this.switchParameter(this.parameterSelected);
         break;
+
     }
   }
+
+
+  /**
+   *
+   * @param stations
+   * @param mymap
+   */
   async createRainLayer(stations: any[], mymap: L.Map) {
     var stationsCoordinates: Station[];
       this.dataService.getRainPerStation().subscribe((weather) => {
