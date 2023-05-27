@@ -4,6 +4,7 @@ import { DataJson } from '../constants/fake';
 import { QueryBuilderService } from './query-builder.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IWeather } from '../models/dataFromServeur';
+import {IAvgTempPerRegion} from "../models/data";
 
 @Injectable({
   providedIn: 'root',
@@ -11,14 +12,24 @@ import { IWeather } from '../models/dataFromServeur';
 export class DataService {
   private apiUrl = 'https://weakg.i3s.unice.fr/sparql';
 
+  initAvgTempPerRegionData : IAvgTempPerRegion[] | undefined;
+
   constructor(
     private mapperService: MapperService,
     private queryBuilderService: QueryBuilderService,
     private http: HttpClient
-  ) {}
+  ) {
 
-  getData() {
-    return this.mapperService.weatherToTemperature(DataJson);
+    this.getAvgTempPerRegion().subscribe(data=>{
+      this.initAvgTempPerRegionData = this.mapperService.weatherToAvgTempPerRegion(data);
+    });
+
+  }
+
+  getAvgTempPerRegion() {
+    const query = this.queryBuilderService.getAvgTempPerRegion();
+    const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;
+    return this.http.get<IWeather>(url);
   }
 
   getTemperaturePerRegion(ResgionCode: number) {
@@ -41,4 +52,5 @@ export class DataService {
     const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;
     return this.http.get<IWeather>(url);
   }
+
 }

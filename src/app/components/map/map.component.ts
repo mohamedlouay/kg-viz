@@ -1,17 +1,13 @@
-import { Component } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common'
-import { MatDialog } from '@angular/material/dialog';
+import {Component} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import * as d3 from 'd3';
 import * as hexbin from 'd3-hexbin';
-import { select } from 'd3-selection';
 import * as L from 'leaflet';
-import * as Ld3 from '@asymmetrik/leaflet-d3';
-import { ChartModalComponent } from '../chart-modal/chart-modal.component';
-import { HexbinLayerConfig } from 'leaflet';
-import { DataService } from '../../services/data.service';
-import { MapperService } from '../../services/mapper.service';
-import { Station } from '../../models/data';
-import { Observable, Subscriber } from 'rxjs';
+import {HexbinLayerConfig} from 'leaflet';
+import {ChartModalComponent} from '../chart-modal/chart-modal.component';
+import {DataService} from '../../services/data.service';
+import {MapperService} from '../../services/mapper.service';
+import {IAvgTempPerRegion, Station} from '../../models/data';
 
 @Component({
   selector: 'app-map',
@@ -62,34 +58,14 @@ export class MapComponent {
     )
       .then((response) => response.json())
       .then((data) => {
-        // Calcul de la valeur maximale de la densité de population
-        var maxPopulationDensity = 0;
-        data.features.forEach((region: any) => {
-          var populationDensity = region.properties.code;
-          if (populationDensity > maxPopulationDensity) {
-            maxPopulationDensity = populationDensity;
-          }
-        });
 
-        // Création d'une fonction de couleur pour la choropleth map
-        function getColor(d: number) {
-          return d > maxPopulationDensity * 0.8
-            ? '#bd0327'
-            : d > maxPopulationDensity * 0.6
-            ? '#f03b20'
-            : d > maxPopulationDensity * 0.4
-            ? '#fd8d3c'
-            : d > maxPopulationDensity * 0.2
-            ? '#feb24c'
-            : '#fed976';
-        }
 
         // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
         var regionLayer = L.geoJSON(data, {
-          style: function (feature) {
-            var populationDensity = feature!.properties.code;
+          style: (feature) => {
+            var regionIsee = feature!.properties.code;
             return {
-              fillColor: getColor(populationDensity),
+              fillColor:this.colorMapByTemperature(regionIsee),
               fillOpacity: 0.75,
               weight: 1,
               color: 'black',
@@ -198,4 +174,31 @@ export class MapComponent {
   }
 
   protected readonly console = console;
+
+
+ colorMapByTemperature(isee: string) {
+
+   let temperatureData: IAvgTempPerRegion[] = this.dataService.initAvgTempPerRegionData!;
+   console.log(temperatureData);
+   // Calculate the average temperature
+   let averageTemperature = temperatureData.reduce((sum, data) => sum  + Number(data.temp_avg), 0) / temperatureData.length;
+   console.log(averageTemperature);
+   averageTemperature = 24 ;
+
+   // Calculate the standard deviation of temperatures
+   const standardDeviation = Math.sqrt(temperatureData.reduce((sum, data) => sum + Math.pow(data.temp_avg - averageTemperature, 2), 0) / temperatureData.length);
+
+   // Define the color scale
+   const colorScale = d3.scaleLinear<string>()
+     .domain([averageTemperature - standardDeviation, averageTemperature, averageTemperature + standardDeviation])
+     .range([ "#fed976", "#fd8d3c"]);
+
+   let temperature = temperatureData.find(region => region.isee === isee)!.temp_avg;
+   console.log(colorScale(temperature));
+   // return the color
+   return colorScale(temperature);
+ }
+
+
+
 }

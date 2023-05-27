@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ITemperature, Station } from '../models/data';
+import {IAvgTempPerRegion, ITemperature, Station} from '../models/data';
 import { IWeather } from '../models/dataFromServeur';
 
 @Injectable({
@@ -45,4 +45,23 @@ export class MapperService {
     }
     return stations;
   }
+
+  weatherToAvgTempPerRegion(weatherJson: IWeather): IAvgTempPerRegion[] {
+    const temperatures: IAvgTempPerRegion[] = [];
+    if (weatherJson.results.bindings) {
+      for (const binding of weatherJson.results.bindings) {
+        const temperature: IAvgTempPerRegion = {
+          region: binding.label.value,
+          temp_avg: binding.temp_avg.value,
+          isee: binding.insee.value
+        };
+        temperatures.push(temperature);
+      }
+    }
+
+    return temperatures;
+  }
+
+
+
 }

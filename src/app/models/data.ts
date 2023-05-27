@@ -5,6 +5,13 @@ export interface ITemperature {
   region: string;
 }
 
+export interface IAvgTempPerRegion {
+  isee: string;
+  temp_avg: number;
+  region: string;
+}
+
+
 export interface Station {
   longitude: number;
   latitude: number;
