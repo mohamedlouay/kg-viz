@@ -18,6 +18,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatInputModule} from "@angular/material/input";
 import {MatSliderModule} from "@angular/material/slider";
 import {FormsModule} from "@angular/forms";
+import { LegendColorChartComponent } from './components/legent-color-chart/legend-color-chart.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import {FormsModule} from "@angular/forms";
     ParameterFilterComponent,
     InformationLayerComponent,
     TimeBrushComponent,
+    LegendColorChartComponent,
   ],
   imports: [
     BrowserModule,
