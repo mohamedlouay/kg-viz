@@ -1,4 +1,8 @@
-.container{
+#legend-chart{
+  position: absolute;
+  margin-top: 25px;
+  margin-left: 90%;
+  z-index: 1001
 }
 
 mat-button-toggle {
@@ -12,8 +16,6 @@ mat-button-toggle {
   text-align: center;
   margin-left: 35%;
 }
-
-
 
 #map {
   position:relative;

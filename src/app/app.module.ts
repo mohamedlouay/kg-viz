@@ -13,15 +13,15 @@ import { ParameterFilterComponent } from './components/parameter-filter/paramete
 import { InformationLayerComponent } from './components/information-layer/information-layer.component';
 import { LeafletD3Module } from '@asymmetrik/ngx-leaflet-d3';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { DropDownButtonModule } from '@syncfusion/ej2-angular-splitbuttons';
 import { TimeBrushComponent } from './components/time-brush/time-brush.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatInputModule} from "@angular/material/input";
+import {MatSliderModule} from "@angular/material/slider";
+import {FormsModule} from "@angular/forms";
+import {LegendColorChartComponent} from "./components/legent-color-chart/legend-color-chart.component";
 import { NpnSliderModule } from 'npn-slider';
 import { Ng5SliderModule } from 'ng5-slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatInputModule } from '@angular/material/input';
-import { MatSliderModule } from '@angular/material/slider';
-import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -32,6 +32,7 @@ import { FormsModule } from '@angular/forms';
     ParameterFilterComponent,
     InformationLayerComponent,
     TimeBrushComponent,
+    LegendColorChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,9 +46,8 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     MatSliderModule,
     FormsModule,
-    MatButtonToggleModule,
+    MatButtonToggleModule
   ],
-
   providers: [],
   bootstrap: [AppComponent],
 })
