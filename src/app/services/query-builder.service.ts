@@ -75,7 +75,7 @@ export class QueryBuilderService {
             PREFIX dct: <http://purl.org/dc/terms/>
             PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 
-SELECT distinct ?Nstation (AVG(?rainfall24h)) as ?rain ?label ?insee WHERE
+SELECT distinct ?Nstation (AVG(?rainfall24h)) as ?rain ?label ?insee ?latitude ?long WHERE
     {
         VALUES ?year  {"2021"^^xsd:gYear}
         ?s  a qb:Slice ;
@@ -89,9 +89,12 @@ SELECT distinct ?Nstation (AVG(?rainfall24h)) as ?rain ?label ?insee WHERE
         ?station a weo:WeatherStation ; dct:spatial ?e; rdfs:label ?Nstation.
         ?e wdt:P131 ?item .
         ?item rdfs:label ?label ; wdt:P2585  ?insee .
+?station geo:lat ?latitude .
+?station geo:long ?long.
+FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
         #BIND(month(?date) as ?month)
     }
-    GROUP BY ?Nstation ?label ?insee
+    GROUP BY ?Nstation ?label ?insee ?long ?latitude
     ORDER BY ?Nstation
     `;
     return query;
@@ -159,6 +162,7 @@ SELECT ?insee ?label ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg)   WH
       ?item rdfs:label ?label ; wdt:P2585 ?insee.
 ?station geo:lat ?latitude .
 ?station geo:long ?long.
+FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
     FILTER (?date >= xsd:date('2020-05-01'))
    FILTER (?date <= xsd:date('2021-05-30'))
       }
@@ -190,6 +194,7 @@ sosa:hasSimpleResult ?speed;
 wep:madeByStation ?station ;
 sosa:resultTime ?time .
 ?station rdfs:label ?StationName ; weo:stationID ?stationID .
+FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
 FILTER(?time>= xsd:date("2021-01-01"))
 FILTER(?time < xsd:date("2021-12-31"))
 }
@@ -218,6 +223,7 @@ ORDER BY ?time;`
     sosa:hasSimpleResult ?angle;
     wep:madeByStation ?station ;
     sosa:resultTime ?time .
+    FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
       ?station rdfs:label ?StationName ; weo:stationID ?stationID .
       FILTER(?time>= xsd:date("2021-01-01"))
       FILTER(?time < xsd:date("2021-12-31"))
@@ -247,6 +253,7 @@ sosa:observedProperty
 sosa:hasSimpleResult ?humidity;
 wep:madeByStation ?station ;
 sosa:resultTime ?time .
+FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
 ?station rdfs:label ?StationName ; weo:stationID ?stationID .
 FILTER(?time>= xsd:date("2021-01-01"))
 FILTER(?time < xsd:date("2021-12-31"))

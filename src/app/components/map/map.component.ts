@@ -25,6 +25,8 @@ export class MapComponent {
   colorScale: any;
   options: any;
   hexLayer: any;
+  hexLayerRain: any;
+
   stationsData: Station[] = [];
   //mymap: L.Map;
 
@@ -133,22 +135,15 @@ export class MapComponent {
         [41, -5],
         [51, 10],
       ])),
-        (this.colorScale = d3
-          .scaleLinear()
-          .domain([5, 15, 18, 28])
-          .range([0, 5, 10, 30]));
 
       this.hexLayer = L.hexbinLayer(this.hexbinOptions);
-      this.hexLayer.colorScale(this.colorScale);
-      this.hexLayer.colorRange(['white', 'yellow', 'orange', 'red', 'darkred']);
-
-      // Use the getData function to access the fully populated data
+      this.hexLayer.colorRange(['white', 'yellow', 'orange', 'red']);
       this.getData().then((data) => {
+        console.log("temp data: ", data);
         this.hexLayer._data = data;
       });
-
       this.hexLayer
-        .radiusRange([10, 15, 20, 25, 30])
+        .radiusRange([12, 18, 25, 30])
         .lng(function (d: any[]) {
           return d[0];
         })
@@ -157,6 +152,30 @@ export class MapComponent {
         })
         .colorValue(function (d: any[]) {
           return parseInt(d[0]['o'][2]);
+        })
+        .radiusValue(function (d: any[]) {
+          return parseInt(d[0]['o'][2]);
+        });
+
+      this.hexLayerRain = L.hexbinLayer(this.hexbinOptions);
+
+      this.hexLayerRain.colorRange(['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B']);
+
+      this.getRainData().then((data) => {
+        this.hexLayerRain._data = data;
+        console.log("rain data: " ,this.hexLayerRain._data);
+      });
+      this.hexLayerRain
+        .radiusRange([15, 18, 20, 24, 28, 32])
+        .lng(function (d: any[]) {
+          return d[0];
+        })
+        .lat(function (d: any[]) {
+          return d[1];
+        })
+        .colorValue(function (d: any[]) {
+          console.log('rain ? ', parseInt(String(parseFloat(d[0]['o'][2]) * 10)));
+          return parseInt(String(parseFloat(d[0]['o'][2]) * 10));
         })
         .radiusValue(function (d: any[]) {
           return parseInt(d[0]['o'][2]);
@@ -217,10 +236,20 @@ export class MapComponent {
   }
   async getData() {
     let data: any[][] = [];
-    this.dataService.getTemperaturePerStation().subscribe((weather) => {
+      this.dataService.getTemperaturePerStation().subscribe((weather) => {
+        this.stationsData = this.mapperService.weatherToStation(weather);
+        this.stationsData.forEach((station) => {
+          data.push([station.longitude, station.latitude, station.temp_avg]);
+        });
+      });
+    return data;
+  }
+  async getRainData(){
+    let data: any[][] = [];
+    this.dataService.getRainPerStation().subscribe((weather) => {
       this.stationsData = this.mapperService.weatherToStation(weather);
       this.stationsData.forEach((station) => {
-        data.push([station.longitude, station.latitude, station.temp_avg]);
+        data.push([station.longitude, station.latitude, station.rain]);
       });
     });
     return data;
@@ -231,25 +260,49 @@ export class MapComponent {
   switchLayer() {
     switch (this.layer) {
       case 'station':
+        if(this.mymap.hasLayer(this.hexLayerRain)){
+          this.mymap.removeLayer(this.hexLayerRain);
+        }
+        if(this.mymap.hasLayer(this.regionLayer)){
+          this.mymap.removeLayer(this.regionLayer);
+        }
         this.mymap.addLayer(this.hexLayer);
-        this.mymap.removeLayer(this.regionLayer);
+        break;
+      case 'temperature':
+        if(this.mymap.hasLayer(this.hexLayerRain)){
+          this.mymap.removeLayer(this.hexLayerRain);
+        }
+        if(this.mymap.hasLayer(this.regionLayer)){
+          this.mymap.removeLayer(this.regionLayer);
+        }
+        this.mymap.addLayer(this.hexLayer);
         break;
       case 'région':
-        this.mymap.removeLayer(this.hexLayer);
+        if(this.mymap.hasLayer(this.hexLayerRain)){
+          this.mymap.removeLayer(this.hexLayerRain);
+        }
+        if(this.mymap.hasLayer(this.hexLayer)){
+          this.mymap.removeLayer(this.hexLayer);
+        }
         this.mymap.addLayer(this.regionLayer);
+        break;
+      case 'rain':
+        if(this.mymap.hasLayer(this.regionLayer)){
+          this.mymap.removeLayer(this.regionLayer);
+        }
+        if(this.mymap.hasLayer(this.hexLayer)){
+          this.mymap.removeLayer(this.hexLayer);
+        }
+        this.mymap.addLayer(this.hexLayerRain);
         break;
     }
   }
   async createRainLayer(stations: any[], mymap: L.Map) {
     var stationsCoordinates: Station[];
-
-    this.dataService.getTemperaturePerStation().subscribe((weather) => {
-      stationsCoordinates = this.mapperService.weatherToStation(weather);
       this.dataService.getRainPerStation().subscribe((weather) => {
         this.stationsData = this.mapperService.weatherToStation(weather);
-        stationsCoordinates.forEach((st) => {
           this.stationsData.forEach((station) => {
-            var marker = L.marker([st.latitude, st.longitude]).bindTooltip(
+          /*  var marker = L.marker([station.latitude, station.longitude]).bindTooltip(
               station.nom,
               {
                 permanent: false,
@@ -264,9 +317,10 @@ export class MapComponent {
             );
             marker.addTo(this.mymap);
           });
+          */
+
         });
       });
-    });
   }
   private openModal<G, P>(feature: any) {
     const dialogRef = this.dialog.open(ChartModalComponent, {
