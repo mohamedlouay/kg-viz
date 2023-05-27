@@ -18,7 +18,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatInputModule} from "@angular/material/input";
 import {MatSliderModule} from "@angular/material/slider";
 import {FormsModule} from "@angular/forms";
-import { LegendColorChartComponent } from './components/legent-color-chart/legend-color-chart.component';
+import {LegendColorChartComponent} from "./components/legent-color-chart/legend-color-chart.component";
 import { NpnSliderModule } from 'npn-slider';
 import { Ng5SliderModule } from 'ng5-slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -32,6 +32,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     ParameterFilterComponent,
     InformationLayerComponent,
     TimeBrushComponent,
+    LegendColorChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,7 +45,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatTooltipModule,
     MatInputModule,
     MatSliderModule,
-    FormsModule
+    FormsModule,
+    MatButtonToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent],

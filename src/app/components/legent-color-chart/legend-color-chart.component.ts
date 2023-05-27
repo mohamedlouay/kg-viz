@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-legent-color-chart',
+  selector: 'app-legend-color-chart',
   templateUrl: './legend-color-chart.component.html',
   styleUrls: ['./legend-color-chart.component.css']
 })
