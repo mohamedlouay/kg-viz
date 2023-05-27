@@ -19,3 +19,7 @@ mat-dialog-container{
   white-space: nowrap;
  padding-top: 150px;
 }
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  overflow: hidden;
+}
