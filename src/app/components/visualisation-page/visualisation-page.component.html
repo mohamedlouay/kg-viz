@@ -2,16 +2,16 @@
   <div id="title">
     <app-information-layer></app-information-layer>
   </div>
-  <div id="map">
-    <app-map></app-map>
-  </div>
   <div id="filter">
-    <app-parameter-filter></app-parameter-filter>
+    <app-parameter-filter (parameterSelected)="switchLayer($event)"></app-parameter-filter>
+  </div>
+  <div id="map">
+    <app-map [layer]="activeLayer"></app-map>
   </div>
   <div id="legend-chart">
-    <app-legent-color-chart [scale1]="'80°C'" [scale2]="'60°C'" [scale3]="'40°C'" [scale4]="'20°C'" [scale5]="'0°C'"
+    <app-legend-color-chart [scale1]="'80°C'" [scale2]="'60°C'" [scale3]="'40°C'" [scale4]="'20°C'" [scale5]="'0°C'"
     [color1]="'red'" [color2]="'blue'" [color3]="'purple'" [color4]="'yellow'" [color5]="'black'">
-    </app-legent-color-chart>
+    </app-legend-color-chart>
   </div>
 
 </div>

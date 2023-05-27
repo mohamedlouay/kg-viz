@@ -159,8 +159,8 @@ SELECT ?insee ?label ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg)   WH
       ?item rdfs:label ?label ; wdt:P2585 ?insee.
 ?station geo:lat ?latitude .
 ?station geo:long ?long.
-    FILTER (?date >= xsd:date('2021-05-01'))
-   FILTER (?date <= xsd:date('2022-05-30'))
+    FILTER (?date >= xsd:date('2020-05-01'))
+   FILTER (?date <= xsd:date('2021-05-30'))
       }
 
   GROUP BY ?label ?insee ?station ?latitude ?long

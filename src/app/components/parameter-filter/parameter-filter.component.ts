@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
   selector: 'app-parameter-filter',
@@ -6,7 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./parameter-filter.component.css']
 })
 export class ParameterFilterComponent {
-  activeButton: string ="";
+  @Output() activeButton: string = "";
+  @Output() parameterSelected = new EventEmitter<string>();
 
   private parameterList : string[] = [
     'wind',
@@ -14,16 +15,17 @@ export class ParameterFilterComponent {
     'rain',
     'temperature'
   ]
+   public layerType: string | undefined;
 
-  selectParameter(parameter: string) {
-    console.log("clicked on: ", parameter);
-    //var color = document.getElementById(parameter)!.style.setProperty('color','red');// .color;
-    document.body.style.background = 'yellow';
-    for (const param in this.parameterList) {
-      if(this.parameterList[param] != parameter) {
-        document.getElementById(parameter)!.style.color = 'white';
-      }
-    }
+  constructor() {
+
+  }
+
+  ngOnInit(){
+    this.loadRain();
+    this.getButtonClass('rain');
+    this.layerType = "station";
+    this.activeButton = 'region'
   }
 
 
@@ -32,20 +34,27 @@ export class ParameterFilterComponent {
       'active': this.activeButton === name
     };
   }
+  regionStation(input: string) {
+    this.parameterSelected.emit(input);
+  }
   loadTemperature() {
     this.activeButton = 'temperature';
+    this.parameterSelected.emit(this.activeButton);
   }
 
   loadWind() {
     this.activeButton = 'wind';
+    this.parameterSelected.emit(this.activeButton);
   }
 
   loadRain() {
     this.activeButton = 'rain';
+    this.parameterSelected.emit(this.activeButton);
   }
 
   loadHumidity() {
     this.activeButton = 'humidity';
+    this.parameterSelected.emit(this.activeButton);
   }
 
 }

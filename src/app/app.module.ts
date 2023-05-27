@@ -19,6 +19,9 @@ import {MatInputModule} from "@angular/material/input";
 import {MatSliderModule} from "@angular/material/slider";
 import {FormsModule} from "@angular/forms";
 import { LegendColorChartComponent } from './components/legent-color-chart/legend-color-chart.component';
+import { NpnSliderModule } from 'npn-slider';
+import { Ng5SliderModule } from 'ng5-slider';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,6 @@ import { LegendColorChartComponent } from './components/legent-color-chart/legen
     ParameterFilterComponent,
     InformationLayerComponent,
     TimeBrushComponent,
-    LegendColorChartComponent,
   ],
   imports: [
     BrowserModule,
