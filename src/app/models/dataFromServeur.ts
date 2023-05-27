@@ -20,9 +20,9 @@ interface BindingsEntity {
   long: longitude;
   latitude: latitude;
   rain: rain;
-  speed: number;
-  angle: number;
-  humidity: number;
+  speed: speed;
+  angle: angle;
+  humidity: humidity;
 }
 interface nom {
   type: string;
@@ -30,6 +30,21 @@ interface nom {
   value: string;
 }
 
+interface speed {
+  type: string;
+  datatype: string;
+  value: number;
+}
+interface angle {
+  type: string;
+  datatype: string;
+  value: number;
+}
+interface humidity {
+  type: string;
+  datatype: string;
+  value: number;
+}
 interface longitude {
   type: string;
   datatype: string;

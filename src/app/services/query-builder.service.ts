@@ -185,7 +185,7 @@ PREFIX wd:   <http://www.wikidata.org/entity/>
 prefix weo:  <http://ns.inria.fr/meteo/ontology/>
 prefix wevf: <http://ns.inria.fr/meteo/vocab/meteorologicalfeature/>
 prefix wevp: <http://ns.inria.fr/meteo/vocab/weatherproperty/>
-select  ?stationID ?StationName ?time ?speed where
+select  ?stationID ?StationName AVG(?speed) AS ?speed  ?latitude ?long where
 {
   ?obs a  weo:MeteorologicalObservation;
 sosa:observedProperty
@@ -193,12 +193,17 @@ sosa:observedProperty
 sosa:hasSimpleResult ?speed;
 wep:madeByStation ?station ;
 sosa:resultTime ?time .
-?station rdfs:label ?StationName ; weo:stationID ?stationID .
+?station geo:lat ?latitude .
+?station geo:long ?long.
+      ?station rdfs:label ?StationName ;
+           weo:stationID ?stationID ;
+           rdfs:label ?label .
 FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
 FILTER(?time>= xsd:date("2021-01-01"))
 FILTER(?time < xsd:date("2021-12-31"))
 }
-ORDER BY ?time;`
+GROUP BY ?stationID ?StationName ?latitude ?long
+ORDER BY ?stationID`
     return query;
   }
 
@@ -215,7 +220,7 @@ ORDER BY ?time;`
     prefix weo:  <http://ns.inria.fr/meteo/ontology/>
     prefix wevf: <http://ns.inria.fr/meteo/vocab/meteorologicalfeature/>
     prefix wevp: <http://ns.inria.fr/meteo/vocab/weatherproperty/>
-    select  ?stationID ?StationName ?time ?angle ?speed where
+    select  ?stationID ?StationName  AVG(?angle) AS ?angle where
       {
         ?obs a  weo:MeteorologicalObservation;
     sosa:observedProperty
@@ -223,12 +228,16 @@ ORDER BY ?time;`
     sosa:hasSimpleResult ?angle;
     wep:madeByStation ?station ;
     sosa:resultTime ?time .
+      ?station rdfs:label ?StationName ;
+           weo:stationID ?stationID ;
+           rdfs:label ?label .
+
     FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
-      ?station rdfs:label ?StationName ; weo:stationID ?stationID .
       FILTER(?time>= xsd:date("2021-01-01"))
       FILTER(?time < xsd:date("2021-12-31"))
   }
-    ORDER BY ?time`
+GROUP BY ?stationID ?StationName
+ORDER BY ?stationID`
     return query;
   }
 
@@ -245,7 +254,7 @@ PREFIX wd:   <http://www.wikidata.org/entity/>
 prefix weo:  <http://ns.inria.fr/meteo/ontology/>
 prefix wevf: <http://ns.inria.fr/meteo/vocab/meteorologicalfeature/>
 prefix wevp: <http://ns.inria.fr/meteo/vocab/weatherproperty/>
-select  ?stationID ?StationName ?time ?humidity where
+select  ?stationID ?StationName  AVG(?humidity) AS ?humidity where
 {
   ?obs a  weo:MeteorologicalObservation;
 sosa:observedProperty
@@ -253,12 +262,16 @@ sosa:observedProperty
 sosa:hasSimpleResult ?humidity;
 wep:madeByStation ?station ;
 sosa:resultTime ?time .
+      ?station rdfs:label ?StationName ;
+           weo:stationID ?stationID ;
+           rdfs:label ?label .
 FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
 ?station rdfs:label ?StationName ; weo:stationID ?stationID .
 FILTER(?time>= xsd:date("2021-01-01"))
 FILTER(?time < xsd:date("2021-12-31"))
 }
-ORDER BY ?time`
+GROUP BY ?stationID ?StationName
+ORDER BY ?stationID`
     return query;
   }
 

@@ -180,6 +180,10 @@ export class MapComponent {
         .radiusValue(function (d: any[]) {
           return parseInt(d[0]['o'][2]);
         });
+      this.combineWindSpeedDirection().then((data) => {
+        console.log("wind data: " , data);
+      });
+
       //this.regionLayer.addTo(this.layerGroup);
       //this.hexLayer.addTo(this.layerGroup);
       //this.createRainLayer(this.stationsData, mymap);
@@ -254,6 +258,61 @@ export class MapComponent {
     });
     return data;
   }
+
+  async getWindData(){
+    let data: any[][] = [];
+    let tempData : Station[];
+
+    this.dataService.getWindPerStation().subscribe((weather) => {
+      tempData = this.mapperService.weatherToStation(weather);
+      tempData.forEach((station) => {
+        data.push([station.longitude, station.latitude, station.speed]);
+      }
+      )}
+    );
+
+    return data;
+    };
+
+    async getWindDirectionData(){
+      let data: any[][] = [];
+      let tempData : Station[];
+
+      this.dataService.getWindDirectionPerStation().subscribe((weather) => {
+        tempData = this.mapperService.weatherToStation(weather);
+        tempData.forEach((station) => {
+          data.push([station.angle]);
+        }) });
+        return data;
+    }
+
+    async combineWindSpeedDirection(){
+      let data: any[][] = [];
+      setTimeout(() => {
+
+      this.getWindData().then( speed => {
+        console.log("here ? ", speed);
+
+        console.log("here ? ", speed.at(0));
+        speed.forEach(value => console.log("ssd ", value));
+
+        this.getWindDirectionData().then( direction => {
+          direction.forEach(value => console.log("directtt ", value));
+
+          for (let i = 0; i < speed.length; i++){
+
+            console.log("speed ? " , speed[i][2]);
+        console.log("direct ? " , direction[i][0]);
+
+        data.push([speed[i][0], speed[i][1], speed[i][2], direction[i][0]]);
+      }
+      })
+      });
+    console.log(" combine ? ", data);
+return data;   }, 2000);
+    }
+
+
   ngOnChanges() {
       this.switchLayer();
   }

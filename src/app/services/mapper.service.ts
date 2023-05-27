@@ -34,9 +34,9 @@ export class MapperService {
         let longitude = binding.long ? binding.long.value : null;
         let temp_avg = binding.temp_avg ? binding.temp_avg.value : null;
         let rain = binding.rain ? binding.rain.value : null;
-        let speed = binding.speed ? binding.speed : null;
-        let angle = binding.angle ? binding.angle: null;
-        let humidity = binding.humidity ? binding.humidity: null;
+        let speed = binding.speed ? binding.speed.value : null;
+        let angle = binding.angle ? binding.angle.value: null;
+        let humidity = binding.humidity ? binding.humidity.value: null;
 
         let data: Station = {
           nom: nom as string,
