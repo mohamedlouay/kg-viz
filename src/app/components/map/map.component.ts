@@ -1,4 +1,4 @@
-import {Component, Input, SimpleChanges} from '@angular/core';
+import {Component, Input, Output, SimpleChanges} from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import * as d3 from 'd3';
@@ -35,6 +35,7 @@ export class MapComponent {
   mymap: any;
 
   @Input() layer: string | undefined;
+  @Output() colors : string[] | undefined;
 
   private hexbinOptions!: HexbinLayerConfig;
 
@@ -43,6 +44,7 @@ export class MapComponent {
     private dataService: DataService,
     private mapperService: MapperService
   ) {
+    this.colors = ['white', 'yellow', 'orange', 'red'];
   }
 
   ngOnInit(): void {
@@ -319,6 +321,7 @@ return data;   }, 2000);
   switchLayer() {
     switch (this.layer) {
       case 'station':
+        this.colors = ['white', 'yellow', 'orange', 'red'];
         if(this.mymap.hasLayer(this.hexLayerRain)){
           this.mymap.removeLayer(this.hexLayerRain);
         }
@@ -328,6 +331,7 @@ return data;   }, 2000);
         this.mymap.addLayer(this.hexLayer);
         break;
       case 'temperature':
+        this.colors = ['white', 'yellow', 'orange', 'red'];
         if(this.mymap.hasLayer(this.hexLayerRain)){
           this.mymap.removeLayer(this.hexLayerRain);
         }
@@ -346,6 +350,7 @@ return data;   }, 2000);
         this.mymap.addLayer(this.regionLayer);
         break;
       case 'rain':
+        this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B'];
         if(this.mymap.hasLayer(this.regionLayer)){
           this.mymap.removeLayer(this.regionLayer);
         }

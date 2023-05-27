@@ -9,7 +9,7 @@ import {MapComponent} from "../map/map.component";
 export class VisualisationPageComponent {
  @Output() activeLayer!: string;
   @Output() layerSelected = new EventEmitter<string>();
-
+ @Input() colors: string[] | undefined;
 constructor(
 ) {
 }
