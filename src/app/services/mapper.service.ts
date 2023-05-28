@@ -15,7 +15,8 @@ export class MapperService {
         const temperature: ITemperature = {
           region: binding.label.value,
           temp_avg: binding.temp_avg.value,
-          station: binding.StationName.value,
+          stationName: binding.StationName.value,
+          station: binding.Nstation.value,
           date: binding.date.value,
         };
         temperatures.push(temperature);

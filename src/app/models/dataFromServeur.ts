@@ -14,6 +14,7 @@ interface Results {
 interface BindingsEntity {
   date: Date;
   StationName: StationName;
+  Nstation: Nstation;
   temp_avg: TempAvg;
   label: Label;
   insee: Insee;
@@ -89,6 +90,11 @@ interface Date {
   value: string;
 }
 interface StationName {
+  type: string;
+  value: string;
+}
+
+interface Nstation {
   type: string;
   value: string;
 }

@@ -1,5 +1,6 @@
 export interface ITemperature {
   date: string;
+  stationName: string;
   station: string;
   temp_avg: number;
   region: string;
