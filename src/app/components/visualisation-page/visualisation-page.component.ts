@@ -10,12 +10,15 @@ export class VisualisationPageComponent {
   @Output() activeLayer!: string;
   @Output() parameterSelected = new EventEmitter<string>();
   @Output() layerSelected = new EventEmitter<string>();
+  @Output() legendScaleEvent = new EventEmitter<string>();
+
   @Output() color1: string = '#7DF9FF';
   @Output() color2: string = '#7DF9FF';
   @Output() color3: string = '#7DF9FF';
   @Output() color4: string = '#7DF9FF';
   @Output() color5: string = '#7DF9FF';
   @Output() parameterChosen!: string;
+  @Input() legendScale!:number[];
 
  constructor() {}
 
@@ -50,13 +53,6 @@ export class VisualisationPageComponent {
      this.color1 = '#bd0327'
    }
 
-    if(activeLayerParameter == 'humidity'){
-      this.color5 = '#fed976';
-      this.color4 = '#feb24c';
-      this.color3 = '#fd8d3c';
-      this.color2 = '#f03b20';
-      this.color1 = '#bd0327'
-    }
     if(activeLayerParameter == 'humidity'){
       this.color5 = '#E6E6FA';
       this.color4 = '#E0B0FF';

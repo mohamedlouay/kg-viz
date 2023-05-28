@@ -15,6 +15,7 @@ import { Observable, Subscriber } from 'rxjs';
 import { ParameterFilterComponent } from '../parameter-filter/parameter-filter.component';
 import {VisualisationPageComponent} from "../visualisation-page/visualisation-page.component";
 import {RotatedMarker} from "leaflet-marker-rotation";
+import {text} from "d3";
 
 @Component({
   selector: 'app-map',
@@ -36,11 +37,13 @@ export class MapComponent {
   @Input() layerSelected: string | undefined;
   @Input() parameterSelected!:string;
   @Output() colors : string[] | undefined;
+  @Output() legendScale : number[] | undefined;
 
   private hexbinOptions!: HexbinLayerConfig;
 
   constructor(private dialog: MatDialog, private dataService: DataService, private mapperService: MapperService) {
-    this.colors = ['white', 'yellow', 'orange', 'red'];}
+    this.colors = ['white', 'yellow', 'orange', 'red'];
+    this.legendScale = [11, 15, 20, 25];}
 
   /**
    *
@@ -207,7 +210,6 @@ export class MapComponent {
     this.hexLayerHumidity.colorRange(['#E6E6FA','#E0B0FF','#E0B0FF', '#DA70D6','#800080']);
 
     this.getWindHumudityData().then((data) => {
-      console.log("humidity; ", data);
       this.hexLayerHumidity._data = data;
     });
     this.hexLayerHumidity
@@ -219,7 +221,7 @@ export class MapComponent {
         return d[1];
       })
       .colorValue(function (d: any[]) {
-        return parseInt(String(parseFloat(d[0]['o'][2]) * 10));
+        return parseInt(String(parseFloat(d[0]['o'][2])*10));
       })
       .radiusValue(function (d: any[]) {
         return parseInt(d[0]['o'][2]);
@@ -434,6 +436,8 @@ export class MapComponent {
           });
           this.colors = ['white', 'yellow', 'orange', 'red'];
           this.mymap.addLayer(this.hexLayer);
+          this.calculateLegendValues(this.hexLayer._data);
+          //this.createTempValuesMarkers(this.hexLayer._data, this.mymap);
         }
         if(this.parameterSelected == 'rain'){
           this.mymap.eachLayer((layer: any) => {
@@ -443,11 +447,13 @@ export class MapComponent {
           });
           this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B'];
           this.mymap.addLayer(this.hexLayerRain);
+          this.calculateLegendValues(this.hexLayerRain._data);
         }
         if(this.parameterSelected == 'wind'){
           this.colors = ['#ECFFDC','#93C572',  '#2E8B57'];
           this.mymap.addLayer(this.hexLayerWind);
           this.createWindDirectionIcons(this.hexLayerWind._data, this.mymap);
+          this.calculateLegendValues(this.hexLayerWind._data);
         }
         if(this.parameterSelected == 'humidity'){
           this.mymap.eachLayer((layer: any) => {
@@ -457,6 +463,7 @@ export class MapComponent {
           });
           this.colors =['#E6E6FA','#E0B0FF','#E0B0FF', '#DA70D6','#800080'];
           this.mymap.addLayer(this.hexLayerHumidity);
+          this.calculateLegendValues(this.hexLayerHumidity._data);
         }
         //this.switchParameter(this.parameterSelected);
         break;
@@ -495,7 +502,7 @@ export class MapComponent {
    * @param stations
    * @param mymap
    */
-  async createRainLayer(stations: any[], mymap: L.Map) {
+  async createRainValuesLayer(stations: any[], mymap: L.Map) {
     var stationsCoordinates: Station[];
       this.dataService.getRainPerStation().subscribe((weather) => {
         this.stationsData = this.mapperService.weatherToStation(weather);
@@ -519,6 +526,35 @@ export class MapComponent {
 
         });
       });
+  }
+
+  calculateLegendValues( data: any[]){
+    let numbers: number[] = [];
+    data.forEach(num => {
+      numbers.push(parseInt(num[2]));
+    })
+    const minValue = Math.min(...numbers);
+    const maxValue = Math.max(...numbers);
+    const range = maxValue - minValue;
+    const interval = range / 5;
+    const legendLabels: number[] = [];
+    for (let i = 1; i <= 5; i++) {
+      const average = minValue + interval * i;
+      legendLabels.push(average);
+    }
+    this.legendScale = legendLabels;
+  }
+  createTempValuesMarkers(stations: any[][], mymap: L.Map) {
+    stations.forEach((station) => {
+
+      var  tooltip = L.tooltip()
+        .setLatLng([station[1], station[0]])
+        .setContent(String(parseInt(station[2])))
+
+      if(this.parameterSelected === "temperature") {
+        tooltip.addTo(this.mymap);
+      }
+    });
   }
 
    createWindDirectionIcons(stations: any[][], mymap: L.Map) {

@@ -6,7 +6,7 @@ import {Component, Input} from '@angular/core';
   styleUrls: ['./legend-color-chart.component.css']
 })
 export class LegendColorChartComponent {
-  @Input() scale1: string | undefined;
+  @Input() scale1: number | undefined;
   @Input() scale2: string | undefined;
   @Input() scale3: string | undefined;
   @Input() scale4: string | undefined;
