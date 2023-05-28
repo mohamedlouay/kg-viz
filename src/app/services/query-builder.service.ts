@@ -75,7 +75,7 @@ export class QueryBuilderService {
             PREFIX dct: <http://purl.org/dc/terms/>
             PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 
-SELECT distinct ?Nstation (AVG(?rainfall24h)) as ?rain ?label ?insee WHERE
+SELECT distinct ?Nstation (AVG(?rainfall24h)) as ?rain ?label ?insee ?latitude ?long WHERE
     {
         VALUES ?year  {"2021"^^xsd:gYear}
         ?s  a qb:Slice ;
@@ -89,9 +89,12 @@ SELECT distinct ?Nstation (AVG(?rainfall24h)) as ?rain ?label ?insee WHERE
         ?station a weo:WeatherStation ; dct:spatial ?e; rdfs:label ?Nstation.
         ?e wdt:P131 ?item .
         ?item rdfs:label ?label ; wdt:P2585  ?insee .
+?station geo:lat ?latitude .
+?station geo:long ?long.
+FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
         #BIND(month(?date) as ?month)
     }
-    GROUP BY ?Nstation ?label ?insee
+    GROUP BY ?Nstation ?label ?insee ?long ?latitude
     ORDER BY ?Nstation
     `;
     return query;
@@ -159,14 +162,119 @@ SELECT ?insee ?label ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg)   WH
       ?item rdfs:label ?label ; wdt:P2585 ?insee.
 ?station geo:lat ?latitude .
 ?station geo:long ?long.
-    FILTER (?date >= xsd:date('2021-05-01'))
-   FILTER (?date <= xsd:date('2022-05-30'))
+FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
+    FILTER (?date >= xsd:date('2020-05-01'))
+   FILTER (?date <= xsd:date('2021-05-30'))
       }
 
   GROUP BY ?label ?insee ?station ?latitude ?long
 ORDER BY ?temp_avg`;
     return query;
   }
+
+  buildQuery_getAllStationsAvgWindSpeed() {
+    var query = `PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wd:   <http://www.wikidata.org/entity/>
+prefix weo:  <http://ns.inria.fr/meteo/ontology/>
+prefix wevf: <http://ns.inria.fr/meteo/vocab/meteorologicalfeature/>
+prefix wevp: <http://ns.inria.fr/meteo/vocab/weatherproperty/>
+select  ?stationID ?StationName AVG(?speed) AS ?speed  ?latitude ?long where
+{
+  ?obs a  weo:MeteorologicalObservation;
+sosa:observedProperty
+              wevp:windAverageSpeed ;
+sosa:hasSimpleResult ?speed;
+wep:madeByStation ?station ;
+sosa:resultTime ?time .
+?station geo:lat ?latitude .
+?station geo:long ?long.
+      ?station rdfs:label ?StationName ;
+           weo:stationID ?stationID ;
+           rdfs:label ?label .
+FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
+FILTER(?time>= xsd:date("2021-01-01"))
+FILTER(?time < xsd:date("2021-12-31"))
+}
+GROUP BY ?stationID ?StationName ?latitude ?long
+ORDER BY ?stationID`
+    return query;
+  }
+
+  buildQuery_getAllStationsAvgWindDirection() {
+    var query = `PREFIX sosa: <http://www.w3.org/ns/sosa/>
+    PREFIX qudt: <http://qudt.org/schema/qudt/>
+    PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX sosa: <http://www.w3.org/ns/sosa/>
+    PREFIX qudt: <http://qudt.org/schema/qudt/>
+    PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX wd:   <http://www.wikidata.org/entity/>
+    prefix weo:  <http://ns.inria.fr/meteo/ontology/>
+    prefix wevf: <http://ns.inria.fr/meteo/vocab/meteorologicalfeature/>
+    prefix wevp: <http://ns.inria.fr/meteo/vocab/weatherproperty/>
+    select  ?stationID ?StationName  AVG(?angle) AS ?angle where
+      {
+        ?obs a  weo:MeteorologicalObservation;
+    sosa:observedProperty
+    wevp:windAverageDirection;
+    sosa:hasSimpleResult ?angle;
+    wep:madeByStation ?station ;
+    sosa:resultTime ?time .
+      ?station rdfs:label ?StationName ;
+           weo:stationID ?stationID ;
+           rdfs:label ?label .
+
+    FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
+      FILTER(?time>= xsd:date("2021-01-01"))
+      FILTER(?time < xsd:date("2021-12-31"))
+  }
+GROUP BY ?stationID ?StationName
+ORDER BY ?stationID`
+    return query;
+  }
+
+  buildQuery_getAllStationsAvgHumidity() {
+    var query = `PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wd:   <http://www.wikidata.org/entity/>
+prefix weo:  <http://ns.inria.fr/meteo/ontology/>
+prefix wevf: <http://ns.inria.fr/meteo/vocab/meteorologicalfeature/>
+prefix wevp: <http://ns.inria.fr/meteo/vocab/weatherproperty/>
+select  ?stationID ?StationName  AVG(?humidity) AS ?humidity where
+{
+  ?obs a  weo:MeteorologicalObservation;
+sosa:observedProperty
+              wevp:airRelativeHumidity ;
+sosa:hasSimpleResult ?humidity;
+wep:madeByStation ?station ;
+sosa:resultTime ?time .
+      ?station rdfs:label ?StationName ;
+           weo:stationID ?stationID ;
+           rdfs:label ?label .
+FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
+?station rdfs:label ?StationName ; weo:stationID ?stationID .
+FILTER(?time>= xsd:date("2021-01-01"))
+FILTER(?time < xsd:date("2021-12-31"))
+}
+GROUP BY ?stationID ?StationName
+ORDER BY ?stationID`
+    return query;
+  }
+
 
 
   getAvgTempPerRegion(){

@@ -1,13 +1,15 @@
 <div *ngIf="startDate > 1">
-  <app-time-brush [startDate]="startDate" [endDate]="endDate"
-                  (rangeChanged)="handleRangeChangedEvent($event)" ></app-time-brush>
+  <app-time-brush
+    [startDate]="startDate"
+    [endDate]="endDate"
+    (rangeChanged)="handleRangeChangedEvent($event)"
+  ></app-time-brush>
 </div>
 
 <div id="chart-box">
   <h2>{{ data.regionName }}</h2>
-  <div  fxLayout="column" fxLayoutGap="50px">
+  <div fxLayout="column">
     <div #chart></div>
     <div class="legend-container"></div>
   </div>
 </div>
-

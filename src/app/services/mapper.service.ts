@@ -29,16 +29,24 @@ export class MapperService {
     let stations: Station[] = [];
     if (weatherJson.results.bindings) {
       for (let binding of weatherJson.results.bindings) {
+        let nom = binding.Nstation ? binding.Nstation.value : null;
         let latitude = binding.latitude ? binding.latitude.value : null;
         let longitude = binding.long ? binding.long.value : null;
         let temp_avg = binding.temp_avg ? binding.temp_avg.value : null;
         let rain = binding.rain ? binding.rain.value : null;
+        let speed = binding.speed ? binding.speed.value : null;
+        let angle = binding.angle ? binding.angle.value: null;
+        let humidity = binding.humidity ? binding.humidity.value: null;
 
         let data: Station = {
+          nom: nom as string,
           latitude: latitude as number,
           longitude: longitude as number,
           temp_avg: temp_avg as number,
-          rain: rain as number
+          rain: rain as number,
+          speed: speed as number,
+          angle: angle as number,
+          humidity: humidity as number
         };
         stations.push(data);
       }

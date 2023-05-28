@@ -5,6 +5,7 @@ import { QueryBuilderService } from './query-builder.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IWeather } from '../models/dataFromServeur';
 import {IAvgTempPerRegion} from "../models/data";
+import { forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +45,17 @@ export class DataService {
   }
   getRainPerStation() {
     const query = this.queryBuilderService.buildQuery_avgRainQtyPerStation();
+    const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;
+    return this.http.get<IWeather>(url);
+  }
+
+  getWindPerStation() {
+    const query = this.queryBuilderService.buildQuery_getAllStationsAvgWindSpeed();
+    const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;
+    return this.http.get<IWeather>(url);
+  }
+  getWindDirectionPerStation(){
+    const query = this.queryBuilderService.buildQuery_getAllStationsAvgWindDirection();
     const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;
     return this.http.get<IWeather>(url);
   }

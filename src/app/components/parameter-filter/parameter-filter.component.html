@@ -1,20 +1,52 @@
-<div class="box transparent-bg" fxLayout="row" fxLayoutGap="50px">
+<mat-button-toggle-group [(ngModel)]="layerType" appearance="legacy">
+  <mat-button-toggle value="station" (click)="regionStation('station')"
+  >Station</mat-button-toggle
+  >
+  <mat-button-toggle value="région" (click)="regionStation('région')"
+  >Région</mat-button-toggle
+  >
+</mat-button-toggle-group>
+<div class="box transparent-bg" fxLayout="row">
   <div class="line" fxLayout="column" fxLayoutGap="10px">
-    <button [ngClass]="getButtonClass('temperature')" (click)="loadTemperature()"
-            id="temperature" matTooltip="Temperature" matTooltipPosition="right" >
-      <span><i class="fa-solid fa-temperature-high "></i></span>
+    <button
+      [ngClass]="getButtonClass('temperature')"
+      (click)="loadTemperature()"
+      id="temperature"
+      matTooltip="Temperature"
+      matTooltipPosition="right"
+      fxFlexAlign="center"
+    >
+      <span><i class="fa-solid fa-temperature-high"></i></span>
     </button>
-    <button [ngClass]="getButtonClass('rain')" (click)="loadRain()"
-            id="rain" matTooltip="Rain" matTooltipPosition="right" >
-      <span><i class="fa-solid fa-cloud-rain "></i></span>
+    <button
+      [ngClass]="getButtonClass('rain')"
+      (click)="loadRain()"
+      id="rain"
+      matTooltip="Rain"
+      matTooltipPosition="right"
+      fxFlexAlign="center"
+    >
+      <span><i class="fa-solid fa-cloud-rain"></i></span>
     </button>
-    <button [ngClass]="getButtonClass('humidity')" (click)="loadHumidity()"
-            id="humidity" matTooltip="Humidity" matTooltipPosition="right" >
-      <span><i class="fa-solid fa-droplet "></i></span>
+    <button
+      [ngClass]="getButtonClass('humidity')"
+      (click)="loadHumidity()"
+      id="humidity"
+      matTooltip="Humidity"
+      matTooltipPosition="right"
+      fxFlexAlign="center"
+    >
+      <span><i class="fa-solid fa-droplet"></i></span>
     </button>
-    <button [ngClass]="getButtonClass('wind')" (click)="loadWind()"
-            id="wind" matTooltip="Wind" matTooltipPosition="right">
-      <span><i class="fa-solid fa-wind "></i></span>
+    <button
+      [ngClass]="getButtonClass('wind')"
+      (click)="loadWind()"
+      id="wind"
+      matTooltip="Wind"
+      matTooltipPosition="right"
+      fxFlexAlign="center"
+    >
+      <span><i class="fa-solid fa-wind"></i></span>
     </button>
   </div>
 </div>
