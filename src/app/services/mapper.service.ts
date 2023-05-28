@@ -15,7 +15,7 @@ export class MapperService {
         const temperature: ITemperature = {
           region: binding.label.value,
           temp_avg: binding.temp_avg.value,
-          station: binding.Nstation.value,
+          station: binding.StationName.value,
           date: binding.date.value,
         };
         temperatures.push(temperature);
@@ -29,7 +29,7 @@ export class MapperService {
     let stations: Station[] = [];
     if (weatherJson.results.bindings) {
       for (let binding of weatherJson.results.bindings) {
-        let nom = binding.Nstation ? binding.Nstation.value : null;
+        let nom = binding.StationName ? binding.StationName.value : null;
         let latitude = binding.latitude ? binding.latitude.value : null;
         let longitude = binding.long ? binding.long.value : null;
         let temp_avg = binding.temp_avg ? binding.temp_avg.value : null;

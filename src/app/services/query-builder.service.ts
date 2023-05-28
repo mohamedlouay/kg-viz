@@ -198,7 +198,11 @@ sosa:resultTime ?time .
       ?station rdfs:label ?StationName ;
            weo:stationID ?stationID ;
            rdfs:label ?label .
-FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
+
+FILTER (?label != "ST-PIERRE" && ?label !="NOUVELLE AMSTERDAM" && ?label !="TROMELIN" && ?label !="KERGUELEN"
+&& ?label !="EUROPA" && ?label !="PAMANDZI" && ?label !="GLORIEUSES" && ?label !="GILLOT-AEROPORT" && ?label !="ST-BARTHELEMY METEO"
+&& ?label !="LE RAIZET AERO" && ?label !="LA DESIRADE METEO" && ?label !="TRINITE-CARAVEL" && ?label !="LAMENTIN-AERO"
+&& ?label !="SAINT LAURENT" && ?label !="CAYENNE-MATOURY" && ?label !="SAINT GEORGES" && ?label !="MARIPASOULA" && ?label !="DUMONT D'URVILLE")
 FILTER(?time>= xsd:date("2021-01-01"))
 FILTER(?time < xsd:date("2021-12-31"))
 }
@@ -254,7 +258,7 @@ PREFIX wd:   <http://www.wikidata.org/entity/>
 prefix weo:  <http://ns.inria.fr/meteo/ontology/>
 prefix wevf: <http://ns.inria.fr/meteo/vocab/meteorologicalfeature/>
 prefix wevp: <http://ns.inria.fr/meteo/vocab/weatherproperty/>
-select  ?stationID ?StationName  AVG(?humidity) AS ?humidity where
+select  ?stationID ?StationName  AVG(?humidity) AS ?humidity ?latitude ?long where
 {
   ?obs a  weo:MeteorologicalObservation;
 sosa:observedProperty
@@ -262,15 +266,21 @@ sosa:observedProperty
 sosa:hasSimpleResult ?humidity;
 wep:madeByStation ?station ;
 sosa:resultTime ?time .
+?station geo:lat ?latitude .
+?station geo:long ?long.
       ?station rdfs:label ?StationName ;
            weo:stationID ?stationID ;
            rdfs:label ?label .
 FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
 ?station rdfs:label ?StationName ; weo:stationID ?stationID .
+FILTER (?label != "ST-PIERRE" && ?label !="NOUVELLE AMSTERDAM" && ?label !="TROMELIN" && ?label !="KERGUELEN"
+&& ?label !="EUROPA" && ?label !="PAMANDZI" && ?label !="GLORIEUSES" && ?label !="GILLOT-AEROPORT" && ?label !="ST-BARTHELEMY METEO"
+&& ?label !="LE RAIZET AERO" && ?label !="LA DESIRADE METEO" && ?label !="TRINITE-CARAVEL" && ?label !="LAMENTIN-AERO"
+&& ?label !="SAINT LAURENT" && ?label !="CAYENNE-MATOURY" && ?label !="SAINT GEORGES" && ?label !="MARIPASOULA" && ?label !="DUMONT D'URVILLE")
 FILTER(?time>= xsd:date("2021-01-01"))
 FILTER(?time < xsd:date("2021-12-31"))
 }
-GROUP BY ?stationID ?StationName
+GROUP BY ?stationID ?StationName ?latitude ?long
 ORDER BY ?stationID`
     return query;
   }

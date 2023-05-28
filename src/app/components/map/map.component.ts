@@ -14,6 +14,7 @@ import { Station } from '../../models/data';
 import { Observable, Subscriber } from 'rxjs';
 import { ParameterFilterComponent } from '../parameter-filter/parameter-filter.component';
 import {VisualisationPageComponent} from "../visualisation-page/visualisation-page.component";
+import {RotatedMarker} from "leaflet-marker-rotation";
 
 @Component({
   selector: 'app-map',
@@ -26,6 +27,8 @@ export class MapComponent {
   options: any;
   hexLayer: any;
   hexLayerRain: any;
+  hexLayerWind: any;
+  hexLayerHumidity: any;
   stationsData: Station[] = [];
   regionLayer: any;
   mymap: any;
@@ -160,7 +163,6 @@ export class MapComponent {
 
       this.getRainData().then((data) => {
         this.hexLayerRain._data = data;
-        console.log("rain data: " ,this.hexLayerRain._data);
       });
       this.hexLayerRain
         .radiusRange([15, 18, 20, 24, 28, 32])
@@ -171,23 +173,59 @@ export class MapComponent {
           return d[1];
         })
         .colorValue(function (d: any[]) {
-          console.log('rain ? ', parseInt(String(parseFloat(d[0]['o'][2]) * 10)));
           return parseInt(String(parseFloat(d[0]['o'][2]) * 10));
         })
         .radiusValue(function (d: any[]) {
           return parseInt(d[0]['o'][2]);
         });
-      this.combineWindSpeedDirection().then((data) => {
-        console.log("wind data: " , data);
-      });
 
-      //this.regionLayer.addTo(this.layerGroup);
-      //this.hexLayer.addTo(this.layerGroup);
-      //this.createRainLayer(this.stationsData, mymap);
+      this.hexLayerWind = L.hexbinLayer(this.hexbinOptions);
+      this.hexLayerWind.colorRange(['#ECFFDC', '#93C572',  '#2E8B57']);
+
+      this.combineWindSpeedDirection().then((data) => {
+        this.hexLayerWind._data = data;
+        this.createWindDirectionIcons(data, this.mymap);
+      });
+      this.hexLayerWind
+        .radiusRange([15, 18, 20, 24, 28, 32])
+        .lng(function (d: any[]) {
+          return d[0];
+        })
+        .lat(function (d: any[]) {
+          return d[1];
+        })
+        .colorValue(function (d: any[]) {
+          return parseInt(String(parseFloat(d[0]['o'][2]) * 10));
+        })
+        .radiusValue(function (d: any[]) {
+          return parseInt(d[0]['o'][2]);
+        });
     });
 
-    this.switchLayer();
 
+    this.hexLayerHumidity = L.hexbinLayer(this.hexbinOptions);
+    this.hexLayerHumidity.colorRange(['#E6E6FA','#E0B0FF','#E0B0FF', '#DA70D6','#800080']);
+
+    this.getWindHumudityData().then((data) => {
+      console.log("humidity; ", data);
+      this.hexLayerHumidity._data = data;
+    });
+    this.hexLayerHumidity
+      .radiusRange([15, 18, 20, 24, 28, 32])
+      .lng(function (d: any[]) {
+        return d[0];
+      })
+      .lat(function (d: any[]) {
+        return d[1];
+      })
+      .colorValue(function (d: any[]) {
+        return parseInt(String(parseFloat(d[0]['o'][2]) * 10));
+      })
+      .radiusValue(function (d: any[]) {
+        return parseInt(d[0]['o'][2]);
+      });
+
+    this.switchLayer();
   }
 
   /**
@@ -273,64 +311,91 @@ export class MapComponent {
   /**
    *
    */
-  async getWindData(){
-    let data: any[][] = [];
-    let tempData : Station[];
+  async getWindData(): Promise<any[][]> {
+    return new Promise<any[][]>((resolve, reject) => {
+      let data: any[][] = [];
+      let tempData: Station[];
 
-    this.dataService.getWindPerStation().subscribe((weather) => {
-      tempData = this.mapperService.weatherToStation(weather);
-      tempData.forEach((station) => {
-        data.push([station.longitude, station.latitude, station.speed]);
-      }
-      )}
-    );
+      this.dataService.getWindPerStation().subscribe(
+        (weather) => {
+          tempData = this.mapperService.weatherToStation(weather);
+          tempData.forEach((station) => {
+            data.push([station.longitude, station.latitude, station.speed, station.nom]);
+          });
+          resolve(data);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
 
-    return data;
-    };
 
   /**
    *
    */
-    async getWindDirectionData(){
+  async getWindDirectionData(): Promise<any[][]> {
+    return new Promise<any[][]>((resolve, reject) => {
       let data: any[][] = [];
-      let tempData : Station[];
+      let tempData: Station[];
 
-      this.dataService.getWindDirectionPerStation().subscribe((weather) => {
-        tempData = this.mapperService.weatherToStation(weather);
-        tempData.forEach((station) => {
-          data.push([station.angle]);
-        }) });
-        return data;
-    }
+      this.dataService.getWindDirectionPerStation().subscribe(
+        (weather) => {
+          tempData = this.mapperService.weatherToStation(weather);
+          tempData.forEach((station) => {
+            data.push([station.angle]);
+          });
+          resolve(data);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
 
+  async getWindHumudityData(): Promise<any[][]> {
+    return new Promise<any[][]>((resolve, reject) => {
+      let data: any[][] = [];
+      let tempData: Station[];
+
+      this.dataService.getHumidityPerStation().subscribe(
+        (weather) => {
+          tempData = this.mapperService.weatherToStation(weather);
+          tempData.forEach((station) => {
+            data.push([station.longitude, station.latitude, station.humidity]);
+          });
+          resolve(data);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
   /**
    *
    */
-  async combineWindSpeedDirection(){
-      let data: any[][] = [];
-      setTimeout(() => {
+  async combineWindSpeedDirection(): Promise<any[][]> {
+    const speedData = await this.getWindData();
+    const directionData = await this.getWindDirectionData();
 
-      this.getWindData().then( speed => {
-        console.log("here ? ", speed);
+    const combinedData: any[][] = [];
 
-        console.log("here ? ", speed.at(0));
-        speed.forEach(value => console.log("ssd ", value));
-
-        this.getWindDirectionData().then( direction => {
-          direction.forEach(value => console.log("directtt ", value));
-
-          for (let i = 0; i < speed.length; i++){
-
-            console.log("speed ? " , speed[i][2]);
-        console.log("direct ? " , direction[i][0]);
-
-        data.push([speed[i][0], speed[i][1], speed[i][2], direction[i][0]]);
-      }
-      })
-      });
-      console.log(" combine ? ", data);
-      return data;   }, 2000);
+    for (let i = 0; i < speedData.length; i++) {
+      combinedData.push([
+        speedData[i][0],
+        speedData[i][1],
+        speedData[i][2],
+        speedData[i][3],
+        directionData[i][0]
+      ]);
     }
+
+    return combinedData;
+  }
+
 
   /**
    *
@@ -356,18 +421,53 @@ export class MapComponent {
         if(this.mymap.hasLayer(this.hexLayer)){
           this.mymap.removeLayer(this.hexLayer);
         }
+        if(this.mymap.hasLayer(this.hexLayerWind)){
+          this.mymap.removeLayer(this.hexLayerWind);
+        }
+        if(this.mymap.hasLayer(this.hexLayerHumidity)){
+          this.mymap.removeLayer(this.hexLayerHumidity);
+        }
         if(this.parameterSelected == 'temperature'){
+          this.mymap.eachLayer((layer: any) => {
+            if (layer instanceof L.Marker || layer instanceof RotatedMarker) {
+              this.mymap.removeLayer(layer);
+            }
+          });
           this.colors = ['white', 'yellow', 'orange', 'red'];
           this.mymap.addLayer(this.hexLayer);
         }
         if(this.parameterSelected == 'rain'){
+          this.mymap.eachLayer((layer: any) => {
+            if (layer instanceof L.Marker || layer instanceof RotatedMarker) {
+              this.mymap.removeLayer(layer);
+            }
+          });
           this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B'];
           this.mymap.addLayer(this.hexLayerRain);
+        }
+        if(this.parameterSelected == 'wind'){
+          this.colors = ['#ECFFDC','#93C572',  '#2E8B57'];
+          this.mymap.addLayer(this.hexLayerWind);
+          this.createWindDirectionIcons(this.hexLayerWind._data, this.mymap);
+        }
+        if(this.parameterSelected == 'humidity'){
+          this.mymap.eachLayer((layer: any) => {
+            if (layer instanceof L.Marker || layer instanceof RotatedMarker) {
+              this.mymap.removeLayer(layer);
+            }
+          });
+          this.colors =['#E6E6FA','#E0B0FF','#E0B0FF', '#DA70D6','#800080'];
+          this.mymap.addLayer(this.hexLayerHumidity);
         }
         //this.switchParameter(this.parameterSelected);
         break;
 
       case 'région':
+        this.mymap.eachLayer((layer: any) => {
+          if (layer instanceof L.Marker || layer instanceof RotatedMarker) {
+            this.mymap.removeLayer(layer);
+          }
+        });
         if(this.mymap.hasLayer(this.hexLayerRain)){
           this.mymap.removeLayer(this.hexLayerRain);
         }
@@ -390,7 +490,6 @@ export class MapComponent {
 
     }
   }
-
 
   /**
    *
@@ -422,6 +521,32 @@ export class MapComponent {
         });
       });
   }
+
+   createWindDirectionIcons(stations: any[][], mymap: L.Map) {
+    console.log(stations);
+      stations.forEach((station) => {
+         var marker = new RotatedMarker([station[1], station[0]], {
+           rotationAngle: station[4],
+           rotationOrigin: "bottom center",
+         }).bindTooltip(
+            station[3],
+            {
+              permanent: false,
+              direction: 'center',
+            }
+          );
+
+          marker.setIcon(
+            L.icon({
+              iconUrl: 'assets/arrow.png',
+              iconSize: [30, 30],
+              iconAnchor: [10, 60]
+            })
+          );
+          marker.addTo(this.mymap);
+        });
+  }
+
   private openModal<G, P>(feature: any) {
     const dialogRef = this.dialog.open(ChartModalComponent, {
       data: {

@@ -22,7 +22,6 @@ export class LegendColorChartComponent {
   indicators! : HTMLCollectionOf<Element>;
   counter!: number;
 
-
   ngOnInit() {
     this.gradientBar = document.getElementById("gradient-bar")!;
     this.indicators = document.getElementsByClassName("indicator")!;
@@ -42,14 +41,13 @@ export class LegendColorChartComponent {
   ngOnChanges(){
     this.changeColor();
   }
-
     //changing gradient colors
   changeColor(){
-      document.documentElement.style.setProperty('--color1', this.color1+''); //suffix may be px or ''
-      document.documentElement.style.setProperty('--color2', this.color2+''); //suffix may be px or ''
-      document.documentElement.style.setProperty('--color3', this.color3+''); //suffix may be px or ''
-      document.documentElement.style.setProperty('--color4', this.color4+''); //suffix may be px or ''
-      document.documentElement.style.setProperty('--color5', this.color5+''); //suffix may be px or ''
+      document.documentElement.style.setProperty('--color1', this.color1+'');
+      document.documentElement.style.setProperty('--color2', this.color2+'');
+      document.documentElement.style.setProperty('--color3', this.color3+'');
+      document.documentElement.style.setProperty('--color4', this.color4+'');
+      document.documentElement.style.setProperty('--color5', this.color5+'');
   }
 
 
