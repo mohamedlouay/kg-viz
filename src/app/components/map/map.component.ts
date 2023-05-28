@@ -143,7 +143,6 @@ export class MapComponent {
       this.hexLayer = L.hexbinLayer(this.hexbinOptions);
       this.hexLayer.colorRange(['white', 'yellow', 'orange', 'red']);
       this.getData().then((data) => {
-        console.log("temp data: ", data);
         this.hexLayer._data = data;
       });
       this.hexLayer
@@ -228,7 +227,6 @@ export class MapComponent {
         return parseInt(d[0]['o'][2]);
       });
 
-    this.legendScaleTest.emit(this.legendScale);
   }
 
   /**
@@ -411,7 +409,6 @@ export class MapComponent {
    *
    */
   switchLayer() {
-    console.log(this.layerSelected)
     switch (this.layerSelected) {
       case 'station':
         this.colors = ['white', 'yellow', 'orange', 'red'];
@@ -439,6 +436,8 @@ export class MapComponent {
           this.colors = ['white', 'yellow', 'orange', 'red'];
           this.mymap.addLayer(this.hexLayer);
           this.calculateLegendValues(this.hexLayer._data);
+          this.legendScaleTest.emit(this.legendScale);
+
           //this.createTempValuesMarkers(this.hexLayer._data, this.mymap);
         }
         if(this.parameterSelected == 'rain'){
@@ -450,6 +449,8 @@ export class MapComponent {
           this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B'];
           this.mymap.addLayer(this.hexLayerRain);
           this.calculateLegendValues(this.hexLayerRain._data);
+          this.legendScaleTest.emit(this.legendScale);
+
         }
         if(this.parameterSelected == 'wind'){
           this.colors = ['#ECFFDC','#93C572',  '#2E8B57'];
@@ -466,6 +467,8 @@ export class MapComponent {
           this.colors =['#E6E6FA','#E0B0FF','#E0B0FF', '#DA70D6','#800080'];
           this.mymap.addLayer(this.hexLayerHumidity);
           this.calculateLegendValues(this.hexLayerHumidity._data);
+          this.legendScaleTest.emit(this.legendScale);
+
         }
         //this.switchParameter(this.parameterSelected);
         break;
@@ -560,7 +563,6 @@ export class MapComponent {
   }
 
    createWindDirectionIcons(stations: any[][], mymap: L.Map) {
-    console.log(stations);
       stations.forEach((station) => {
          var marker = new RotatedMarker([station[1], station[0]], {
            rotationAngle: station[4],

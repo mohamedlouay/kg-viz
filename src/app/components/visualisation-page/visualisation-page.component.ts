@@ -10,7 +10,7 @@ export class VisualisationPageComponent {
   @Output() activeLayer!: string;
   @Output() parameterSelected = new EventEmitter<string>();
   @Output() layerSelected = new EventEmitter<string>();
-  @Output() legendScaleTest = new EventEmitter<string>();
+  @Output() legendScaleTest = new EventEmitter<number>();
 
 
   @Output() color1: string = '#7DF9FF';
@@ -20,6 +20,11 @@ export class VisualisationPageComponent {
   @Output() color5: string = '#7DF9FF';
 
   @Output() scale1!: number;
+  @Output() scale2!: number;
+  @Output() scale3!: number;
+  @Output() scale4!: number;
+  @Output() scale5!: number;
+
   @Output() parameterChosen!: string;
   @Input() legendScale!:number[];
   @Output() legendScaleTestValue!:number[];
@@ -76,15 +81,16 @@ export class VisualisationPageComponent {
 
   switchLayer($event: string) {
     this.activeLayer = $event;
-    console.log(this.activeLayer)
     this.layerSelected.emit(this.activeLayer);
   }
 
   getLegendScale($event: number[]) {
    this.legendScaleTestValue = $event;
-   console.log("legendscale: ",this.legendScaleTestValue);
    this.scale1 = this.legendScaleTestValue[0];
-   this.legendScaleTest.emit(this.legendScaleTestValue.toString());
+    this.scale2 = this.legendScaleTestValue[1];
+    this.scale3 = this.legendScaleTestValue[2];
+    this.scale4 = this.legendScaleTestValue[3];
+    this.scale5 = this.legendScaleTestValue[4];
 
   }
 }

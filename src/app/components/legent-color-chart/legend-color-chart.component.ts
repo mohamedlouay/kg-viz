@@ -7,10 +7,10 @@ import {Component, Input} from '@angular/core';
 })
 export class LegendColorChartComponent {
   @Input() scale1: number | undefined;
-  @Input() scale2: string | undefined;
-  @Input() scale3: string | undefined;
-  @Input() scale4: string | undefined;
-  @Input() scale5: string | undefined;
+  @Input() scale2: number | undefined;
+  @Input() scale3: number | undefined;
+  @Input() scale4: number | undefined;
+  @Input() scale5: number | undefined;
   @Input() color1!: string;
   @Input() color2!: string;
   @Input() color3!: string;
