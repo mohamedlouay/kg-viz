@@ -171,7 +171,7 @@ ORDER BY ?temp_avg`;
 
   getAvgTempPerRegion(){
     let query = `
-    PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
+        PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
     PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     PREFIX qb: <http://purl.org/linked-data/cube#>
@@ -194,8 +194,10 @@ ORDER BY ?temp_avg`;
         ?item rdfs:label ?label ; wdt:P2585 ?insee .
         ?station geo:lat ?latitude .
         ?station geo:long ?long .
+      FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
         FILTER (?date >= xsd:date('2021-05-01'))
         FILTER (?date <= xsd:date('2022-05-30'))
+
     }
     GROUP BY ?label
       ORDER BY ?temp_avg`;

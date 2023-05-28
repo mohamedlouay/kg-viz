@@ -30,6 +30,13 @@ export class MapComponent {
   ) {}
 
   ngOnInit(): void {
+    this.dataService.getAvgTempPerRegion().subscribe(()=>{
+      this.createMap();
+    })
+
+  }
+
+  private createMap() {
     const hexLayout = hexbin.hexbin();
     this.hexbinOptions = {
       radius: 10,
@@ -60,12 +67,12 @@ export class MapComponent {
       .then((data) => {
 
 
-        // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
+        // Création d'une couche GeoJSON pour les régions
         var regionLayer = L.geoJSON(data, {
           style: (feature) => {
             var regionIsee = feature!.properties.code;
             return {
-              fillColor:this.colorMapByTemperature(regionIsee),
+              fillColor: this.colorMapByTemperature(regionIsee),
               fillOpacity: 0.75,
               weight: 1,
               color: 'black',
@@ -105,7 +112,7 @@ export class MapComponent {
         .domain([5, 15, 18, 28])
         .range([0, 5, 10, 30]);
 
-      this.hexLayer = L.hexbinLayer(this.hexbinOptions);
+    this.hexLayer = L.hexbinLayer(this.hexbinOptions);
     this.hexLayer
       .colorScale(this.colorScale);
     this.hexLayer.colorRange(["white", "yellow", "orange", "red", "darkred"]);
@@ -130,7 +137,6 @@ export class MapComponent {
         return parseInt(d[0]["o"][2]);
       });
     this.createRainLayer(this.stationsData, mymap);
-
   }
 
   async getData() {
@@ -179,11 +185,8 @@ export class MapComponent {
  colorMapByTemperature(isee: string) {
 
    let temperatureData: IAvgTempPerRegion[] = this.dataService.initAvgTempPerRegionData!;
-   console.log(temperatureData);
    // Calculate the average temperature
    let averageTemperature = temperatureData.reduce((sum, data) => sum  + Number(data.temp_avg), 0) / temperatureData.length;
-   console.log(averageTemperature);
-   averageTemperature = 24 ;
 
    // Calculate the standard deviation of temperatures
    const standardDeviation = Math.sqrt(temperatureData.reduce((sum, data) => sum + Math.pow(data.temp_avg - averageTemperature, 2), 0) / temperatureData.length);
@@ -191,10 +194,9 @@ export class MapComponent {
    // Define the color scale
    const colorScale = d3.scaleLinear<string>()
      .domain([averageTemperature - standardDeviation, averageTemperature, averageTemperature + standardDeviation])
-     .range([ "#fed976", "#fd8d3c"]);
+     .range([ "#f7ff00","#ff2f00"]);
 
    let temperature = temperatureData.find(region => region.isee === isee)!.temp_avg;
-   console.log(colorScale(temperature));
    // return the color
    return colorScale(temperature);
  }
