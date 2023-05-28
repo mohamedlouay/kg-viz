@@ -225,7 +225,6 @@ export class MapComponent {
         return parseInt(d[0]['o'][2]);
       });
 
-    this.switchLayer();
   }
 
   /**
@@ -543,7 +542,9 @@ export class MapComponent {
               iconAnchor: [10, 60]
             })
           );
-          marker.addTo(this.mymap);
+          if(this.parameterSelected === "wind") {
+            marker.addTo(this.mymap);
+          }
         });
   }
 

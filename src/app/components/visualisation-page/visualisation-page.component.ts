@@ -29,7 +29,6 @@ export class VisualisationPageComponent {
 
   switchParameter($event: string) {
     this.parameterChosen = $event;
-    console.log(this.parameterChosen)
     this.parameterSelected.emit(this.parameterChosen);
     this.legendColorGetter(this.parameterChosen);
   }
@@ -50,6 +49,28 @@ export class VisualisationPageComponent {
      this.color2 = '#f03b20';
      this.color1 = '#bd0327'
    }
+
+    if(activeLayerParameter == 'humidity'){
+      this.color5 = '#fed976';
+      this.color4 = '#feb24c';
+      this.color3 = '#fd8d3c';
+      this.color2 = '#f03b20';
+      this.color1 = '#bd0327'
+    }
+    if(activeLayerParameter == 'humidity'){
+      this.color5 = '#E6E6FA';
+      this.color4 = '#E0B0FF';
+      this.color3 = '#E0B0FF';
+      this.color2 = '#DA70D6';
+      this.color1 = '#800080';
+    }
+    if(activeLayerParameter == 'wind'){
+      this.color5 = '#ECFFDC';
+      this.color4 = '#C1E1C1';
+      this.color3 = '#93C572';
+      this.color2 = '#93C572';
+      this.color1 = '#008000';
+    }
   }
 
   switchLayer($event: string) {
