@@ -59,6 +59,12 @@ export class DataService {
     const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;
     return this.http.get<IWeather>(url);
   }
+
+  getHumidityPerStation(){
+    const query = this.queryBuilderService.buildQuery_getAllStationsAvgHumidity();
+    const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;
+    return this.http.get<IWeather>(url);
+  }
   QueryObservationsByDate(insee: number, date: string) {
     const query = this.queryBuilderService.QueryObservationsByDate(insee, date);
     const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;

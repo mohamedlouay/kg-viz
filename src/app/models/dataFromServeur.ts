@@ -13,6 +13,7 @@ interface Results {
 }
 interface BindingsEntity {
   date: Date;
+  StationName: StationName;
   Nstation: Nstation;
   temp_avg: TempAvg;
   label: Label;
@@ -23,6 +24,7 @@ interface BindingsEntity {
   speed: speed;
   angle: angle;
   humidity: humidity;
+  nom: nom;
 }
 interface nom {
   type: string;
@@ -87,6 +89,11 @@ interface Date {
   datatype: string;
   value: string;
 }
+interface StationName {
+  type: string;
+  value: string;
+}
+
 interface Nstation {
   type: string;
   value: string;

@@ -6,11 +6,11 @@ import {Component, Input} from '@angular/core';
   styleUrls: ['./legend-color-chart.component.css']
 })
 export class LegendColorChartComponent {
-  @Input() scale1: string | undefined;
-  @Input() scale2: string | undefined;
-  @Input() scale3: string | undefined;
-  @Input() scale4: string | undefined;
-  @Input() scale5: string | undefined;
+  @Input() scale1: number | undefined;
+  @Input() scale2: number | undefined;
+  @Input() scale3: number | undefined;
+  @Input() scale4: number | undefined;
+  @Input() scale5: number | undefined;
   @Input() color1!: string;
   @Input() color2!: string;
   @Input() color3!: string;
@@ -21,7 +21,6 @@ export class LegendColorChartComponent {
   gradientBar! : HTMLElement;
   indicators! : HTMLCollectionOf<Element>;
   counter!: number;
-
 
   ngOnInit() {
     this.gradientBar = document.getElementById("gradient-bar")!;
@@ -42,14 +41,13 @@ export class LegendColorChartComponent {
   ngOnChanges(){
     this.changeColor();
   }
-
     //changing gradient colors
   changeColor(){
-      document.documentElement.style.setProperty('--color1', this.color1+''); //suffix may be px or ''
-      document.documentElement.style.setProperty('--color2', this.color2+''); //suffix may be px or ''
-      document.documentElement.style.setProperty('--color3', this.color3+''); //suffix may be px or ''
-      document.documentElement.style.setProperty('--color4', this.color4+''); //suffix may be px or ''
-      document.documentElement.style.setProperty('--color5', this.color5+''); //suffix may be px or ''
+      document.documentElement.style.setProperty('--color1', this.color1+'');
+      document.documentElement.style.setProperty('--color2', this.color2+'');
+      document.documentElement.style.setProperty('--color3', this.color3+'');
+      document.documentElement.style.setProperty('--color4', this.color4+'');
+      document.documentElement.style.setProperty('--color5', this.color5+'');
   }
 
 
