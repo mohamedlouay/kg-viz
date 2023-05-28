@@ -1,25 +1,19 @@
 import {Component, Input, Output, SimpleChanges} from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import {Component} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
 import * as d3 from 'd3';
 import * as hexbin from 'd3-hexbin';
+import { select } from 'd3-selection';
 import * as L from 'leaflet';
 import * as Ld3 from '@asymmetrik/leaflet-d3';
 import { ChartModalComponent } from '../chart-modal/chart-modal.component';
 import { GeoJSON, HexbinLayerConfig, Layer } from 'leaflet';
 import { DataService } from '../../services/data.service';
 import { MapperService } from '../../services/mapper.service';
-import { Station } from '../../models/data';
+import {IAvgTempPerRegion, Station} from '../../models/data';
 import { Observable, Subscriber } from 'rxjs';
 import { ParameterFilterComponent } from '../parameter-filter/parameter-filter.component';
 import {VisualisationPageComponent} from "../visualisation-page/visualisation-page.component";
-import {HexbinLayerConfig} from 'leaflet';
-import {ChartModalComponent} from '../chart-modal/chart-modal.component';
-import {DataService} from '../../services/data.service';
-import {MapperService} from '../../services/mapper.service';
-import {IAvgTempPerRegion, Station} from '../../models/data';
 
 @Component({
   selector: 'app-map',
@@ -35,7 +29,7 @@ export class MapComponent {
   stationsData: Station[] = [];
   regionLayer: any;
   mymap: any;
-
+  protected readonly console = console;
   @Input() layerSelected: string | undefined;
   @Input() parameterSelected!:string;
   @Output() colors : string[] | undefined;
@@ -49,7 +43,6 @@ export class MapComponent {
    *
    */
   ngOnInit(): void {
-
     this.dataService.getAvgTempPerRegion().subscribe(()=>{
       this.createMap();
     })
@@ -57,7 +50,6 @@ export class MapComponent {
   }
 
   private createMap() {
-    const hexLayout = hexbin.hexbin();
     this.hexbinOptions = {
       radius: 10,
       opacity: 0.7,
@@ -85,32 +77,8 @@ export class MapComponent {
     )
       .then((response) => response.json())
       .then((data) => {
-        // Calcul de la valeur maximale de la densité de population
-        var maxPopulationDensity = 0;
-        data.features.forEach((region: any) => {
-          var populationDensity = region.properties.code;
-          if (populationDensity > maxPopulationDensity) {
-            maxPopulationDensity = populationDensity;
-          }
-        });
-        // Création d'une fonction de couleur pour la choropleth map
-        function getColor(d: number) {
-          return d > maxPopulationDensity * 0.8
-            ? '#bd0327'
-            : d > maxPopulationDensity * 0.6
-              ? '#f03b20'
-              : d > maxPopulationDensity * 0.4
-                ? '#fd8d3c'
-                : d > maxPopulationDensity * 0.2
-                  ? '#feb24c'
-                  : '#fed976';
-        }
 
 
-        // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
-        this.regionLayer = L.geoJSON(data, {
-          style: function (feature) {
-            var populationDensity = feature!.properties.code;
         // Création d'une couche GeoJSON pour les régions
         var regionLayer = L.geoJSON(data, {
           style: (feature) => {
@@ -129,8 +97,8 @@ export class MapComponent {
             layer.bindTooltip(
               feature.properties.nom,
               {
-                permanent:false,
-                direction:'center',
+                permanent: false,
+                direction: 'center',
                 className: 'regionLabel'
               }
             );
@@ -152,7 +120,7 @@ export class MapComponent {
         [51, 10],
       ])),
 
-      this.hexLayer = L.hexbinLayer(this.hexbinOptions);
+        this.hexLayer = L.hexbinLayer(this.hexbinOptions);
       this.hexLayer.colorRange(['white', 'yellow', 'orange', 'red']);
       this.getData().then((data) => {
         console.log("temp data: ", data);
@@ -175,11 +143,11 @@ export class MapComponent {
 
       this.hexLayerRain = L.hexbinLayer(this.hexbinOptions);
 
-      this.hexLayerRain.colorRange(['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B']);
+      this.hexLayerRain.colorRange(['white', '#7DF9FF', '#ADD8E6', '#0000FF', '#00008B']);
 
       this.getRainData().then((data) => {
         this.hexLayerRain._data = data;
-        console.log("rain data: " ,this.hexLayerRain._data);
+        console.log("rain data: ", this.hexLayerRain._data);
       });
       this.hexLayerRain
         .radiusRange([15, 18, 20, 24, 28, 32])
@@ -197,30 +165,7 @@ export class MapComponent {
           return parseInt(d[0]['o'][2]);
         });
       this.combineWindSpeedDirection().then((data) => {
-        console.log("wind data: " , data);
-    this.hexLayer = L.hexbinLayer(this.hexbinOptions);
-    this.hexLayer
-      .colorScale(this.colorScale);
-    this.hexLayer.colorRange(["white", "yellow", "orange", "red", "darkred"]);
-
-    // Use the getData function to access the fully populated data
-    this.getData().then((data) => {
-      this.hexLayer._data = data;
-    });
-
-    this.hexLayer
-      .radiusRange([10, 15, 20, 25, 30])
-      .lng(function (d: any[]) {
-        return d[0];
-      })
-      .lat(function (d: any[]) {
-        return d[1];
-      })
-      .colorValue(function (d: any[]) {
-        return parseInt(d[0]["o"][2]);
-      })
-      .radiusValue(function (d: any[]) {
-        return parseInt(d[0]["o"][2]);
+        console.log("wind data: ", data);
       });
 
       //this.regionLayer.addTo(this.layerGroup);
@@ -229,7 +174,6 @@ export class MapComponent {
     });
 
     this.switchLayer();
-
   }
 
   /**
@@ -254,12 +198,12 @@ export class MapComponent {
           return d > maxPopulationDensity * 0.8
             ? '#bd0327'
             : d > maxPopulationDensity * 0.6
-            ? '#f03b20'
-            : d > maxPopulationDensity * 0.4
-            ? '#fd8d3c'
-            : d > maxPopulationDensity * 0.2
-            ? '#feb24c'
-            : '#fed976';
+              ? '#f03b20'
+              : d > maxPopulationDensity * 0.4
+                ? '#fd8d3c'
+                : d > maxPopulationDensity * 0.2
+                  ? '#feb24c'
+                  : '#fed976';
         }
 
         // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
@@ -280,22 +224,19 @@ export class MapComponent {
           },
         });
         // Ajout de la couche à la carte
-       // this.regionLayer.addTo(this.mymap);
+        // this.regionLayer.addTo(this.mymap);
       });
-    this.createRainLayer(this.stationsData, mymap);
   }
 
-  /**
-   *
-   */
+
   async getData() {
     let data: any[][] = [];
-      this.dataService.getTemperaturePerStation().subscribe((weather) => {
-        this.stationsData = this.mapperService.weatherToStation(weather);
-        this.stationsData.forEach((station) => {
-          data.push([station.longitude, station.latitude, station.temp_avg]);
-        });
+    this.dataService.getTemperaturePerStation().subscribe((weather) => {
+      this.stationsData = this.mapperService.weatherToStation(weather);
+      this.stationsData.forEach((station) => {
+        data.push([station.longitude, station.latitude, station.temp_avg]);
       });
+    });
     return data;
   }
 
@@ -323,35 +264,33 @@ export class MapComponent {
     this.dataService.getWindPerStation().subscribe((weather) => {
       tempData = this.mapperService.weatherToStation(weather);
       tempData.forEach((station) => {
-        data.push([station.longitude, station.latitude, station.speed]);
-      }
+          data.push([station.longitude, station.latitude, station.speed]);
+        }
       )}
     );
 
     return data;
-    };
+  };
 
   /**
    *
    */
-    async getWindDirectionData(){
-      let data: any[][] = [];
-      let tempData : Station[];
+  async getWindDirectionData(){
+    let data: any[][] = [];
+    let tempData : Station[];
 
-      this.dataService.getWindDirectionPerStation().subscribe((weather) => {
-        tempData = this.mapperService.weatherToStation(weather);
-        tempData.forEach((station) => {
-          data.push([station.angle]);
-        }) });
-        return data;
-    }
+    this.dataService.getWindDirectionPerStation().subscribe((weather) => {
+      tempData = this.mapperService.weatherToStation(weather);
+      tempData.forEach((station) => {
+        data.push([station.angle]);
+      }) });
+    return data;
+  }
 
-  /**
-   *
-   */
+
   async combineWindSpeedDirection(){
-      let data: any[][] = [];
-      setTimeout(() => {
+    let data: any[][] = [];
+    setTimeout(() => {
 
       this.getWindData().then( speed => {
         console.log("here ? ", speed);
@@ -365,26 +304,22 @@ export class MapComponent {
           for (let i = 0; i < speed.length; i++){
 
             console.log("speed ? " , speed[i][2]);
-        console.log("direct ? " , direction[i][0]);
+            console.log("direct ? " , direction[i][0]);
 
-        data.push([speed[i][0], speed[i][1], speed[i][2], direction[i][0]]);
-      }
-      })
+            data.push([speed[i][0], speed[i][1], speed[i][2], direction[i][0]]);
+          }
+        })
       });
       console.log(" combine ? ", data);
       return data;   }, 2000);
-    }
-
-  /**
-   *
-   */
-  ngOnChanges() {
-      this.switchLayer();
   }
 
-  /**
-   *
-   */
+
+  ngOnChanges() {
+    this.switchLayer();
+  }
+
+
   switchLayer() {
     console.log(this.layerSelected)
     switch (this.layerSelected) {
@@ -442,28 +377,28 @@ export class MapComponent {
    */
   async createRainLayer(stations: any[], mymap: L.Map) {
     var stationsCoordinates: Station[];
-      this.dataService.getRainPerStation().subscribe((weather) => {
-        this.stationsData = this.mapperService.weatherToStation(weather);
-          this.stationsData.forEach((station) => {
-          /*  var marker = L.marker([station.latitude, station.longitude]).bindTooltip(
-              station.nom,
-              {
-                permanent: false,
-                direction: 'center',
-              }
-            );
-            marker.setIcon(
-              L.icon({
-                iconUrl: 'assets/rains.png',
-                iconSize: [station.rain * 3, station.rain * 4],
-              })
-            );
-            marker.addTo(this.mymap);
-          });
-          */
-
+    this.dataService.getRainPerStation().subscribe((weather) => {
+      this.stationsData = this.mapperService.weatherToStation(weather);
+      this.stationsData.forEach((station) => {
+        /*  var marker = L.marker([station.latitude, station.longitude]).bindTooltip(
+            station.nom,
+            {
+              permanent: false,
+              direction: 'center',
+            }
+          );
+          marker.setIcon(
+            L.icon({
+              iconUrl: 'assets/rains.png',
+              iconSize: [station.rain * 3, station.rain * 4],
+            })
+          );
+          marker.addTo(this.mymap);
         });
+        */
+
       });
+    });
   }
   private openModal<G, P>(feature: any) {
     const dialogRef = this.dialog.open(ChartModalComponent, {
@@ -477,28 +412,22 @@ export class MapComponent {
 
   }
 
-  protected readonly console = console;
+  colorMapByTemperature(isee: string) {
 
+    let temperatureData: IAvgTempPerRegion[] = this.dataService.initAvgTempPerRegionData!;
+    // Calculate the average temperature
+    let averageTemperature = temperatureData.reduce((sum, data) => sum  + Number(data.temp_avg), 0) / temperatureData.length;
 
- colorMapByTemperature(isee: string) {
+    // Calculate the standard deviation of temperatures
+    const standardDeviation = Math.sqrt(temperatureData.reduce((sum, data) => sum + Math.pow(data.temp_avg - averageTemperature, 2), 0) / temperatureData.length);
 
-   let temperatureData: IAvgTempPerRegion[] = this.dataService.initAvgTempPerRegionData!;
-   // Calculate the average temperature
-   let averageTemperature = temperatureData.reduce((sum, data) => sum  + Number(data.temp_avg), 0) / temperatureData.length;
+    // Define the color scale
+    const colorScale = d3.scaleLinear<string>()
+      .domain([averageTemperature - standardDeviation, averageTemperature, averageTemperature + standardDeviation])
+      .range([ "#f7ff00","#ff2f00"]);
 
-   // Calculate the standard deviation of temperatures
-   const standardDeviation = Math.sqrt(temperatureData.reduce((sum, data) => sum + Math.pow(data.temp_avg - averageTemperature, 2), 0) / temperatureData.length);
-
-   // Define the color scale
-   const colorScale = d3.scaleLinear<string>()
-     .domain([averageTemperature - standardDeviation, averageTemperature, averageTemperature + standardDeviation])
-     .range([ "#f7ff00","#ff2f00"]);
-
-   let temperature = temperatureData.find(region => region.isee === isee)!.temp_avg;
-   // return the color
-   return colorScale(temperature);
- }
-
-
-
+    let temperature = temperatureData.find(region => region.isee === isee)!.temp_avg;
+    // return the color
+    return colorScale(temperature);
+  }
 }
