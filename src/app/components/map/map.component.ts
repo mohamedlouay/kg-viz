@@ -1,4 +1,4 @@
-import {Component, Input, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import * as d3 from 'd3';
@@ -38,6 +38,7 @@ export class MapComponent {
   @Input() parameterSelected!:string;
   @Output() colors : string[] | undefined;
   @Output() legendScale : number[] | undefined;
+  @Output() legendScaleTest = new EventEmitter<number[]>();
 
   private hexbinOptions!: HexbinLayerConfig;
 
@@ -227,6 +228,7 @@ export class MapComponent {
         return parseInt(d[0]['o'][2]);
       });
 
+    this.legendScaleTest.emit(this.legendScale);
   }
 
   /**

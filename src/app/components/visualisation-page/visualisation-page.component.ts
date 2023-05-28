@@ -10,15 +10,19 @@ export class VisualisationPageComponent {
   @Output() activeLayer!: string;
   @Output() parameterSelected = new EventEmitter<string>();
   @Output() layerSelected = new EventEmitter<string>();
-  @Output() legendScaleEvent = new EventEmitter<string>();
+  @Output() legendScaleTest = new EventEmitter<string>();
+
 
   @Output() color1: string = '#7DF9FF';
   @Output() color2: string = '#7DF9FF';
   @Output() color3: string = '#7DF9FF';
   @Output() color4: string = '#7DF9FF';
   @Output() color5: string = '#7DF9FF';
+
+  @Output() scale1!: number;
   @Output() parameterChosen!: string;
   @Input() legendScale!:number[];
+  @Output() legendScaleTestValue!:number[];
 
  constructor() {}
 
@@ -28,6 +32,7 @@ export class VisualisationPageComponent {
 
   ngOnChanges(){
    this.switchParameter(this.activeLayer);
+   this.getLegendScale([0,1,2,3,4]);
   }
 
   switchParameter($event: string) {
@@ -73,7 +78,14 @@ export class VisualisationPageComponent {
     this.activeLayer = $event;
     console.log(this.activeLayer)
     this.layerSelected.emit(this.activeLayer);
-   // this.legendColorGetter(this.parameterChosen);
+  }
+
+  getLegendScale($event: number[]) {
+   this.legendScaleTestValue = $event;
+   console.log("legendscale: ",this.legendScaleTestValue);
+   this.scale1 = this.legendScaleTestValue[0];
+   this.legendScaleTest.emit(this.legendScaleTestValue.toString());
+
   }
 }
 

@@ -6,10 +6,10 @@
     <app-parameter-filter [buttonColor]="color3" (parameterSelected)="switchParameter($event)"  (layerSelected)="switchLayer($event)"></app-parameter-filter>
   </div>
   <div id="map">
-    <app-map [parameterSelected]="parameterChosen" [layerSelected]="activeLayer"></app-map>
+    <app-map (legendScaleTest)="getLegendScale($event)" [parameterSelected]="parameterChosen" [layerSelected]="activeLayer"></app-map>
   </div>
   <div id="legend-chart">
-    <app-legend-color-chart [scale1]="legendScale[0]" [scale2]="'High'" [scale3]="'Medium'" [scale4]="'Low'" [scale5]="'Very Low'"
+    <app-legend-color-chart [scale1]="scale1" [scale2]="'High'" [scale3]="'Medium'" [scale4]="'Low'" [scale5]="'Very Low'"
     [color1]="color1" [color2]="color2" [color3]="color3" [color4]="color4" [color5]="color5">
     </app-legend-color-chart>
   </div>
