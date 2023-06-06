@@ -102,7 +102,7 @@ export class MapComponent {
             };
           },
           onEachFeature: (feature, layer) => {
-            this.openModal(feature);
+            //this.openModal(feature);
             layer.on('click', () => {
               this.openModal(feature);
             });
@@ -262,7 +262,7 @@ export class MapComponent {
             };
           },
           onEachFeature: (feature, layer) => {
-            this.openModal(feature);
+            //this.openModal(feature);
             layer.on('click', () => {
               this.openModal(feature);
             });
