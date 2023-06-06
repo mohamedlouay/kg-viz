@@ -53,6 +53,7 @@ export class MapComponent {
     this.dataService.getAvgTempPerRegion().subscribe(()=>{
       this.createMap();
     })
+
   }
 
   private createMap() {
@@ -101,6 +102,7 @@ export class MapComponent {
             };
           },
           onEachFeature: (feature, layer) => {
+            this.openModal(feature);
             layer.on('click', () => {
               this.openModal(feature);
             });
@@ -260,6 +262,7 @@ export class MapComponent {
             };
           },
           onEachFeature: (feature, layer) => {
+            this.openModal(feature);
             layer.on('click', () => {
               this.openModal(feature);
             });
