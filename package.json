@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng build --service-worker --output-path docs"
+    "deploy": "ng build --service-worker --base-href /kg-viz/ --output-path docs "
   },
   "private": false,
   "dependencies": {
