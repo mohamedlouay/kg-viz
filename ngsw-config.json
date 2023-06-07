@@ -1,0 +1,60 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "map",
+      "urls": [
+        "https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions.geojson",
+        "https://www.openstreetmap.org/",
+        "https://a.tile.openstreetmap.org/**",
+        "https://b.tile.openstreetmap.org/**",
+        "https://c.tile.openstreetmap.org/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 30,
+        "maxAge": "24h",
+        "timeout": "10s",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "queries",
+      "urls": [
+        "https://weakg.i3s.unice.fr/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 50,
+        "maxAge": "12h",
+        "timeout": "10s",
+        "strategy": "freshness"
+      }
+    }
+  ]
+}
