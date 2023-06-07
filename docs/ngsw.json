@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1686156483823,
+  "timestamp": 1686157456730,
   "index": "/kg-viz/index.html",
   "assetGroups": [
     {
@@ -53,13 +53,7 @@
         "/kg-viz/layers.ef6db8722c2c3f9a.png",
         "/kg-viz/marker-icon.d577052aa271e13f.png"
       ],
-      "patterns": [
-        "https:\\/\\/raw\\.githubusercontent\\.com\\/gregoiredavid\\/france-geojson\\/master\\/regions\\.geojson",
-        "https:\\/\\/www\\.openstreetmap\\.org\\/",
-        "https:\\/\\/a\\.tile\\.openstreetmap\\.org\\/.*",
-        "https:\\/\\/b\\.tile\\.openstreetmap\\.org\\/.*",
-        "https:\\/\\/c\\.tile\\.openstreetmap\\.org\\/.*"
-      ]
+      "patterns": []
     }
   ],
   "dataGroups": [
@@ -75,7 +69,6 @@
       "strategy": "performance",
       "maxSize": 50,
       "maxAge": 86400000,
-      "timeoutMs": 10000,
       "cacheQueryOptions": {
         "ignoreVary": true
       },
@@ -89,7 +82,6 @@
       "strategy": "performance",
       "maxSize": 30,
       "maxAge": 43200000,
-      "timeoutMs": 10000,
       "cacheQueryOptions": {
         "ignoreVary": true
       },
