@@ -17,7 +17,6 @@ export class TimeBrushComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log([this.startDate, this.endDate]);
     this.sliderValues = [this.startDate, this.endDate];
   }
 

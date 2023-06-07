@@ -27,8 +27,8 @@ export class DataService {
     const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;
     return this.http.get<IWeather>(url);
   }
-  getTemperaturePerStation() {
-    const query = this.queryBuilderService.buildQuery_getAllStationsAvgTemp();
+  getTemperaturePerStation(start: string, end: string) {
+    const query = this.queryBuilderService.buildQuery_getAllStationsAvgTemp(start, end);
     const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;
     return this.http.get<IWeather>(url);
   }
