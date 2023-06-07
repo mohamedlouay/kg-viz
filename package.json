@@ -9,7 +9,7 @@
     "test": "ng test",
     "deploy": "ng build --output-path docs --base-href /KGViz"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "^15.2.0",
     "@angular/cdk": "^15.2.8",
