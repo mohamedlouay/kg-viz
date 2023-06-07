@@ -38,10 +38,10 @@
         "https://c.tile.openstreetmap.org/**"
       ],
       "cacheConfig": {
-        "maxSize": 30,
+        "maxSize": 50,
         "maxAge": "24h",
         "timeout": "10s",
-        "strategy": "freshness"
+        "strategy": "performance"
       }
     },
     {
@@ -50,10 +50,10 @@
         "https://weakg.i3s.unice.fr/**"
       ],
       "cacheConfig": {
-        "maxSize": 50,
+        "maxSize": 30,
         "maxAge": "12h",
         "timeout": "10s",
-        "strategy": "freshness"
+        "strategy": "performance"
       }
     }
   ]

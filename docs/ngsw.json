@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1686153157569,
+  "timestamp": 1686154733009,
   "index": "/kg-viz/index.html",
   "assetGroups": [
     {
@@ -66,8 +66,8 @@
         "https:\\/\\/b\\.tile\\.openstreetmap\\.org\\/.*",
         "https:\\/\\/c\\.tile\\.openstreetmap\\.org\\/.*"
       ],
-      "strategy": "freshness",
-      "maxSize": 30,
+      "strategy": "performance",
+      "maxSize": 50,
       "maxAge": 86400000,
       "timeoutMs": 10000,
       "cacheQueryOptions": {
@@ -80,8 +80,8 @@
       "patterns": [
         "https:\\/\\/weakg\\.i3s\\.unice\\.fr\\/.*"
       ],
-      "strategy": "freshness",
-      "maxSize": 50,
+      "strategy": "performance",
+      "maxSize": 30,
       "maxAge": 43200000,
       "timeoutMs": 10000,
       "cacheQueryOptions": {
