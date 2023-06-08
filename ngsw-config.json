@@ -23,6 +23,13 @@
         "files": [
           "/assets/**",
           "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ],
+        "urls": [
+          "https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions.geojson",
+          "https://www.openstreetmap.org/",
+          "https://a.tile.openstreetmap.org/**",
+          "https://b.tile.openstreetmap.org/**",
+          "https://c.tile.openstreetmap.org/**"
         ]
       }
     }
@@ -40,6 +47,7 @@
       "cacheConfig": {
         "maxSize": 50,
         "maxAge": "24h",
+        "timeout": "10s",
         "strategy": "performance"
       }
     },
@@ -51,6 +59,7 @@
       "cacheConfig": {
         "maxSize": 30,
         "maxAge": "12h",
+        "timeout": "10s",
         "strategy": "performance"
       }
     }
