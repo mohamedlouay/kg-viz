@@ -22,7 +22,6 @@ import {LegendColorChartComponent} from "./components/legent-color-chart/legend-
 import { NpnSliderModule } from 'npn-slider';
 import { Ng5SliderModule } from 'ng5-slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -48,12 +47,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     MatSliderModule,
     FormsModule,
     MatButtonToggleModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    })
   ],
   providers: [],
   bootstrap: [AppComponent],
