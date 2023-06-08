@@ -131,7 +131,6 @@ export class MapComponent {
         [41, -5],
         [51, 10],
       ])),
-
         this.hexLayer = L.hexbinLayer(this.hexbinOptions);
       this.hexLayer.colorRange(['white', 'yellow', 'orange', 'red']);
       this.getData().then((data) => {
@@ -425,7 +424,8 @@ export class MapComponent {
               this.mymap.removeLayer(layer);
             }
           });
-          this.colors = ['white', 'yellow', 'orange', 'red'];
+          this.colors = ['white', '#fed976', '#feb24c', '#fd8d3c',  '#f03b20', '#bd0327'];
+          //this.colors = ['white', 'yellow', 'orange', 'red'];
           this.mymap.addLayer(this.hexLayer);
           this.calculateLegendValues(this.hexLayer._data);
           this.legendScaleTest.emit(this.legendScale);
@@ -481,7 +481,7 @@ export class MapComponent {
           this.mymap.removeLayer(this.regionLayer);
         }
         if(this.parameterSelected == 'temperature'){
-          this.colors = ['white', 'yellow', 'orange', 'red'];
+          this.colors = ['white', '#fed976', '#feb24c', '#fd8d3c',  '#f03b20', '#bd0327'];
           this.mymap.addLayer(this.regionLayer);
         }
         if(this.parameterSelected == 'rain'){
@@ -603,10 +603,11 @@ export class MapComponent {
     // Define the color scale
     const colorScale = d3.scaleLinear<string>()
       .domain([averageTemperature - standardDeviation, averageTemperature, averageTemperature + standardDeviation])
-      .range([ "#f7ff00","#ff2f00"]);
+      .range(['#feb24c', '#fd8d3c',  '#f03b20', '#bd0327']);
 
     let temperature = temperatureData.find(region => region.isee === isee)!.temp_avg;
 
+    console.log(colorScale(temperature));
     // return the color
     return colorScale(temperature);
   }
