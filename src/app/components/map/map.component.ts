@@ -272,7 +272,7 @@ export class MapComponent {
           },
         });
         // Ajout de la couche à la carte
-        // this.regionLayer.addTo(this.mymap);
+        //this.regionLayer.addTo(this.mymap);
       });
   }
 
@@ -493,6 +493,8 @@ export class MapComponent {
         if(this.parameterSelected == 'temperature'){
           this.colors = ['white', '#fed976', '#feb24c', '#fd8d3c',  '#f03b20', '#bd0327'];
           this.mymap.addLayer(this.regionLayer);
+          this.calculateLegendValues(this.regionLayer._data);
+          this.legendScaleTest.emit(this.legendScale);
         }
         if(this.parameterSelected == 'rain'){
           this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B'];

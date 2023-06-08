@@ -1,6 +1,6 @@
 <div class="container" fxLayout="column">
   <div id="title">
-    <app-information-layer></app-information-layer>
+    <app-information-layer [informationDisplay]="legend"></app-information-layer>
   </div>
   <div id="filter">
     <app-parameter-filter [buttonColor]="color3" (parameterSelected)="switchParameter($event)"  (layerSelected)="switchLayer($event)"></app-parameter-filter>

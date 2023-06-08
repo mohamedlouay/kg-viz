@@ -7,6 +7,9 @@ import { MatSliderChange } from '@angular/material/slider';
   styleUrls: ['./time-brush.component.css'],
 })
 export class TimeBrushComponent implements OnInit {
+
+  public tooltip: Object ={ placement: 'After', isVisible: true, showOn: 'Always' };
+
   @Output() rangeChanged = new EventEmitter<Date[]>();
 
   @Input() startDate = 0;

@@ -1,5 +1,6 @@
 #map {
   height: 100vh;
+  z-index: 1;
 }
 .hexbin-hexagon {
   stroke: #000;
@@ -17,7 +18,12 @@
 }
 
 .brush {
-  background: #880e4f;
+  /*margin-top: 75%;
+  width: 85%;*/
+  background-position: 0 0;
+  width: 85%;
+  position: absolute;
+  left: 100px;
+  bottom: 50px;
   z-index: 1001;
-  position: sticky;
 }
