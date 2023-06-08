@@ -4,7 +4,7 @@
 
 
 
-<app-time-brush class="brush"
+<app-time-brush *ngIf="enable" class="brush"
                 [startDate]="startDate"
                 [endDate]="endDate"
                 (rangeChanged)="handleRangeChangedEvent($event)"

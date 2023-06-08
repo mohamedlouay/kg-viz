@@ -7,7 +7,7 @@ import { select } from 'd3-selection';
 import * as L from 'leaflet';
 import * as Ld3 from '@asymmetrik/leaflet-d3';
 import { ChartModalComponent } from '../chart-modal/chart-modal.component';
-import { GeoJSON, HexbinLayerConfig, Layer } from 'leaflet';
+import {CircleMarker, GeoJSON, HexbinLayerConfig, Layer, Marker} from 'leaflet';
 import { DataService } from '../../services/data.service';
 import { MapperService } from '../../services/mapper.service';
 import {IAvgTempPerRegion, Station} from '../../models/data';
@@ -37,6 +37,8 @@ export class MapComponent {
   endDate: number = 1640908800000;
   start: string = '2021-01-01';
   end: string = '2021-12-31';
+  protected readonly console = console;
+  enable: boolean = false;
 
   @Input() layerSelected: string | undefined;
   @Input() parameterSelected!:string;
@@ -161,6 +163,7 @@ export class MapComponent {
 
       this.getRainData().then((data) => {
         this.hexLayerRain._data = data;
+        this.createLayerTooltip(data, this.mymap);
       });
       this.hexLayerRain
         .radiusRange([15, 18, 20, 24, 28, 32])
@@ -206,6 +209,7 @@ export class MapComponent {
 
     this.getWindHumudityData().then((data) => {
       this.hexLayerHumidity._data = data;
+      this.createLayerTooltip(data, this.mymap);
     });
     this.hexLayerHumidity
       .radiusRange([15, 18, 20, 24, 28, 32])
@@ -240,6 +244,11 @@ export class MapComponent {
             maxPopulationDensity = populationDensity;
           }
         });
+        //alimentation de la légende
+        this.regionLayer.addData(data);
+        console.log("data", data);
+        this.calculateLegendValues(this.regionLayer._data);
+        this.legendScaleTest.emit(this.legendScale);
         // Création d'une fonction de couleur pour la choropleth map
         function getColor(d: number) {
           return d > maxPopulationDensity * 0.8
@@ -284,13 +293,13 @@ export class MapComponent {
     this.dataService.getTemperaturePerStation(this.start, this.end).subscribe((weather) => {
       this.stationsData = this.mapperService.weatherToStation(weather);
       this.stationsData.forEach((station) => {
-        data.push([station.longitude, station.latitude, station.temp_avg]);
+        data.push([station.longitude, station.latitude, station.temp_avg, station.nom]);
       });
     });
       this.dataService.getTemperaturePerStation(this.start, this.end).subscribe((weather) => {
         this.stationsData = this.mapperService.weatherToStation(weather);
         this.stationsData.forEach((station) => {
-          data.push([station.longitude, station.latitude, station.temp_avg]);
+          data.push([station.longitude, station.latitude, station.temp_avg, station.nom]);
         });
       });
     return data;
@@ -304,7 +313,7 @@ export class MapComponent {
     this.dataService.getRainPerStation().subscribe((weather) => {
       this.stationsData = this.mapperService.weatherToStation(weather);
       this.stationsData.forEach((station) => {
-        data.push([station.longitude, station.latitude, station.rain]);
+        data.push([station.longitude, station.latitude, station.rain, station.nom]);
       });
     });
     return data;
@@ -346,7 +355,7 @@ export class MapComponent {
         (weather) => {
           tempData = this.mapperService.weatherToStation(weather);
           tempData.forEach((station) => {
-            data.push([station.angle]);
+            data.push([station.angle,station.nom]);
           });
           resolve(data);
         },
@@ -366,7 +375,8 @@ export class MapComponent {
         (weather) => {
           tempData = this.mapperService.weatherToStation(weather);
           tempData.forEach((station) => {
-            data.push([station.longitude, station.latitude, station.humidity]);
+            console.log("original station format:", station);
+            data.push([station.longitude, station.latitude, station.humidity, station.nom]);
           });
           resolve(data);
         },
@@ -403,6 +413,13 @@ export class MapComponent {
    *
    */
   ngOnChanges() {
+
+    if(this.layerSelected == 'station'){
+      this.enable = true;
+    } else {
+      this.enable = false;
+    }
+
     this.switchLayer();
   }
 
@@ -450,6 +467,7 @@ export class MapComponent {
           });
           this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B'];
           this.mymap.addLayer(this.hexLayerRain);
+          this.createLayerTooltip(this.hexLayerRain._data, this.mymap);
           this.calculateLegendValues(this.hexLayerRain._data);
           this.legendScaleTest.emit(this.legendScale);
 
@@ -459,6 +477,7 @@ export class MapComponent {
           this.mymap.addLayer(this.hexLayerWind);
           this.createWindDirectionIcons(this.hexLayerWind._data, this.mymap);
           this.calculateLegendValues(this.hexLayerWind._data);
+          this.legendScaleTest.emit(this.legendScale);
         }
         if(this.parameterSelected == 'humidity'){
           this.mymap.eachLayer((layer: any) => {
@@ -468,6 +487,7 @@ export class MapComponent {
           });
           this.colors =['#E6E6FA','#E0B0FF','#E0B0FF', '#DA70D6','#800080'];
           this.mymap.addLayer(this.hexLayerHumidity);
+          this.createLayerTooltip(this.hexLayerHumidity._data, this.mymap);
           this.calculateLegendValues(this.hexLayerHumidity._data);
           this.legendScaleTest.emit(this.legendScale);
 
@@ -492,13 +512,8 @@ export class MapComponent {
         }
         if(this.parameterSelected == 'temperature'){
           this.colors = ['white', '#fed976', '#feb24c', '#fd8d3c',  '#f03b20', '#bd0327'];
+          this.addRegionLayer();
           this.mymap.addLayer(this.regionLayer);
-          this.calculateLegendValues(this.regionLayer._data);
-          this.legendScaleTest.emit(this.legendScale);
-        }
-        if(this.parameterSelected == 'rain'){
-          this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B'];
-          this.mymap.addLayer(this.hexLayerRain);
         }
         //this.switchParameter(this.parameterSelected);
         break;
@@ -639,5 +654,27 @@ export class MapComponent {
     this.mymap.addLayer(this.hexLayer);
     });
   }
-  protected readonly console = console;
+
+  private createLayerTooltip(stations: any[][], mymap: L.Map) {
+    stations.forEach((station) => {
+      console.log("station: ", station);
+      var marker = new Marker([station[1], station[0]],{
+        icon: L.divIcon({
+        className: 'leaflet-mouse-marker',
+        iconAnchor: [20, 20],
+        iconSize: [40, 40]
+      }),
+        opacity: 0,
+        zIndexOffset: this.options.zIndexOffset
+    }).bindTooltip(
+        station[3]+":"+station[2],
+        {
+          permanent: false,
+          direction: 'center',
+        }
+      );
+
+      marker.addTo(this.mymap);
+    });
+  }
 }
