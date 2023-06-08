@@ -5,7 +5,6 @@
   stroke: #000;
   stroke-width: 0.5px;
 }
-
 .custom-dialog .mat-dialog-container {
   background: blue;
 }
@@ -17,3 +16,8 @@
   color: white;
 }
 
+.brush {
+  background: #880e4f;
+  z-index: 1001;
+  position: sticky;
+}

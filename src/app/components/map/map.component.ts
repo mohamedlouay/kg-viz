@@ -33,6 +33,10 @@ export class MapComponent {
   stationsData: Station[] = [];
   regionLayer: any;
   mymap: any;
+  startDate: number = 1609459200000;
+  endDate: number = 1640908800000;
+  start: string = '2021-01-01';
+  end: string = '2021-12-31';
 
   @Input() layerSelected: string | undefined;
   @Input() parameterSelected!:string;
@@ -277,12 +281,18 @@ export class MapComponent {
    */
   async getData() {
     let data: any[][] = [];
-    this.dataService.getTemperaturePerStation().subscribe((weather) => {
+    this.dataService.getTemperaturePerStation(this.start, this.end).subscribe((weather) => {
       this.stationsData = this.mapperService.weatherToStation(weather);
       this.stationsData.forEach((station) => {
         data.push([station.longitude, station.latitude, station.temp_avg]);
       });
     });
+      this.dataService.getTemperaturePerStation(this.start, this.end).subscribe((weather) => {
+        this.stationsData = this.mapperService.weatherToStation(weather);
+        this.stationsData.forEach((station) => {
+          data.push([station.longitude, station.latitude, station.temp_avg]);
+        });
+      });
     return data;
   }
 
@@ -611,4 +621,21 @@ export class MapComponent {
     // return the color
     return colorScale(temperature);
   }
+  updateDates(range: Date){
+    const date = new Date(range);
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  handleRangeChangedEvent(range: Date[]) {
+    this.mymap.removeLayer(this.hexLayer);
+    this.start = this.updateDates(range[0]);
+    this.end = this.updateDates(range[1]);
+    this.getData().then((data) => {
+      this.hexLayer._data = data;
+    this.mymap.addLayer(this.hexLayer);
+    });
+  }
+  protected readonly console = console;
 }

@@ -138,7 +138,7 @@ FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"
     return query;
   }
 
-  buildQuery_getAllStationsAvgTemp() {
+  buildQuery_getAllStationsAvgTemp(start: string, end: string) {
     var query = `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
   PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
   PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -151,6 +151,8 @@ FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"
   PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 
 SELECT ?insee ?label ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg)   WHERE {
+   VALUES ?start {'`+start+`'}
+        VALUES ?end {'`+end+`'}
       ?s a qb:Slice ; wes-dimension:station ?station;
           qb:observation [
               a qb:Observation ;
@@ -163,8 +165,8 @@ SELECT ?insee ?label ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg)   WH
 ?station geo:lat ?latitude .
 ?station geo:long ?long.
 FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
-    FILTER (?date >= xsd:date('2020-05-01'))
-   FILTER (?date <= xsd:date('2021-05-30'))
+    FILTER (?date >= xsd:date(?start))
+   FILTER (?date <= xsd:date(?end))
       }
 
   GROUP BY ?label ?insee ?station ?latitude ?long
