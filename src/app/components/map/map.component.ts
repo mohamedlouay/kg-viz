@@ -454,6 +454,7 @@ export class MapComponent {
           this.colors = ['white', '#fed976', '#feb24c', '#fd8d3c',  '#f03b20', '#bd0327'];
           //this.colors = ['white', 'yellow', 'orange', 'red'];
           this.mymap.addLayer(this.hexLayer);
+          this.createLayerTooltip(this.hexLayer._data, this.mymap);
           this.calculateLegendValues(this.hexLayer._data);
           this.legendScaleTest.emit(this.legendScale);
 
@@ -667,7 +668,7 @@ export class MapComponent {
         opacity: 0,
         zIndexOffset: this.options.zIndexOffset
     }).bindTooltip(
-        station[3]+":"+station[2],
+        station[3]+": "+Math.trunc(station[2]),
         {
           permanent: false,
           direction: 'center',
