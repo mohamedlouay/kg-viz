@@ -109,7 +109,6 @@ export class MapComponent {
       .then((response) => response.json())
       .then((data) => {
         // Calcul de la valeur maximale de la densité de population
-
         function getColor(d: number) {
           return '#bd0327';
         }

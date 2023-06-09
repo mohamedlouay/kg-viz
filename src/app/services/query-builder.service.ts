@@ -105,9 +105,10 @@ FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationNa
     `;
     return query;
   }
-/*
-  getAvgRainRegion(){
-    PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
+
+  getAvgRainRegion(start: string, end: string){
+  let query =
+      `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
     PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     PREFIX qb:  <http://purl.org/linked-data/cube#>
@@ -122,8 +123,8 @@ FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationNa
     SELECT distinct (SUM(?rainfall24h)/COUNT(?Nstation)) as ?rain ?label  WHERE
     {
       VALUES ?year  {"2021"^^xsd:gYear}
-      VALUES ?start {'2021-01-01'}
-      VALUES ?end {'2021-01-31'}
+  VALUES ?start {'`+start+`'}
+        VALUES ?end {'`+end+`'}
         ?s  a qb:Slice ;
       wes-dimension:station ?station ;
       wes-dimension:year ?year ;
@@ -146,8 +147,9 @@ FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationNa
     }
 
     GROUP BY ?label
-      ORDER BY ?label
-  } */
+      ORDER BY ?label `;
+    return query;
+  }
   buildQuery_slices(insee: number) {
     let query =
       `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
