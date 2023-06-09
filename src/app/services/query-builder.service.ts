@@ -95,10 +95,7 @@ SELECT distinct ?Nstation (SUM(?rainfall24h)) as ?rain ?StationName ?insee ?lati
         ?item rdfs:label ?StationName ; wdt:P2585  ?insee .
 ?station geo:lat ?latitude .
 ?station geo:long ?long.
-FILTER (?StationName != "ST-PIERRE" && ?StationName !="NOUVELLE AMSTERDAM" && ?StationName !="TROMELIN" && ?StationName !="KERGUELEN"
-&& ?StationName !="EUROPA" && ?StationName !="PAMANDZI" && ?StationName !="GLORIEUSES" && ?StationName !="GILLOT-AEROPORT" && ?StationName !="ST-BARTHELEMY METEO"
-&& ?StationName !="LE RAIZET AERO" && ?StationName !="LA DESIRADE METEO" && ?StationName !="TRINITE-CARAVEL" && ?StationName !="LAMENTIN-AERO"
-&& ?StationName !="SAINT LAURENT" && ?StationName !="CAYENNE-MATOURY" && ?StationName !="SAINT GEORGES" && ?StationName !="MARIPASOULA" && ?StationName !="DUMONT D'URVILLE")
+FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationName !="La Réunion"@fr && ?StationName !="Martinique"@fr && ?StationName !="Guadeloupe"@fr)    FILTER (?date >= xsd:date(?start))
     FILTER(?date >= xsd:date(?start))
     FILTER(?date < xsd:date(?end))
     }
@@ -108,7 +105,49 @@ FILTER (?StationName != "ST-PIERRE" && ?StationName !="NOUVELLE AMSTERDAM" && ?S
     `;
     return query;
   }
+/*
+  getAvgRainRegion(){
+    PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
+    PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    PREFIX qb:  <http://purl.org/linked-data/cube#>
+    PREFIX wes-dimension: <http://ns.inria.fr/meteo/observationslice/dimension#>
+    PREFIX wes-measure: <http://ns.inria.fr/meteo/observationslice/measure#>
+    PREFIX wes-attribute: <http://ns.inria.fr/meteo/observationslice/attribute#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX dct: <http://purl.org/dc/terms/>
+    PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+    PREFIX sosa: <http://www.w3.org/ns/sosa/>
 
+    SELECT distinct (SUM(?rainfall24h)/COUNT(?Nstation)) as ?rain ?label  WHERE
+    {
+      VALUES ?year  {"2021"^^xsd:gYear}
+      VALUES ?start {'2021-01-01'}
+      VALUES ?end {'2021-01-31'}
+        ?s  a qb:Slice ;
+      wes-dimension:station ?station ;
+      wes-dimension:year ?year ;
+      qb:observation [
+        a qb:Observation ;
+      wes-attribute:observationDate ?date ;
+      wes-measure:rainfall24h ?rainfall24h ].
+
+        ?station a weo:WeatherStation ; dct:spatial ?e; rdfs:label ?Nstation.
+      ?e wdt:P131 ?item .
+      ?item rdfs:label ?label ; wdt:P2585  ?insee .
+      ?station geo:lat ?latitude .
+      ?station geo:long ?long.
+      FILTER (?label != "ST-PIERRE" && ?label !="NOUVELLE AMSTERDAM" && ?label !="TROMELIN" && ?label !="KERGUELEN"
+      && ?label !="EUROPA" && ?label !="PAMANDZI" && ?label !="GLORIEUSES" && ?label !="GILLOT-AEROPORT" && ?label !="ST-BARTHELEMY METEO"
+      && ?label !="LE RAIZET AERO" && ?label !="LA DESIRADE METEO" && ?label !="TRINITE-CARAVEL" && ?label !="LAMENTIN-AERO"
+      && ?label !="SAINT LAURENT" && ?label !="LA GUYANNE"&& ?label !="CAYENNE-MATOURY" && ?label !="SAINT GEORGES" && ?label !="MARIPASOULA" && ?label !="DUMONT D'URVILLE")
+      FILTER(?date >= xsd:date(?start))
+      FILTER(?date < xsd:date(?end))
+    }
+
+    GROUP BY ?label
+      ORDER BY ?label
+  } */
   buildQuery_slices(insee: number) {
     let query =
       `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
