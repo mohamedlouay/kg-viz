@@ -7,12 +7,12 @@
     (input)="onSliderChange()"
     [discrete]="true"
     [displayWith]="display"
+    [step]="step"
     [showTickMarks]="true"
   >
 
     <input matSliderStartThumb [(ngModel)]="sliderValues[0]" >
     <input matSliderEndThumb    [(ngModel)]="sliderValues[1]">
   </mat-slider>
-
 
 </div>

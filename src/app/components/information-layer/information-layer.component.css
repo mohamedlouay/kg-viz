@@ -6,6 +6,10 @@
 p{
   font-size: 1em;
 }
+a {
+  font-size: 1em;
+  color:white;
+}
 
 h6{
   margin-block-start: 0.15em;
