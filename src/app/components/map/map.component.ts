@@ -236,7 +236,7 @@ export class MapComponent {
   /**
    *
    */
-  async addRegionLayer() {
+  async addHumidityRegionLayer() {
     return fetch(
       'https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions.geojson'
     )
@@ -288,15 +288,25 @@ export class MapComponent {
   /**
    *
    */
+
   async getData() {
-    let data: any[][] = [];
-      this.dataService.getTemperaturePerStation(this.start, this.end).subscribe((weather) => {
-        this.stationsData = this.mapperService.weatherToStation(weather);
-        this.stationsData.forEach((station) => {
-          data.push([station.longitude, station.latitude, station.temp_avg]);
-        });
-      });
-    return data;
+    return new Promise<any[][]>((resolve, reject) => {
+      let data: any[][] = [];
+      let tempData: Station[];
+
+      this.dataService.getTemperaturePerStation(this.start, this.end).subscribe(
+        (weather) => {
+          tempData = this.mapperService.weatherToStation(weather);
+          tempData.forEach((station) => {
+            data.push([station.longitude, station.latitude, station.temp_avg]);
+          });
+          resolve(data);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
   }
 
   /**
@@ -304,12 +314,13 @@ export class MapComponent {
    */
   async getRainData(){
     let data: any[][] = [];
-    this.dataService.getRainPerStation().subscribe((weather) => {
+    this.dataService.getRainPerStation(this.start, this.end).subscribe((weather) => {
       this.stationsData = this.mapperService.weatherToStation(weather);
       this.stationsData.forEach((station) => {
         data.push([station.longitude, station.latitude, station.rain]);
       });
     });
+    console.log(" RAINS ? ", data);
     return data;
   }
 
@@ -438,10 +449,12 @@ export class MapComponent {
             }
           });
           this.colors = ['white', 'yellow', 'orange', 'red'];
+          this.getData().then((data) => {
+            this.hexLayer._data = data;
           this.mymap.addLayer(this.hexLayer);
           this.calculateLegendValues(this.hexLayer._data);
           this.legendScaleTest.emit(this.legendScale);
-
+          });
           //this.createTempValuesMarkers(this.hexLayer._data, this.mymap);
         }
         if(this.parameterSelected == 'rain'){
@@ -451,10 +464,12 @@ export class MapComponent {
             }
           });
           this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF',  '#00008B'];
+          this.getRainData().then((data) => {
+            this.hexLayerRain._data = data;
           this.mymap.addLayer(this.hexLayerRain);
           this.calculateLegendValues(this.hexLayerRain._data);
           this.legendScaleTest.emit(this.legendScale);
-
+          });
         }
         if(this.parameterSelected == 'wind'){
           this.colors = ['#ECFFDC','#93C572',  '#2E8B57'];
@@ -513,7 +528,7 @@ export class MapComponent {
    */
   async createRainValuesLayer(stations: any[], mymap: L.Map) {
     var stationsCoordinates: Station[];
-      this.dataService.getRainPerStation().subscribe((weather) => {
+      this.dataService.getRainPerStation(this.start, this.end).subscribe((weather) => {
         this.stationsData = this.mapperService.weatherToStation(weather);
           this.stationsData.forEach((station) => {
           /*  var marker = L.marker([station.latitude, station.longitude]).bindTooltip(
@@ -538,12 +553,14 @@ export class MapComponent {
   }
 
   calculateLegendValues( data: any[]){
+    console.log(" LEGEND DATA ? ?? ", data);
     let numbers: number[] = [];
     data.forEach(num => {
       numbers.push(parseInt(num[2]));
     })
     const minValue = Math.min(...numbers);
     const maxValue = Math.max(...numbers);
+    console.log(" MIN ? ", minValue);
     const range = maxValue - minValue;
     const interval = range / 5;
     const legendLabels: number[] = [];
@@ -552,6 +569,7 @@ export class MapComponent {
       legendLabels.push(average);
     }
     this.legendScale = legendLabels;
+    console.log(' LEGEND ', this.legendScale);
   }
   createTempValuesMarkers(stations: any[][], mymap: L.Map) {
     stations.forEach((station) => {
@@ -578,6 +596,7 @@ export class MapComponent {
               direction: 'center',
             }
           );
+
 
           marker.setIcon(
             L.icon({
@@ -612,13 +631,9 @@ export class MapComponent {
     return `${year}-${month}-${day}`;
   }
   handleRangeChangedEvent(range: Date[]) {
-    this.mymap.removeLayer(this.hexLayer);
     this.start = this.updateDates(range[0]);
     this.end = this.updateDates(range[1]);
-    this.getData().then((data) => {
-      this.hexLayer._data = data;
-    this.mymap.addLayer(this.hexLayer);
-    });
+    this.switchLayer();
   }
   protected readonly console = console;
 }
