@@ -13,7 +13,13 @@ import { select } from 'd3-selection';
 import * as L from 'leaflet';
 import * as Ld3 from '@asymmetrik/leaflet-d3';
 import { ChartModalComponent } from '../chart-modal/chart-modal.component';
-import { GeoJSON, HexbinLayerConfig, Layer } from 'leaflet';
+import {
+  CircleMarker,
+  GeoJSON,
+  HexbinLayerConfig,
+  Layer,
+  Marker,
+} from 'leaflet';
 import { DataService } from '../../services/data.service';
 import { MapperService } from '../../services/mapper.service';
 import { IAvgTempPerRegion, Station } from '../../models/data';
@@ -43,9 +49,12 @@ export class MapComponent {
   endDate: number = 1640908800000;
   start: string = '2021-01-01';
   end: string = '2021-12-31';
+  protected readonly console = console;
+  enable: boolean = true;
 
   @Input() layerSelected: string | undefined;
   @Input() parameterSelected!: string;
+  @Input() unit!: string;
   @Output() colors: string[] | undefined;
   @Output() legendScale: number[] | undefined;
   @Output() legendScaleTest = new EventEmitter<number[]>();
@@ -65,6 +74,7 @@ export class MapComponent {
    *
    */
   ngOnInit(): void {
+    this.enable = true;
     this.dataService.getAvgTempPerRegion().subscribe(() => {
       this.createMap();
     });
@@ -174,7 +184,22 @@ export class MapComponent {
 
         this.getRainData().then((data) => {
           this.hexLayerRain._data = data;
+          this.createLayerTooltip(data, this.mymap);
         });
+        this.hexLayerRain
+          .radiusRange([15, 18, 20, 24, 28, 32])
+          .lng(function (d: any[]) {
+            return d[0];
+          })
+          .lat(function (d: any[]) {
+            return d[1];
+          })
+          .colorValue(function (d: any[]) {
+            return parseInt(String(parseFloat(d[0]['o'][2]) * 10));
+          })
+          .radiusValue(function (d: any[]) {
+            return parseInt(d[0]['o'][2]);
+          });
         this.hexLayerRain
           .radiusRange([15, 18, 20, 24, 28, 32])
           .lng(function (d: any[]) {
@@ -251,6 +276,7 @@ export class MapComponent {
 
     this.getWindHumudityData().then((data) => {
       this.hexLayerHumidity._data = data;
+      this.createLayerTooltip(data, this.mymap);
     });
     this.hexLayerHumidity
       .radiusRange([15, 18, 20, 24, 28, 32])
@@ -285,6 +311,11 @@ export class MapComponent {
             maxPopulationDensity = populationDensity;
           }
         });
+        //alimentation de la légende
+        this.regionLayer.addData(data);
+        console.log('data', data);
+        this.calculateLegendValues(this.regionLayer._data);
+        this.legendScaleTest.emit(this.legendScale);
         // Création d'une fonction de couleur pour la choropleth map
         function getColor(d: number) {
           return d > maxPopulationDensity * 0.8
@@ -316,7 +347,7 @@ export class MapComponent {
           },
         });
         // Ajout de la couche à la carte
-        // this.regionLayer.addTo(this.mymap);
+        //this.regionLayer.addTo(this.mymap);
       });
   }
 
@@ -333,7 +364,12 @@ export class MapComponent {
         (weather) => {
           tempData = this.mapperService.weatherToStation(weather);
           tempData.forEach((station) => {
-            data.push([station.longitude, station.latitude, station.temp_avg]);
+            data.push([
+              station.longitude,
+              station.latitude,
+              station.temp_avg,
+              station.nom,
+            ]);
           });
           resolve(data);
         },
@@ -354,7 +390,12 @@ export class MapComponent {
       .subscribe((weather) => {
         this.stationsData = this.mapperService.weatherToStation(weather);
         this.stationsData.forEach((station) => {
-          data.push([station.longitude, station.latitude, station.rain]);
+          data.push([
+            station.longitude,
+            station.latitude,
+            station.rain,
+            station.nom,
+          ]);
         });
       });
     console.log(' RAINS ? ', data);
@@ -401,7 +442,7 @@ export class MapComponent {
         (weather) => {
           tempData = this.mapperService.weatherToStation(weather);
           tempData.forEach((station) => {
-            data.push([station.angle]);
+            data.push([station.angle, station.nom]);
           });
           resolve(data);
         },
@@ -421,7 +462,13 @@ export class MapComponent {
         (weather) => {
           tempData = this.mapperService.weatherToStation(weather);
           tempData.forEach((station) => {
-            data.push([station.longitude, station.latitude, station.humidity]);
+            console.log('original station format:', station);
+            data.push([
+              station.longitude,
+              station.latitude,
+              station.humidity,
+              station.nom,
+            ]);
           });
           resolve(data);
         },
@@ -488,13 +535,22 @@ export class MapComponent {
               this.mymap.removeLayer(layer);
             }
           });
-          this.colors = ['white', 'yellow', 'orange', 'red'];
+          this.colors = [
+            'white',
+            '#fed976',
+            '#feb24c',
+            '#fd8d3c',
+            '#f03b20',
+            '#bd0327',
+          ];
           this.getData().then((data) => {
             this.hexLayer._data = data;
             this.mymap.addLayer(this.hexLayer);
+            this.createLayerTooltip(this.hexLayer._data, this.mymap);
             this.calculateLegendValues(this.hexLayer._data);
             this.legendScaleTest.emit(this.legendScale);
           });
+
           //this.createTempValuesMarkers(this.hexLayer._data, this.mymap);
         }
         if (this.parameterSelected == 'rain') {
@@ -507,6 +563,7 @@ export class MapComponent {
           this.getRainData().then((data) => {
             this.hexLayerRain._data = data;
             this.mymap.addLayer(this.hexLayerRain);
+            this.createLayerTooltip(this.hexLayerRain._data, this.mymap);
             this.calculateLegendValues(this.hexLayerRain._data);
             this.legendScaleTest.emit(this.legendScale);
           });
@@ -516,15 +573,21 @@ export class MapComponent {
           this.mymap.addLayer(this.hexLayerWind);
           this.createWindDirectionIcons(this.hexLayerWind._data, this.mymap);
           this.calculateLegendValues(this.hexLayerWind._data);
+          this.legendScaleTest.emit(this.legendScale);
         }
         if (this.parameterSelected == 'humidity') {
           this.mymap.eachLayer((layer: any) => {
-            if (layer instanceof L.Marker || layer instanceof RotatedMarker) {
+            if (
+              layer instanceof L.Marker ||
+              layer instanceof RotatedMarker ||
+              layer instanceof Marker
+            ) {
               this.mymap.removeLayer(layer);
             }
           });
           this.colors = ['#E6E6FA', '#E0B0FF', '#E0B0FF', '#DA70D6', '#800080'];
           this.mymap.addLayer(this.hexLayerHumidity);
+          this.createLayerTooltip(this.hexLayerHumidity._data, this.mymap);
           this.calculateLegendValues(this.hexLayerHumidity._data);
           this.legendScaleTest.emit(this.legendScale);
         }
@@ -546,13 +609,21 @@ export class MapComponent {
         if (this.mymap.hasLayer(this.regionLayer)) {
           this.mymap.removeLayer(this.regionLayer);
         }
-        if (this.parameterSelected == 'temperature') {
-          this.colors = ['white', 'yellow', 'orange', 'red'];
-          this.mymap.addLayer(this.regionLayer);
-        }
         if (this.parameterSelected == 'rain') {
           this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF', '#00008B'];
           this.mymap.addLayer(this.hexLayerRain);
+        }
+        if (this.parameterSelected == 'temperature') {
+          this.colors = [
+            'white',
+            '#fed976',
+            '#feb24c',
+            '#fd8d3c',
+            '#f03b20',
+            '#bd0327',
+          ];
+          //this.addRegionLayer();
+          this.mymap.addLayer(this.regionLayer);
         }
         //this.switchParameter(this.parameterSelected);
         break;
@@ -573,7 +644,11 @@ export class MapComponent {
     const legendLabels: number[] = [];
     for (let i = 1; i <= 5; i++) {
       const average = minValue + interval * i;
-      legendLabels.push(average);
+      console.log(
+        'average: ',
+        Math.round((average + Number.EPSILON) * 100) / 100
+      );
+      legendLabels.push(Math.round((average + Number.EPSILON) * 100) / 100);
     }
     this.legendScale = legendLabels;
     console.log(' LEGEND ', this.legendScale);
@@ -615,6 +690,7 @@ export class MapComponent {
   }
 
   private openModal<G, P>(feature: any) {
+    this.enable = false;
     const dialogRef = this.dialog.open(ChartModalComponent, {
       data: {
         regionName: feature.properties.nom,
@@ -625,18 +701,6 @@ export class MapComponent {
     });
   }
 
-  updateDates(range: Date) {
-    const date = new Date(range);
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-  handleRangeChangedEvent(range: Date[]) {
-    this.start = this.updateDates(range[0]);
-    this.end = this.updateDates(range[1]);
-    this.switchLayer();
-  }
   colorMapByTemperature(isee: string) {
     let temperatureData: IAvgTempPerRegion[] =
       this.dataService.initAvgTempPerRegionData!;
@@ -661,14 +725,47 @@ export class MapComponent {
         averageTemperature,
         averageTemperature + standardDeviation,
       ])
-      .range(['#f7ff00', '#ff2f00']);
+      .range(['#feb24c', '#fd8d3c', '#f03b20', '#bd0327']);
 
     let temperature = temperatureData.find(
       (region) => region.isee === isee
     )!.temp_avg;
 
+    console.log(colorScale(temperature));
     // return the color
     return colorScale(temperature);
   }
-  protected readonly console = console;
+
+  updateDates(range: Date) {
+    const date = new Date(range);
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  handleRangeChangedEvent(range: Date[]) {
+    this.start = this.updateDates(range[0]);
+    this.end = this.updateDates(range[1]);
+    this.switchLayer();
+  }
+
+  private createLayerTooltip(stations: any[][], mymap: L.Map) {
+    stations.forEach((station) => {
+      console.log('station: ', station);
+      var marker = new Marker([station[1], station[0]], {
+        icon: L.divIcon({
+          className: 'leaflet-mouse-marker',
+          iconAnchor: [20, 20],
+          iconSize: [40, 40],
+        }),
+        opacity: 0,
+        zIndexOffset: this.options.zIndexOffset,
+      }).bindTooltip(station[3] + ': ' + Math.trunc(station[2]) + this.unit, {
+        permanent: false,
+        direction: 'center',
+      });
+
+      marker.addTo(this.mymap);
+    });
+  }
 }

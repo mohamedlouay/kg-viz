@@ -29,6 +29,9 @@ export class VisualisationPageComponent {
   @Input() legendScale!:number[];
   @Output() legendScaleTestValue!:number[];
 
+  legend:string="";
+  scaleUnit: any;
+
  constructor() {}
 
   ngOnInit(){
@@ -48,6 +51,8 @@ export class VisualisationPageComponent {
 
   legendColorGetter(activeLayerParameter: string){
    if(activeLayerParameter == 'rain'){
+     this.legend = "Cumulative rainfall";
+     this.scaleUnit = " mm/m²";
      this.color5 = 'white';
      this.color4 = '#ADD8E6';
      this.color3 = '#7DF9FF';
@@ -56,6 +61,8 @@ export class VisualisationPageComponent {
    }
 
    if(activeLayerParameter == 'temperature'){
+     this.legend = "Temperature mean"
+     this.scaleUnit = " °C";
      this.color5 = '#fed976';
      this.color4 = '#feb24c';
      this.color3 = '#fd8d3c';
@@ -64,6 +71,8 @@ export class VisualisationPageComponent {
    }
 
     if(activeLayerParameter == 'humidity'){
+      this.legend = "Humidity mean"
+      this.scaleUnit = " g/m3";
       this.color5 = '#E6E6FA';
       this.color4 = '#E0B0FF';
       this.color3 = '#E0B0FF';
@@ -71,6 +80,8 @@ export class VisualisationPageComponent {
       this.color1 = '#800080';
     }
     if(activeLayerParameter == 'wind'){
+      this.legend = "Wind"
+      this.scaleUnit = " km/h"
       this.color5 = '#ECFFDC';
       this.color4 = '#C1E1C1';
       this.color3 = '#93C572';

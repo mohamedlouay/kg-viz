@@ -1,16 +1,18 @@
 <div class="slider-container" *ngIf="startDate > 0">
+  <p>Time brush</p>
+  <h6>Click on the time line to change time period</h6>
   <mat-slider class="custom-slider"
     [min]="startDate"
     [max]="endDate"
     (input)="onSliderChange()"
     [discrete]="true"
     [displayWith]="display"
-    [step]="step"
     [showTickMarks]="true"
   >
 
     <input matSliderStartThumb [(ngModel)]="sliderValues[0]" >
     <input matSliderEndThumb    [(ngModel)]="sliderValues[1]">
   </mat-slider>
+
 
 </div>
