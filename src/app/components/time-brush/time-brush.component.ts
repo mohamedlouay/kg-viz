@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatSliderChange } from '@angular/material/slider';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-time-brush',
@@ -7,16 +6,9 @@ import { MatSliderChange } from '@angular/material/slider';
   styleUrls: ['./time-brush.component.css'],
 })
 export class TimeBrushComponent implements OnInit {
-  public tooltip: Object = {
-    placement: 'After',
-    isVisible: true,
-    showOn: 'Always',
-  };
-
+  public tooltip: Object = {placement: 'After', isVisible: true, showOn: 'Always',};
   @Output() rangeChanged = new EventEmitter<Date[]>();
-
   @Input() startDate = 0;
-
   @Input() endDate = 0;
   sliderValues: number[] = [];
   readonly stepOneDay = 86400000 * 30;
@@ -33,6 +25,10 @@ export class TimeBrushComponent implements OnInit {
     this.sliderValues = [this.startDate, this.endDate];
   }
 
+  /**
+   * Get the value of the time period given the time brush
+   * each time the slider is moved
+   */
   onSliderChange() {
     const startDate = new Date(this.sliderValues[0]);
     const endDate = new Date(this.sliderValues[1]);
@@ -40,6 +36,10 @@ export class TimeBrushComponent implements OnInit {
     this.rangeChanged.emit([startDate, endDate]);
   }
 
+  /**
+   * Used to get the time value displayed in the tooltip of the timebrush
+   * @param value
+   */
   display(value: number) {
     const date = new Date(value);
     const year = date.getFullYear().toString();
@@ -48,6 +48,10 @@ export class TimeBrushComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+  /**
+   * Update the step of the time line optimaly
+   * @private
+   */
   private updateStep() {
     if (this.sliderValues[1] - this.sliderValues[0] < this.oneMonth) {
       this.step = this.stepOneDay;

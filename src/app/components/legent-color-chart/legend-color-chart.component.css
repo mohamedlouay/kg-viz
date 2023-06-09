@@ -1,24 +1,26 @@
-.root{
-  --color1:#da4545;
-  --color2:#ff7e0f;
-  --color3:#ffe218;
-  --color4:#7cdf50;
-  --color5:#4591da;
+.root {
+  --color1: #da4545;
+  --color2: #ff7e0f;
+  --color3: #ffe218;
+  --color4: #7cdf50;
+  --color5: #4591da;
 }
+
 #gradient-bar {
   height: 400px;
   width: 20px;
   border-radius: 10px;
-  background:  linear-gradient(var(--color1), var( --color2), var( --color3), var( --color4), var( --color5));
+  background: linear-gradient(var(--color1), var(--color2), var(--color3), var(--color4), var(--color5));
 }
 
-.container{
+.container {
   color: white;
 }
 
 #legend {
   position: relative;
 }
+
 .indicator {
   position: absolute;
   top: 0;

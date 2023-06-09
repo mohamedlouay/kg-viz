@@ -1,33 +1,13 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import * as d3 from 'd3';
-import * as hexbin from 'd3-hexbin';
-import { select } from 'd3-selection';
 import * as L from 'leaflet';
-import * as Ld3 from '@asymmetrik/leaflet-d3';
-import { ChartModalComponent } from '../chart-modal/chart-modal.component';
-import {
-  CircleMarker,
-  GeoJSON,
-  HexbinLayerConfig,
-  Layer,
-  Marker,
-} from 'leaflet';
-import { DataService } from '../../services/data.service';
-import { MapperService } from '../../services/mapper.service';
-import { IAvgTempPerRegion, Station } from '../../models/data';
-import { Observable, Subscriber } from 'rxjs';
-import { ParameterFilterComponent } from '../parameter-filter/parameter-filter.component';
-import { VisualisationPageComponent } from '../visualisation-page/visualisation-page.component';
-import { RotatedMarker } from 'leaflet-marker-rotation';
-import { text } from 'd3';
+import {ChartModalComponent} from '../chart-modal/chart-modal.component';
+import {HexbinLayerConfig, Marker,} from 'leaflet';
+import {DataService} from '../../services/data.service';
+import {MapperService} from '../../services/mapper.service';
+import {IAvgTempPerRegion, Station} from '../../models/data';
+import {RotatedMarker} from 'leaflet-marker-rotation';
 
 @Component({
   selector: 'app-map',
@@ -61,18 +41,15 @@ export class MapComponent {
 
   private hexbinOptions!: HexbinLayerConfig;
 
-  constructor(
-    private dialog: MatDialog,
-    private dataService: DataService,
-    private mapperService: MapperService
+  constructor(private dialog: MatDialog,
+              private dataService: DataService,
+              private mapperService: MapperService
   ) {
     this.colors = ['white', 'yellow', 'orange', 'red'];
     this.legendScale = [11, 15, 20, 25];
   }
 
-  /**
-   *
-   */
+
   ngOnInit(): void {
     this.enable = true;
     this.dataService.getAvgTempPerRegion().subscribe(() => {
@@ -113,6 +90,7 @@ export class MapComponent {
         function getColor(d: number) {
           return '#bd0327';
         }
+
         // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
         // Création d'une couche GeoJSON pour les régions
         this.regionLayer = L.geoJSON(data, {
@@ -316,17 +294,18 @@ export class MapComponent {
         console.log('data', data);
         this.calculateLegendValues(this.regionLayer._data);
         this.legendScaleTest.emit(this.legendScale);
+
         // Création d'une fonction de couleur pour la choropleth map
         function getColor(d: number) {
           return d > maxPopulationDensity * 0.8
             ? '#bd0327'
             : d > maxPopulationDensity * 0.6
-            ? '#f03b20'
-            : d > maxPopulationDensity * 0.4
-            ? '#fd8d3c'
-            : d > maxPopulationDensity * 0.2
-            ? '#feb24c'
-            : '#fed976';
+              ? '#f03b20'
+              : d > maxPopulationDensity * 0.4
+                ? '#fd8d3c'
+                : d > maxPopulationDensity * 0.2
+                  ? '#feb24c'
+                  : '#fed976';
         }
 
         // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
@@ -480,6 +459,7 @@ export class MapComponent {
       );
     });
   }
+
   /**
    *
    */
@@ -698,7 +678,7 @@ export class MapComponent {
         regionName: feature.properties.nom,
         regionCode: feature.properties.code,
       },
-      position: { bottom: '0px' },
+      position: {bottom: '0px'},
       panelClass: 'full-width-dialog',
     });
   }
@@ -745,6 +725,7 @@ export class MapComponent {
     const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
+
   handleRangeChangedEvent(range: Date[]) {
     this.start = this.updateDates(range[0]);
     this.end = this.updateDates(range[1]);

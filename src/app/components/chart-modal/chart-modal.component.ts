@@ -1,56 +1,41 @@
-import {
-  Component,
-  OnInit,
-  ElementRef,
-  ViewChild,
-  Inject,
-} from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {Component, OnInit, ElementRef, ViewChild, Inject,} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import * as d3 from 'd3';
-import { ITemperature } from '../../models/data';
-import { DataService } from '../../services/data.service';
-import { MapperService } from '../../services/mapper.service';
-import { rgb, scaleOrdinal, schemeCategory10 } from 'd3';
+import {ITemperature} from '../../models/data';
+import {DataService} from '../../services/data.service';
+import {MapperService} from '../../services/mapper.service';
+import {rgb, scaleOrdinal, schemeCategory10} from 'd3';
 
 @Component({
   selector: 'app-chart-modal',
   templateUrl: './chart-modal.component.html',
   styleUrls: ['./chart-modal.component.css'],
 })
-export class ChartModalComponent implements OnInit {
-  @ViewChild('chart', { static: false })
+export class ChartModalComponent {
+
+  @ViewChild('chart', {static: false})
   private chartContainer!: ElementRef;
   regionDataFromServer!: ITemperature[];
   regionData!: ITemperature[];
   listStations!: string[];
   message = '';
-
   startDate = 0;
   endDate = 0;
-
   // Set the dimensions of the chart
-  margin = { top: 20, right: 80, bottom: 20, left: 80 };
+  margin = {top: 20, right: 80, bottom: 20, left: 80};
   width = 1150 - this.margin.left - this.margin.right;
   height = 300 - this.margin.top - this.margin.bottom;
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private dataService: DataService,
-    private mapperService: MapperService
-  ) {
-    this.dataService
-      .getTemperaturePerRegion(data.regionCode)
-      .subscribe((weather) => {
-        this.regionDataFromServer =
-          this.mapperService.weatherToTemperature(weather);
-        this.regionData = this.regionDataFromServer;
-        [this.startDate, this.endDate] = this.getMinMaxDate(this.regionData);
-        this.listStations = this.extractListStation();
-        this.createLineChart();
-      });
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService,
+              private mapperService: MapperService) {
+    this.dataService.getTemperaturePerRegion(data.regionCode).subscribe((weather) => {
+      this.regionDataFromServer = this.mapperService.weatherToTemperature(weather);
+      this.regionData = this.regionDataFromServer;
+      [this.startDate, this.endDate] = this.getMinMaxDate(this.regionData);
+      this.listStations = this.extractListStation();
+      this.createLineChart();
+    });
   }
-
-  ngOnInit() {}
 
   private createLineChart(): void {
     // Append the SVG to the chart container
@@ -112,15 +97,24 @@ export class ChartModalComponent implements OnInit {
     this.addLegend();
   }
 
+  /**
+   * Method to extract the list of the station from each
+   * region data collected
+   * @private
+   */
   private extractListStation() {
     const listStation = this.regionData.map((item) => item.station);
     return Array.from(new Set(listStation));
   }
 
+  /**
+   * This method is used to build the legend of the chart with
+   * colored square associated to each station
+   * @private
+   */
   private addLegend() {
     console.log("liste des stations:", this.listStations);
     const svg = d3.select(this.chartContainer.nativeElement).select('svg');
-
     const legendGroup = svg
       .append('g')
       .style('fill', 'white')
@@ -129,7 +123,6 @@ export class ChartModalComponent implements OnInit {
         'transform',
         `translate(${this.width - 50}, ${this.margin.top - 20})`
       );
-
     const legendItems = legendGroup
       .selectAll('.legend-item')
       .data(this.listStations)
@@ -139,7 +132,6 @@ export class ChartModalComponent implements OnInit {
       .attr('transform', (d, i) => `translate(0, ${i * 20})`);
 
     console.log("legend items list:", legendItems);
-
     legendItems
       .append('rect')
       .attr('width', 10)
@@ -147,7 +139,6 @@ export class ChartModalComponent implements OnInit {
       .attr('fill', (d) =>
         rgb(schemeCategory10[this.listStations.indexOf(d)]).toString()
       );
-
     legendItems
       .append('text')
       .style("font-size", "0.70em")
@@ -157,11 +148,22 @@ export class ChartModalComponent implements OnInit {
       .text((d) => d);
   }
 
+  /**
+   * This method is used to handle the time period chage while switching
+   * the time period interval
+   * @param range
+   */
   handleRangeChangedEvent(range: Date[]) {
     this.regionData = this.filterDataByDateRange(range[0], range[1]);
     this.reCreateLineChart();
   }
 
+  /**
+   * Filtering the data by date range
+   * @param startDate
+   * @param endDate
+   * @private
+   */
   private filterDataByDateRange(startDate: Date, endDate: Date) {
     return this.regionDataFromServer.filter((item) => {
       const itemDate = new Date(item.date);
@@ -169,25 +171,35 @@ export class ChartModalComponent implements OnInit {
     });
   }
 
+  /**
+   * create line chart after changes
+   * @private
+   */
   private reCreateLineChart() {
     d3.select(this.chartContainer.nativeElement).select('svg').remove();
     this.createLineChart();
   }
+
+  /**
+   * Getting min and max temperatures
+   * @param datas
+   * @private
+   */
   private getMinMaxTemperatures(datas: ITemperature[]): [number, number] {
     const temperatureValues = datas.map((item) => item.temp_avg);
-
     const minTemp = Math.min(...temperatureValues);
-
     const maxTemp = Math.max(...temperatureValues);
-
     return [minTemp, maxTemp];
   }
 
+  /**
+   * Get the min and max date indicated by the time brush
+   * @param datas
+   * @private
+   */
   private getMinMaxDate(datas: ITemperature[]) {
     const DateValues = datas.map((item) => new Date(item.date).getTime());
-
     const startDate = Math.min(...DateValues);
-
     const endDate = Math.max(...DateValues);
     console.log('getMinMaxDate');
     console.log([startDate, endDate]);

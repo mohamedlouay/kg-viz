@@ -9,32 +9,27 @@ export class ParameterFilterComponent {
   @Output() activeButton: string = "";
   @Output() parameterSelected = new EventEmitter<string>();
   @Output() layerSelected = new EventEmitter<string>();
-  @Input() buttonColor!:string;
+  @Input() buttonColor!: string;
+  public layerType: string | undefined;
 
-  private parameterList : string[] = [
-    'wind',
-    'humidity',
-    'rain',
-    'temperature'
-  ]
-   public layerType: string | undefined;
 
-  constructor() {
-  }
-
-  ngOnInit(){
+  ngOnInit() {
     this.loadTemperature();
     this.getButtonClass('temperature');
-    document.documentElement.style.setProperty('--color', this.buttonColor+''); //suffix may be px or ''
+    document.documentElement.style.setProperty('--color', this.buttonColor + ''); //suffix may be px or ''
     this.layerType = "région";
     this.activeButton = 'temperature';
     this.regionStation('région');
   }
 
-  ngOnChanges(){
-    document.documentElement.style.setProperty('--color', this.buttonColor+''); //suffix may be px or ''
+  ngOnChanges() {
+    document.documentElement.style.setProperty('--color', this.buttonColor + ''); //suffix may be px or ''
   }
 
+  /**
+   * Check if we have clicked on a parameter button
+   * @param name
+   */
   getButtonClass(name: string) {
     return {
       'active': this.activeButton === name
