@@ -1,15 +1,16 @@
 <div class="container" fxLayout="column">
   <div id="title">
-    <app-information-layer></app-information-layer>
+    <app-information-layer [linkedPage]="link" [informationDisplay]="legend"></app-information-layer>
   </div>
   <div id="filter">
     <app-parameter-filter [buttonColor]="color3" (parameterSelected)="switchParameter($event)"  (layerSelected)="switchLayer($event)"></app-parameter-filter>
   </div>
   <div id="map">
-    <app-map (legendScaleTest)="getLegendScale($event)" [parameterSelected]="parameterChosen" [layerSelected]="activeLayer"></app-map>
+
+    <app-map [unit]="scaleUnit" (legendScaleTest)="getLegendScale($event)" [parameterSelected]="parameterChosen" [layerSelected]="activeLayer"></app-map>
   </div>
   <div id="legend-chart">
-    <app-legend-color-chart [scale1]="scale5" [scale2]="scale4" [scale3]="scale3" [scale4]="scale2" [scale5]="scale1"
+    <app-legend-color-chart [unit]="scaleUnit" [scale1]="scale5" [scale2]="scale4" [scale3]="scale3" [scale4]="scale2" [scale5]="scale1"
     [color1]="color1" [color2]="color2" [color3]="color3" [color4]="color4" [color5]="color5">
     </app-legend-color-chart>
   </div>

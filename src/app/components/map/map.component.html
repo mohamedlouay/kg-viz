@@ -1,3 +1,14 @@
 <div class="coverage"></div>
+
 <div id="map">
+
+
+
+<app-time-brush *ngIf="enable" class="brush"
+                [startDate]="startDate"
+                [endDate]="endDate"
+                (rangeChanged)="handleRangeChangedEvent($event)"
+></app-time-brush>
+
+
 </div>

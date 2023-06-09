@@ -1,12 +1,18 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatSliderChange} from "@angular/material/slider";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatSliderChange } from '@angular/material/slider';
 
 @Component({
   selector: 'app-time-brush',
   templateUrl: './time-brush.component.html',
-  styleUrls: ['./time-brush.component.css']
+  styleUrls: ['./time-brush.component.css'],
 })
-export class TimeBrushComponent implements OnInit{
+export class TimeBrushComponent implements OnInit {
+  public tooltip: Object = {
+    placement: 'After',
+    isVisible: true,
+    showOn: 'Always',
+  };
+
   @Output() rangeChanged = new EventEmitter<Date[]>();
 
   @Input() startDate=0;

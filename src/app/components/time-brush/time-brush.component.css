@@ -1,8 +1,7 @@
 .slider-container {
-
   /*min-width: 97vw;*/
   padding:5px 20px;
-  background: black;
+  background: rgba(0,0,0,0.7);;
   opacity: 1;
   /*position: fixed;*/
   /*bottom: 10px;*/
@@ -14,10 +13,33 @@ mat-slider{
   min-width: 80%;
 }
 
+p{
+  margin-block-start: 0.25em;
+  margin-block-end: 0.25em;
+  font-size: 1.5em;
+  color:white;
+  text-align: left;
+}
+h6{
+  margin-block-start: 0.25em;
+  margin-block-end: 0.25em;
+  font-size: 0.85em;
+  color:white;
+  text-align: left;
+}
+
 .custom-slider .mat-slider-thumb-label {
+  color: white;
+  background-color: rgba(0,0,0,0.2);;
   position: absolute;
   /* Adjust the top and left values according to your desired position */
-  top: -30px;
-  left: 50%;
+  /*top: -30px;
+  left: 50%;*/
   transform: translateX(-50%);
 }
+
+
+.mat-slider-thumb {
+  background-color: green !important;
+}
+
