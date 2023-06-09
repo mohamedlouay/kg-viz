@@ -1,24 +1,17 @@
 <div class="slider-container" *ngIf="startDate > 0">
-  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
-    <mat-form-field>
-      <mat-label>Year</mat-label>
-      <mat-select [(ngModel)]="selectedYear">
-        <mat-option *ngFor="let year of years" [value]="year">
-          {{ year }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-slider class="custom-slider"
-                [min]="startDate"
-                [max]="endDate"
-                (input)="onSliderChange()"
-                [discrete]="true"
-                [displayWith]="display"
-                [step]="step"
-                [showTickMarks]="true"
-    >
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
   <p>Time brush</p>
-  <h6>Click on the time line to change time period</h6>
+  <mat-form-field>
+    <mat-label>Year</mat-label>
+    <mat-select [(ngModel)]="selectedYear">
+      <mat-option *ngFor="let year of years" [value]="year">
+        {{ year }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+
   <mat-slider class="custom-slider"
     [min]="startDate"
     [max]="endDate"

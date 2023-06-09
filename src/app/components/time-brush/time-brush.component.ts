@@ -19,7 +19,7 @@ export class TimeBrushComponent implements OnInit {
 
   @Input() endDate=0;
   sliderValues: number[] = [];
-  readonly stepOneDay = 86400000*1 ;
+  readonly stepOneDay = 86400000 ;
   readonly stepTenDays = 86400000*10 ;
   readonly oneMonth = 86400000*30 ;
   step:number;
