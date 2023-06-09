@@ -17,6 +17,7 @@ export class LegendColorChartComponent {
   @Input() color4!: string;
   @Input() color5!: string;
   @Input() colors!: string[];
+  @Input() unit!: string;
 
   gradientBar! : HTMLElement;
   indicators! : HTMLCollectionOf<Element>;
@@ -32,7 +33,7 @@ export class LegendColorChartComponent {
     for (let x = 0; x < numberOfIndicators; x++) {
       let topValue = this.counter + "px";
       this.indicators[x].setAttribute("style", "top:" + topValue);
-      this.counter += barHeight / numberOfIndicators + 3;
+      this.counter += barHeight / numberOfIndicators + 0;
       console.log("counter: ", this.counter);
     }
     this.changeColor();

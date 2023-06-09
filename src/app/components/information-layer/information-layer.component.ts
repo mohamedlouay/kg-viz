@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import { ItemModel } from '@syncfusion/ej2-angular-splitbuttons';
 
 @Component({
@@ -8,6 +8,8 @@ import { ItemModel } from '@syncfusion/ej2-angular-splitbuttons';
 })
 export class InformationLayerComponent {
   public dropdown: boolean = false;
+  @Input() linkedPage!: string;
+  @Input()  informationDisplay: string = "Temperature mean ";
 
   //show content method
   dropContent() {
