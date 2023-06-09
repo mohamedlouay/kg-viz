@@ -38,15 +38,17 @@ export class MapComponent {
   start: string = '2021-01-01';
   end: string = '2021-12-31';
   protected readonly console = console;
-  enable: boolean = false;
+  enable: boolean = true;
 
   @Input() layerSelected: string | undefined;
   @Input() parameterSelected!:string;
+  @Input() unit!: string;
   @Output() colors : string[] | undefined;
   @Output() legendScale : number[] | undefined;
   @Output() legendScaleTest = new EventEmitter<number[]>();
 
   private hexbinOptions!: HexbinLayerConfig;
+
 
   constructor(private dialog: MatDialog, private dataService: DataService, private mapperService: MapperService) {
     this.colors = ['white', 'yellow', 'orange', 'red'];
@@ -56,6 +58,7 @@ export class MapComponent {
    *
    */
   ngOnInit(): void {
+    this.enable = true
     this.dataService.getAvgTempPerRegion().subscribe(()=>{
       this.createMap();
     })
@@ -413,13 +416,6 @@ export class MapComponent {
    *
    */
   ngOnChanges() {
-
-    if(this.layerSelected == 'station'){
-      this.enable = true;
-    } else {
-      this.enable = false;
-    }
-
     this.switchLayer();
   }
 
@@ -482,7 +478,7 @@ export class MapComponent {
         }
         if(this.parameterSelected == 'humidity'){
           this.mymap.eachLayer((layer: any) => {
-            if (layer instanceof L.Marker || layer instanceof RotatedMarker) {
+            if (layer instanceof L.Marker || layer instanceof RotatedMarker || layer instanceof Marker) {
               this.mymap.removeLayer(layer);
             }
           });
@@ -565,10 +561,13 @@ export class MapComponent {
     const legendLabels: number[] = [];
     for (let i = 1; i <= 5; i++) {
       const average = minValue + interval * i;
-      legendLabels.push(average);
+      console.log("average: ", Math.round((average + Number.EPSILON) * 100) / 100);
+      legendLabels.push(Math.round((average + Number.EPSILON) * 100) / 100);
     }
     this.legendScale = legendLabels;
   }
+
+
   createTempValuesMarkers(stations: any[][], mymap: L.Map) {
     stations.forEach((station) => {
 
@@ -609,6 +608,7 @@ export class MapComponent {
   }
 
   private openModal<G, P>(feature: any) {
+    this.enable = false;
     const dialogRef = this.dialog.open(ChartModalComponent, {
       data: {
         regionName: feature.properties.nom,
@@ -668,7 +668,7 @@ export class MapComponent {
         opacity: 0,
         zIndexOffset: this.options.zIndexOffset
     }).bindTooltip(
-        station[3]+": "+Math.trunc(station[2]),
+        station[3]+": "+Math.trunc(station[2]) + this.unit,
         {
           permanent: false,
           direction: 'center',
