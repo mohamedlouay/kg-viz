@@ -36,7 +36,8 @@ export class ChartModalComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dataService: DataService,
-    private mapperService: MapperService
+    private mapperService: MapperService,
+    public dialogRef: MatDialogRef<ChartModalComponent>
   ) {
     this.dataService
       .getTemperaturePerRegion(data.regionCode)
@@ -192,5 +193,9 @@ export class ChartModalComponent implements OnInit {
     console.log('getMinMaxDate');
     console.log([startDate, endDate]);
     return [startDate, endDate];
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 }

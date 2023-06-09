@@ -1,16 +1,27 @@
 <div class="slider-container" *ngIf="startDate > 0">
-  <mat-slider class="custom-slider"
-    [min]="startDate"
-    [max]="endDate"
-    (input)="onSliderChange()"
-    [discrete]="true"
-    [displayWith]="display"
-    [step]="step"
-    [showTickMarks]="true"
-  >
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+    <mat-form-field>
+      <mat-label>Year</mat-label>
+      <mat-select [(ngModel)]="selectedYear">
+        <mat-option *ngFor="let year of years" [value]="year">
+          {{ year }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-slider class="custom-slider"
+                [min]="startDate"
+                [max]="endDate"
+                (input)="onSliderChange()"
+                [discrete]="true"
+                [displayWith]="display"
+                [step]="step"
+                [showTickMarks]="true"
+    >
 
-    <input matSliderStartThumb [(ngModel)]="sliderValues[0]" >
-    <input matSliderEndThumb    [(ngModel)]="sliderValues[1]">
-  </mat-slider>
+      <input matSliderStartThumb [(ngModel)]="sliderValues[0]" >
+      <input matSliderEndThumb    [(ngModel)]="sliderValues[1]">
+    </mat-slider>
+  </div>
+
 
 </div>

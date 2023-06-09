@@ -11,7 +11,7 @@
 
 }
 mat-slider{
-  min-width: 100%;
+  min-width: 80%;
 }
 
 .custom-slider .mat-slider-thumb-label {

@@ -18,7 +18,8 @@ export class TimeBrushComponent implements OnInit{
   readonly oneMonth = 86400000*30 ;
   step:number;
 
-
+  years: number[] = [2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012];
+  selectedYear =  2022;
 
 
   constructor() {
