@@ -95,10 +95,7 @@ SELECT distinct ?Nstation (SUM(?rainfall24h)) as ?rain ?StationName ?insee ?lati
         ?item rdfs:label ?StationName ; wdt:P2585  ?insee .
 ?station geo:lat ?latitude .
 ?station geo:long ?long.
-FILTER (?StationName != "ST-PIERRE" && ?StationName !="NOUVELLE AMSTERDAM" && ?StationName !="TROMELIN" && ?StationName !="KERGUELEN"
-&& ?StationName !="EUROPA" && ?StationName !="PAMANDZI" && ?StationName !="GLORIEUSES" && ?StationName !="GILLOT-AEROPORT" && ?StationName !="ST-BARTHELEMY METEO"
-&& ?StationName !="LE RAIZET AERO" && ?StationName !="LA DESIRADE METEO" && ?StationName !="TRINITE-CARAVEL" && ?StationName !="LAMENTIN-AERO"
-&& ?StationName !="SAINT LAURENT" && ?StationName !="CAYENNE-MATOURY" && ?StationName !="SAINT GEORGES" && ?StationName !="MARIPASOULA" && ?StationName !="DUMONT D'URVILLE")
+FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationName !="La Réunion"@fr && ?StationName !="Martinique"@fr && ?StationName !="Guadeloupe"@fr)    FILTER (?date >= xsd:date(?start))
     FILTER(?date >= xsd:date(?start))
     FILTER(?date < xsd:date(?end))
     }
