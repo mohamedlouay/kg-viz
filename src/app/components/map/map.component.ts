@@ -291,7 +291,6 @@ export class MapComponent {
         });
         //alimentation de la légende
         this.regionLayer.addData(data);
-        console.log('data', data);
         this.calculateLegendValues(this.regionLayer._data);
         this.legendScaleTest.emit(this.legendScale);
 
@@ -363,24 +362,28 @@ export class MapComponent {
    *
    */
   async getRainData() {
-    let data: any[][] = [];
-    this.dataService
-      .getRainPerStation(this.start, this.end)
-      .subscribe((weather) => {
-        this.stationsData = this.mapperService.weatherToStation(weather);
-        this.stationsData.forEach((station) => {
-          data.push([
-            station.longitude,
-            station.latitude,
-            station.rain,
-            station.nom,
-          ]);
-        });
+    return new Promise<any[][]>((resolve, reject) => {
+      let data: any[][] = [];
+      let tempData: Station[];
 
-        console.log("rains; ", data);
-      });
-    console.log(' RAINS ? ', data);
-    return data;
+      this.dataService.getRainPerStation(this.start, this.end).subscribe(
+        (weather) => {
+          tempData = this.mapperService.weatherToStation(weather);
+          tempData.forEach((station) => {
+            data.push([
+              station.longitude,
+              station.latitude,
+              station.rain,
+              station.nom,
+            ]);
+          });
+          resolve(data);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
   }
 
   /**
@@ -443,7 +446,6 @@ export class MapComponent {
         (weather) => {
           tempData = this.mapperService.weatherToStation(weather);
           tempData.forEach((station) => {
-            console.log('original station format:', station);
             data.push([
               station.longitude,
               station.latitude,
@@ -613,14 +615,20 @@ export class MapComponent {
   }
 
   calculateLegendValues(data: any[]) {
-    console.log(' LEGEND DATA ? ?? ', data);
+    console.log(' rain data  ', data.length);
+
     let numbers: number[] = [];
     data.forEach((num) => {
+      console.log(' NUMMM ', num);
       numbers.push(parseInt(num[2]));
     });
+    console.log(' LEGEND DATA ? ?? ', numbers);
+
     const minValue = Math.min(...numbers);
     const maxValue = Math.max(...numbers);
     console.log(' MIN ? ', minValue);
+    console.log(' MAX ? ', maxValue);
+
     const range = maxValue - minValue;
     const interval = range / 5;
     const legendLabels: number[] = [];
@@ -713,7 +721,6 @@ export class MapComponent {
       (region) => region.isee === isee
     )!.temp_avg;
 
-    console.log(colorScale(temperature));
     // return the color
     return colorScale(temperature);
   }
@@ -734,7 +741,6 @@ export class MapComponent {
 
   private createLayerTooltip(stations: any[][], mymap: L.Map) {
     stations.forEach((station) => {
-      console.log('station: ', station);
       var marker = new Marker([station[1], station[0]], {
         icon: L.divIcon({
           className: 'leaflet-mouse-marker',
