@@ -380,4 +380,43 @@ ORDER BY ?stationID`
     return query;
   }
 
+
+
+  getAvgTempPerRegion(){
+    let query = `
+        PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
+    PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    PREFIX qb: <http://purl.org/linked-data/cube#>
+    PREFIX wes-dimension: <http://ns.inria.fr/meteo/observationslice/dimension#>
+    PREFIX wes-measure: <http://ns.inria.fr/meteo/observationslice/measure#>
+    PREFIX wes-attribute: <http://ns.inria.fr/meteo/observationslice/attribute#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX dct: <http://purl.org/dc/terms/>
+    PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+    SELECT ?label (GROUP_CONCAT(DISTINCT ?insee; SEPARATOR=",") AS ?insee)  (AVG(?temp_avg) AS ?temp_avg) WHERE {
+        ?s a qb:Slice ; wes-dimension:station ?station ;
+      qb:observation [
+        a qb:Observation ;
+      wes-attribute:observationDate ?date ;
+      wes-measure:avgDailyTemperature ?temp_avg
+    ] .
+        ?station a weo:WeatherStation ; dct:spatial ?e ; rdfs:label ?Nstation .
+        ?e wdt:P131 ?item .
+        ?item rdfs:label ?label ; wdt:P2585 ?insee .
+        ?station geo:lat ?latitude .
+        ?station geo:long ?long .
+      FILTER (?label != "Guyane"@fr && ?label !="Mayotte"@fr && ?label !="La Réunion"@fr && ?label !="Martinique"@fr && ?label !="Guadeloupe"@fr)
+        FILTER (?date >= xsd:date('2021-05-01'))
+        FILTER (?date <= xsd:date('2022-05-30'))
+
+    }
+    GROUP BY ?label
+      ORDER BY ?temp_avg`;
+    return query;
+  }
+
+
+
 }

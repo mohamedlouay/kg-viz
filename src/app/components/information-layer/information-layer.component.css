@@ -2,14 +2,14 @@
 #title {
   padding: 1.5px 2px;
 }
-.dropdown {
+.dropper {
   width: 500px;
   background-color: black;
   color: white;
 }
 
-.dropdown-content {
-  display: none;
+.dropper-content {
+  /*display: none;*/
   text-align: center;
   position: absolute;
   background-color: black;
@@ -20,6 +20,6 @@
   z-index: 1001;
 }
 
-.dropdown:hover .dropdown-content {
+/*.dropper:hover .dropdown-content {
   display: block;
-}
+}*/

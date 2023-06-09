@@ -7,6 +7,14 @@ import { ItemModel } from '@syncfusion/ej2-angular-splitbuttons';
   styleUrls: ['./information-layer.component.css']
 })
 export class InformationLayerComponent {
+  public dropdown: boolean = false;
+
+  //show content method
+  dropContent() {
+    console.log("click");
+    this.dropdown = !this.dropdown;
+    console.log(this.dropdown);
+  }
 // Initialize content.
   public items: ItemModel[] = [
     {

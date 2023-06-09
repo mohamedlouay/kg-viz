@@ -118,6 +118,7 @@ export class ChartModalComponent implements OnInit {
   }
 
   private addLegend() {
+    console.log("liste des stations:", this.listStations);
     const svg = d3.select(this.chartContainer.nativeElement).select('svg');
 
     const legendGroup = svg
@@ -126,7 +127,7 @@ export class ChartModalComponent implements OnInit {
       .attr('class', 'legend')
       .attr(
         'transform',
-        `translate(${this.width - 50}, ${this.margin.top - 50})`
+        `translate(${this.width - 50}, ${this.margin.top - 20})`
       );
 
     const legendItems = legendGroup
@@ -136,6 +137,8 @@ export class ChartModalComponent implements OnInit {
       .append('g')
       .attr('class', 'legend-item')
       .attr('transform', (d, i) => `translate(0, ${i * 20})`);
+
+    console.log("legend items list:", legendItems);
 
     legendItems
       .append('rect')
@@ -147,9 +150,10 @@ export class ChartModalComponent implements OnInit {
 
     legendItems
       .append('text')
-      .attr('x', 20)
+      .style("font-size", "0.70em")
+      .attr('x', 17)
       .attr('y', 5)
-      .attr('dy', '1.5em')
+      .attr('dy', '0.3em')
       .text((d) => d);
   }
 
