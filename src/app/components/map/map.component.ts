@@ -397,6 +397,8 @@ export class MapComponent {
             station.nom,
           ]);
         });
+
+        console.log("rains; ", data);
       });
     console.log(' RAINS ? ', data);
     return data;
