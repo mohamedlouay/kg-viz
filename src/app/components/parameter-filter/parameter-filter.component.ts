@@ -10,6 +10,7 @@ export class ParameterFilterComponent {
   @Output() parameterSelected = new EventEmitter<string>();
   @Output() layerSelected = new EventEmitter<string>();
   @Input() buttonColor!: string;
+  @Input() buttonColorWhenDisabled!:string;
   public layerType: string | undefined;
   @Input() disable: boolean = false;
 
@@ -25,6 +26,13 @@ export class ParameterFilterComponent {
 
   ngOnChanges() {
     document.documentElement.style.setProperty('--color', this.buttonColor + ''); //suffix may be px or ''
+    if(this.disable){
+      document.documentElement.style.setProperty('--colorStationOnly', 'grey'); //suffix may be px or ''
+    }
+    if(!this.disable){
+      document.documentElement.style.setProperty('--colorStationOnly', this.buttonColor + ''); //suffix may be px or ''
+    }
+
   }
 
   /**

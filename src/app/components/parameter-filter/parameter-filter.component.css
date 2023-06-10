@@ -5,11 +5,12 @@
   margin-left: 45px;
 }
 
-.root{
+.root {
   --color: #f89146;
+  --colorStationOnly: #f89146;
 }
 
-mat-button-toggle-group{
+mat-button-toggle-group {
   border-radius: 30px;
 }
 
@@ -18,7 +19,7 @@ mat-button-toggle {
   border-radius: 30px;
   cursor: pointer;
   border: transparent;
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
   font-size: 14px;
   width: fit-content;
   height: fit-content;
@@ -37,10 +38,10 @@ mat-button-toggle {
   margin: 10px;
 }
 
-button {
-  background: rgba(0,0,0,0.3);
+#temperature, #rain {
+  background: rgba(0, 0, 0, 0.3);
   border: none;
-  color : white;
+  color: white;
   cursor: pointer;
   border-radius: 100%;
   padding: 15px;
@@ -48,11 +49,26 @@ button {
   height: fit-content;
 }
 
-button:hover {
+#wind, #humidity {
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 100%;
+  padding: 15px;
+  width: fit-content;
+  height: fit-content;
+}
+
+#rain:hover, #temperature:hover {
   background: var(--color);
 }
 
-.active{
+#wind:hover, #humidity:hover {
+  background: var(--colorStationOnly);
+}
+
+.active {
   color: black;
   background: var(--color);
 
