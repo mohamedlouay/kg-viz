@@ -7,6 +7,7 @@ import {Component, Input} from '@angular/core';
 })
 export class InformationLayerComponent {
   @Input() linkedPage!: string;
-  @Input() informationDisplay: string = "Temperature mean ";
+  @Input() informationDisplay: string = "";
+  @Input() unit: string = "";
 
 }

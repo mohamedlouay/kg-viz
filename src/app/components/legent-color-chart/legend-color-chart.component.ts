@@ -17,7 +17,6 @@ export class LegendColorChartComponent {
   @Input() color4!: string;
   @Input() color5!: string;
   @Input() colors!: string[];
-  @Input() unit!: string;
 
   gradientBar!: HTMLElement;
   indicators!: HTMLCollectionOf<Element>;

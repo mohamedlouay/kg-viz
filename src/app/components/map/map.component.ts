@@ -494,6 +494,7 @@ export class MapComponent {
    *
    */
   switchLayer() {
+    this.enable = true;
     switch (this.layerSelected) {
       case 'station':
         this.colors = ['white', 'yellow', 'orange', 'red'];
