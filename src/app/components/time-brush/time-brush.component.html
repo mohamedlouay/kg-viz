@@ -10,9 +10,8 @@
     </mat-select>
   </mat-form-field>
   </div>
-  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
-
-  <mat-slider class="custom-slider"
+  <div fxLayout="row" fxLayoutAlign="center center" >
+  <mat-slider class="custom-slider" 
     [min]="startDate"
     [max]="endDate"
     (input)="onSliderChange()"
@@ -25,6 +24,7 @@
       <input matSliderStartThumb [(ngModel)]="sliderValues[0]" >
       <input matSliderEndThumb    [(ngModel)]="sliderValues[1]">
     </mat-slider>
+
   </div>
 
 
