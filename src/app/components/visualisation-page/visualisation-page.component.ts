@@ -55,11 +55,10 @@ export class VisualisationPageComponent {
 
 
   switchActiveButton(layerSelected: string) {
-    console.log("activelayer,", this.activeLayer);
     if (layerSelected == "station") {
       this.disabled = false;
     }
-    if (layerSelected == "region") {
+    if (layerSelected == "région") {
       this.disabled = true;
     }
   }
@@ -118,6 +117,7 @@ export class VisualisationPageComponent {
    * @param $event
    */
   switchLayer($event: string) {
+    console.log("activelayer,", this.activeLayer);
     this.activeLayer = $event;
     this.layerSelected.emit(this.activeLayer);
     this.switchActiveButton(this.activeLayer);

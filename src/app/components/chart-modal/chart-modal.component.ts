@@ -27,6 +27,7 @@ export class ChartModalComponent {
   margin = {top: 20, right: 80, bottom: 20, left: 80};
   width = 1150 - this.margin.left - this.margin.right;
   height = 300 - this.margin.top - this.margin.bottom;
+  enable: boolean = true;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,

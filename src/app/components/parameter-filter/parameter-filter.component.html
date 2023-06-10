@@ -4,7 +4,7 @@
   </mat-button-toggle
   >
   <mat-button-toggle value="région" (click)="regionStation('région')"
-  >Région
+  >Region
   </mat-button-toggle
   >
 </mat-button-toggle-group>
@@ -48,6 +48,7 @@
       matTooltip="Wind"
       matTooltipPosition="right"
       fxFlexAlign="center"
+      [disabled] ="disable"
     >
       <span><i class="fa-solid fa-wind"></i></span>
     </button>

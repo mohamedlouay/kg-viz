@@ -1,6 +1,6 @@
 .slider-container {
   padding: 5px 20px;
-  background: rgba(0, 0, 0, 0.7);;
+  background: rgba(0, 0, 0, 0.80);;
   opacity: 1;
 }
 
@@ -9,7 +9,7 @@ mat-slider {
 }
 
 mat-form-field {
-  margin: 100px;
+  margin: 130px;
   position: absolute;
   z-index: 1001;
 }

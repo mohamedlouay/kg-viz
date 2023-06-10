@@ -8,6 +8,7 @@ import {DataService} from '../../services/data.service';
 import {MapperService} from '../../services/mapper.service';
 import {IAvgTempPerRegion, Station} from '../../models/data';
 import {RotatedMarker} from 'leaflet-marker-rotation';
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-map',
@@ -103,7 +104,6 @@ export class MapComponent {
             };
           },
           onEachFeature: (feature, layer) => {
-            //this.openModal(feature);
             layer.on('click', () => {
               this.openModal(feature);
             });
@@ -688,6 +688,11 @@ export class MapComponent {
       },
       position: {bottom: '0px'},
       panelClass: 'full-width-dialog',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.enable = true;
     });
   }
 

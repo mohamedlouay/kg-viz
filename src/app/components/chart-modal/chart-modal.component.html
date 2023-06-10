@@ -1,5 +1,5 @@
 <div *ngIf="startDate > 1" fxLayout="row" fxLayoutAlign="space-between stretch">
-  <div fxFlex="98">
+  <div fxFlex="100">
     <app-time-brush
       [startDate]="startDate"
       [endDate]="endDate"
@@ -8,10 +8,8 @@
     ></app-time-brush>
   </div>
   <div class="icon-container">
-    <mat-icon aria-hidden="false"  (click)="closeDialog()" fontIcon="expand_more"></mat-icon>
-
+    <mat-icon aria-hidden="false" (click)="closeDialog()" fontIcon="expand_more"></mat-icon>
   </div>
-
 
 
 </div>
