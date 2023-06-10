@@ -13,7 +13,7 @@ export class MapperService {
     if (weatherJson.results.bindings) {
       for (const binding of weatherJson.results.bindings) {
         const temperature: ITemperature = {
-          region: binding.label.value,
+          region: binding.StationName.value,
           temp_avg: binding.temp_avg.value,
           stationName:  null,
           station: binding.Nstation.value,

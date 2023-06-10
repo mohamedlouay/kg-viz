@@ -1,9 +1,19 @@
-<div *ngIf="startDate > 1">
-  <app-time-brush
-    [startDate]="startDate"
-    [endDate]="endDate"
-    (rangeChanged)="handleRangeChangedEvent($event)"
-  ></app-time-brush>
+<div *ngIf="startDate > 1" fxLayout="row" fxLayoutAlign="space-between stretch">
+  <div fxFlex="98">
+    <app-time-brush
+      [startDate]="startDate"
+      [endDate]="endDate"
+      (rangeChanged)="handleRangeChangedEvent($event)"
+      (selectedYearChanged)="handleSelectedYearChangedEvent($event)"
+    ></app-time-brush>
+  </div>
+  <div class="icon-container">
+    <mat-icon aria-hidden="false"  (click)="closeDialog()" fontIcon="expand_more"></mat-icon>
+
+  </div>
+
+
+
 </div>
 
 <div id="chart-box">
@@ -13,3 +23,4 @@
     <div class="legend-container"></div>
   </div>
 </div>
+

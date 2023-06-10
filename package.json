@@ -7,10 +7,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng build --output-path docs --base-href /KGViz",
-    "lint": "ng lint"
+    "deploy": "ng build --service-worker --base-href /kg-viz/ --output-path docs "
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "^15.2.0",
     "@angular/cdk": "^15.2.8",
@@ -23,6 +22,7 @@
     "@angular/platform-browser": "^15.2.0",
     "@angular/platform-browser-dynamic": "^15.2.0",
     "@angular/router": "^15.2.0",
+    "@angular/service-worker": "^15.2.0",
     "@asymmetrik/leaflet-d3": "^6.0.1",
     "@asymmetrik/ngx-leaflet": "^15.0.1",
     "@asymmetrik/ngx-leaflet-d3": "^15.0.0",

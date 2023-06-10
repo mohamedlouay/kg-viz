@@ -30,6 +30,8 @@ export class VisualisationPageComponent {
   @Output() legendScaleTestValue!:number[];
 
   legend:string="";
+  scaleUnit: string="";
+  link: string="";
 
  constructor() {}
 
@@ -50,7 +52,9 @@ export class VisualisationPageComponent {
 
   legendColorGetter(activeLayerParameter: string){
    if(activeLayerParameter == 'rain'){
-     this.legend = "Cumulative rainfall"
+     this.legend = "Cumulative rainfall";
+     this.link = "http://weakg.i3s.unice.fr/ontology/#http://ns.inria.fr/meteo/vocab/weatherproperty/precipitationAmount";
+     this.scaleUnit = " mm";
      this.color5 = 'white';
      this.color4 = '#ADD8E6';
      this.color3 = '#7DF9FF';
@@ -59,7 +63,9 @@ export class VisualisationPageComponent {
    }
 
    if(activeLayerParameter == 'temperature'){
-     this.legend = "Temperature mean"
+     this.legend = "Mean Air Temperature "
+     this.link = "http://weakg.i3s.unice.fr/ontology/#http://ns.inria.fr/meteo/vocab/weatherproperty/airTemperature";
+     this.scaleUnit = " °C";
      this.color5 = '#fed976';
      this.color4 = '#feb24c';
      this.color3 = '#fd8d3c';
@@ -68,7 +74,8 @@ export class VisualisationPageComponent {
    }
 
     if(activeLayerParameter == 'humidity'){
-      this.legend = "Humidity mean"
+      this.legend = "Mean Air Humidity"
+      this.scaleUnit = " g/m3";
       this.color5 = '#E6E6FA';
       this.color4 = '#E0B0FF';
       this.color3 = '#E0B0FF';
@@ -76,7 +83,9 @@ export class VisualisationPageComponent {
       this.color1 = '#800080';
     }
     if(activeLayerParameter == 'wind'){
-      this.legend = "Wind"
+      this.legend = "Wind Average Speed"
+      this.link = "http://weakg.i3s.unice.fr/ontology/#http://ns.inria.fr/meteo/vocab/weatherproperty/windSpeed";
+      this.scaleUnit = " m/s"
       this.color5 = '#ECFFDC';
       this.color4 = '#C1E1C1';
       this.color3 = '#93C572';

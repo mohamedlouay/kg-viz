@@ -13,3 +13,20 @@ h2 {
   color: White;
   width: fit-content;
 }
+.icon-container{
+  cursor: pointer;
+  background: black;
+
+
+}
+mat-icon{
+  margin: 10px;
+  color :black;
+  background: white;
+  border-radius: 30px;
+}
+mat-icon:hover{
+
+  background: #3901c7;
+
+}
