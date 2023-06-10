@@ -148,7 +148,7 @@ FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationNa
     GROUP BY ?label
       ORDER BY ?label
   } */
-  buildQuery_slices(insee: number) {
+    buildQuery_slices(insee: number, year: number) {
     let query =
       `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
             PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
@@ -166,7 +166,7 @@ FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationNa
         VALUES ?insee  {'` +
       insee +
       `' }
-        VALUES ?year  {"2021"^^xsd:gYear}
+        VALUES ?year  {'`+year+`'^^xsd:gYear}
         ?s  a qb:Slice ;
         wes-dimension:station ?station ;
         wes-dimension:year ?year ;

@@ -11,8 +11,6 @@ export class MapperService {
   weatherToTemperature(weatherJson: IWeather): ITemperature[] {
     const temperatures: ITemperature[] = [];
     if (weatherJson.results.bindings) {
-      console.log("lllllllllllllllllllllllll");
-      console.log(weatherJson.results.bindings);
       for (const binding of weatherJson.results.bindings) {
         const temperature: ITemperature = {
           region: binding.StationName.value,

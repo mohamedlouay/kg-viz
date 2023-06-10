@@ -38,9 +38,18 @@ export class ChartModalComponent implements OnInit {
     private dataService: DataService,
     private mapperService: MapperService,
     public dialogRef: MatDialogRef<ChartModalComponent>
-  ) {
+  )
+  {
+
+    this.getData(2022);
+  }
+
+  ngOnInit() {}
+
+
+  private getData(selectedYear: number) {
     this.dataService
-      .getTemperaturePerRegion(data.regionCode)
+      .getTemperaturePerRegion(this.data.regionCode, selectedYear)
       .subscribe((weather) => {
         this.regionDataFromServer =
           this.mapperService.weatherToTemperature(weather);
@@ -51,9 +60,10 @@ export class ChartModalComponent implements OnInit {
       });
   }
 
-  ngOnInit() {}
-
   private createLineChart(): void {
+    // delete any old chart if exist
+    d3.select(this.chartContainer.nativeElement).select('svg').remove();
+
     // Append the SVG to the chart container
     const svg = d3
       .select(this.chartContainer.nativeElement)
@@ -119,7 +129,6 @@ export class ChartModalComponent implements OnInit {
   }
 
   private addLegend() {
-    console.log("liste des stations:", this.listStations);
     const svg = d3.select(this.chartContainer.nativeElement).select('svg');
 
     const legendGroup = svg
@@ -139,7 +148,6 @@ export class ChartModalComponent implements OnInit {
       .attr('class', 'legend-item')
       .attr('transform', (d, i) => `translate(0, ${i * 20})`);
 
-    console.log("legend items list:", legendItems);
 
     legendItems
       .append('rect')
@@ -160,7 +168,7 @@ export class ChartModalComponent implements OnInit {
 
   handleRangeChangedEvent(range: Date[]) {
     this.regionData = this.filterDataByDateRange(range[0], range[1]);
-    this.reCreateLineChart();
+    this.createLineChart();
   }
 
   private filterDataByDateRange(startDate: Date, endDate: Date) {
@@ -170,10 +178,6 @@ export class ChartModalComponent implements OnInit {
     });
   }
 
-  private reCreateLineChart() {
-    d3.select(this.chartContainer.nativeElement).select('svg').remove();
-    this.createLineChart();
-  }
   private getMinMaxTemperatures(datas: ITemperature[]): [number, number] {
     const temperatureValues = datas.map((item) => item.temp_avg);
 
@@ -190,10 +194,18 @@ export class ChartModalComponent implements OnInit {
     const startDate = Math.min(...DateValues);
 
     const endDate = Math.max(...DateValues);
-    console.log('getMinMaxDate');
-    console.log([startDate, endDate]);
+
     return [startDate, endDate];
   }
+
+
+
+  handleSelectedYearChangedEvent(selectedYear: number) {
+    this.getData(selectedYear);
+  }
+
+
+
 
   closeDialog() {
     this.dialogRef.close();

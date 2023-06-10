@@ -3,7 +3,7 @@
   <p>Time brush</p>
   <mat-form-field>
     <mat-label>Year</mat-label>
-    <mat-select [(ngModel)]="selectedYear">
+    <mat-select [(ngModel)]="selectedYear" (selectionChange)="onYearChanged()">
       <mat-option *ngFor="let year of years" [value]="year">
         {{ year }}
       </mat-option>

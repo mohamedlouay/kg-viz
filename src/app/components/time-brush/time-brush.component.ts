@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
 
 @Component({
@@ -6,7 +6,7 @@ import { MatSliderChange } from '@angular/material/slider';
   templateUrl: './time-brush.component.html',
   styleUrls: ['./time-brush.component.css'],
 })
-export class TimeBrushComponent implements OnInit {
+export class TimeBrushComponent implements OnInit, OnChanges {
   public tooltip: Object = {
     placement: 'After',
     isVisible: true,
@@ -14,6 +14,7 @@ export class TimeBrushComponent implements OnInit {
   };
 
   @Output() rangeChanged = new EventEmitter<Date[]>();
+  @Output() selectedYearChanged = new EventEmitter<number>();
 
   @Input() startDate=0;
 
@@ -33,10 +34,16 @@ export class TimeBrushComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log( [this.startDate, this.endDate]);
     this.sliderValues = [this.startDate, this.endDate];
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    // Check if the 'startDate' input property has changed
+    if (changes['startDate']) {
+      this.sliderValues = [this.startDate, this.endDate];
+
+    }
+  }
 
   onSliderChange() {
     const startDate = new Date(this.sliderValues[0]);
@@ -63,5 +70,9 @@ export class TimeBrushComponent implements OnInit {
     else {
       this.step = this.stepTenDays;
     }
+  }
+
+  onYearChanged() {
+    this.selectedYearChanged.emit(this.selectedYear);
   }
 }
