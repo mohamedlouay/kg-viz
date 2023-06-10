@@ -19,8 +19,10 @@ export class ChartModalComponent {
   regionData!: ITemperature[];
   listStations!: string[];
   message = '';
+
   startDate = 0;
   endDate = 0;
+
   // Set the dimensions of the chart
   margin = {top: 20, right: 80, bottom: 20, left: 80};
   width = 1150 - this.margin.left - this.margin.right;
@@ -28,16 +30,28 @@ export class ChartModalComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService,
               private mapperService: MapperService) {
-    this.dataService.getTemperaturePerRegion(data.regionCode).subscribe((weather) => {
-      this.regionDataFromServer = this.mapperService.weatherToTemperature(weather);
-      this.regionData = this.regionDataFromServer;
-      [this.startDate, this.endDate] = this.getMinMaxDate(this.regionData);
-      this.listStations = this.extractListStation();
-      this.createLineChart();
-    });
+
+    this.getData(2022);
+  }
+
+
+  private getData(selectedYear: number) {
+    this.dataService
+      .getTemperaturePerRegion(this.data.regionCode, selectedYear)
+      .subscribe((weather) => {
+        this.regionDataFromServer =
+          this.mapperService.weatherToTemperature(weather);
+        this.regionData = this.regionDataFromServer;
+        [this.startDate, this.endDate] = this.getMinMaxDate(this.regionData);
+        this.listStations = this.extractListStation();
+        this.createLineChart();
+      });
   }
 
   private createLineChart(): void {
+    // delete any old chart if exist
+    d3.select(this.chartContainer.nativeElement).select('svg').remove();
+
     // Append the SVG to the chart container
     const svg = d3
       .select(this.chartContainer.nativeElement)
@@ -131,7 +145,7 @@ export class ChartModalComponent {
       .attr('class', 'legend-item')
       .attr('transform', (d, i) => `translate(0, ${i * 20})`);
 
-    console.log("legend items list:", legendItems);
+
     legendItems
       .append('rect')
       .attr('width', 10)
@@ -155,7 +169,7 @@ export class ChartModalComponent {
    */
   handleRangeChangedEvent(range: Date[]) {
     this.regionData = this.filterDataByDateRange(range[0], range[1]);
-    this.reCreateLineChart();
+    this.createLineChart();
   }
 
   /**
@@ -201,8 +215,9 @@ export class ChartModalComponent {
     const DateValues = datas.map((item) => new Date(item.date).getTime());
     const startDate = Math.min(...DateValues);
     const endDate = Math.max(...DateValues);
-    console.log('getMinMaxDate');
-    console.log([startDate, endDate]);
+
     return [startDate, endDate];
   }
+
+
 }

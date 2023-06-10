@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1686321242389,
+  "timestamp": 1686382225312,
   "index": "/kg-viz/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/kg-viz/favicon.ico",
         "/kg-viz/index.html",
-        "/kg-viz/main.fd152db8ccb07009.js",
+        "/kg-viz/main.3bf508ad5adb22c5.js",
         "/kg-viz/manifest.webmanifest",
         "/kg-viz/polyfills.dcc88f833df64d17.js",
         "/kg-viz/runtime.119fa101aead7050.js",
@@ -109,10 +109,10 @@
     "/kg-viz/fa-v4compatibility.6209cf0172d95b0e.woff2": "8f80d0bbe995f7fe92320fdaec10cd5ccd710a51",
     "/kg-viz/fa-v4compatibility.92dce52f885fd838.ttf": "a9d072aca9e0fadc2a7167671ce3d6b18d9cd2cc",
     "/kg-viz/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "/kg-viz/index.html": "82ab01668dd0cbf072fbc392a5533807241b98f9",
+    "/kg-viz/index.html": "88a3304aa3acfa55131047a6ce752bbbc5bb7e46",
     "/kg-viz/layers-2x.9859cd1231006a4a.png": "152a162333e46d24f9d89f566312fc0c64011dee",
     "/kg-viz/layers.ef6db8722c2c3f9a.png": "c9e7528e491a39232ba24a2706c6c739d6fb0f06",
-    "/kg-viz/main.fd152db8ccb07009.js": "05bf86f1b039223abe58c8c3ea9469669ca52760",
+    "/kg-viz/main.3bf508ad5adb22c5.js": "4934d2631a71c0864079b43509d2c216bd3ce72c",
     "/kg-viz/manifest.webmanifest": "05428a10ea971fd12584db3f20dfebe430b8067d",
     "/kg-viz/marker-icon.d577052aa271e13f.png": "60a90bcbb2b42b7ddb4556db94eb7c1084b0e5da",
     "/kg-viz/polyfills.dcc88f833df64d17.js": "ed0fb382a47a48d4bee1c496339104ce2b1af737",

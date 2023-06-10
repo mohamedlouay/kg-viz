@@ -76,7 +76,7 @@ export class QueryBuilderService {
             PREFIX wdt: <http://www.wikidata.org/prop/direct/>
             PREFIX sosa: <http://www.w3.org/ns/sosa/>
 
-SELECT distinct ?Nstation as ?StationName (SUM(?rainfall24h)) as ?rain ?insee ?latitude ?long WHERE
+SELECT distinct ?Nstation (SUM(?rainfall24h)) as ?rain ?StationName ?insee ?latitude ?long WHERE
     {
         VALUES ?year  {"2021"^^xsd:gYear}
         VALUES ?start {'`+start+`'}
@@ -95,10 +95,7 @@ SELECT distinct ?Nstation as ?StationName (SUM(?rainfall24h)) as ?rain ?insee ?l
         ?item rdfs:label ?StationName ; wdt:P2585  ?insee .
 ?station geo:lat ?latitude .
 ?station geo:long ?long.
-FILTER (?Nstation != "ST-PIERRE" && ?Nstation !="NOUVELLE AMSTERDAM" && ?Nstation !="TROMELIN" && ?Nstation !="KERGUELEN"
-&& ?Nstation !="EUROPA" && ?Nstation !="PAMANDZI" && ?Nstation !="GLORIEUSES" && ?Nstation !="GILLOT-AEROPORT" && ?Nstation !="ST-BARTHELEMY METEO"
-&& ?Nstation !="LE RAIZET AERO" && ?Nstation !="LA DESIRADE METEO" && ?Nstation !="TRINITE-CARAVEL" && ?Nstation !="LAMENTIN-AERO"
-&& ?Nstation !="SAINT LAURENT" && ?Nstation !="JUAN DE NOVA" && ?Nstation !="CAYENNE-MATOURY" && ?Nstation !="SAINT GEORGES" && ?Nstation !="MARIPASOULA" && ?Nstation !="DUMONT D'URVILLE")
+FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationName !="La Réunion"@fr && ?StationName !="Martinique"@fr && ?StationName !="Guadeloupe"@fr)    FILTER (?date >= xsd:date(?start))
     FILTER(?date >= xsd:date(?start))
     FILTER(?date < xsd:date(?end))
     }
@@ -108,10 +105,9 @@ FILTER (?Nstation != "ST-PIERRE" && ?Nstation !="NOUVELLE AMSTERDAM" && ?Nstatio
     `;
     return query;
   }
-
-  getAvgRainRegion(start: string, end: string){
-  let query =
-      `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
+/*
+  getAvgRainRegion(){
+    PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
     PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     PREFIX qb:  <http://purl.org/linked-data/cube#>
@@ -126,8 +122,8 @@ FILTER (?Nstation != "ST-PIERRE" && ?Nstation !="NOUVELLE AMSTERDAM" && ?Nstatio
     SELECT distinct (SUM(?rainfall24h)/COUNT(?Nstation)) as ?rain ?label  WHERE
     {
       VALUES ?year  {"2021"^^xsd:gYear}
-  VALUES ?start {'`+start+`'}
-        VALUES ?end {'`+end+`'}
+      VALUES ?start {'2021-01-01'}
+      VALUES ?end {'2021-01-31'}
         ?s  a qb:Slice ;
       wes-dimension:station ?station ;
       wes-dimension:year ?year ;
@@ -150,10 +146,9 @@ FILTER (?Nstation != "ST-PIERRE" && ?Nstation !="NOUVELLE AMSTERDAM" && ?Nstatio
     }
 
     GROUP BY ?label
-      ORDER BY ?label `;
-    return query;
-  }
-  buildQuery_slices(insee: number) {
+      ORDER BY ?label
+  } */
+    buildQuery_slices(insee: number, year: number) {
     let query =
       `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
             PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
@@ -171,7 +166,7 @@ FILTER (?Nstation != "ST-PIERRE" && ?Nstation !="NOUVELLE AMSTERDAM" && ?Nstatio
         VALUES ?insee  {'` +
       insee +
       `' }
-        VALUES ?year  {"2021"^^xsd:gYear}
+        VALUES ?year  {'`+year+`'^^xsd:gYear}
         ?s  a qb:Slice ;
         wes-dimension:station ?station ;
         wes-dimension:year ?year ;
@@ -202,7 +197,6 @@ FILTER (?Nstation != "ST-PIERRE" && ?Nstation !="NOUVELLE AMSTERDAM" && ?Nstatio
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
   PREFIX dct: <http://purl.org/dc/terms/>
   PREFIX wdt: <http://www.wikidata.org/prop/direct/>
-  PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
 
 SELECT ?insee ?StationName ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg)   WHERE {
    VALUES ?start {'`+start+`'}
@@ -213,16 +207,13 @@ SELECT ?insee ?StationName ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg
               wes-attribute:observationDate ?date ;
              wes-measure:avgDailyTemperature ?temp_avg
           ] .
-      ?station a weo:WeatherStation ; dct:spatial ?e ; rdfs:label ?StationName.
-
+      ?station a weo:WeatherStation ; dct:spatial ?e ; rdfs:label ?Nstation.
+      ?e wdt:P131 ?item .
+      ?item rdfs:label ?StationName ; wdt:P2585 ?insee.
 ?station geo:lat ?latitude .
 ?station geo:long ?long.
-FILTER (?StationName != "ST-PIERRE" && ?StationName !="NOUVELLE AMSTERDAM" && ?StationName !="TROMELIN" && ?StationName !="KERGUELEN"
-&& ?StationName !="EUROPA" && ?StationName !="PAMANDZI" && ?StationName !="GLORIEUSES" && ?StationName !="GILLOT-AEROPORT" && ?StationName !="ST-BARTHELEMY METEO"
-&& ?StationName !="LE RAIZET AERO" && ?StationName !="LA DESIRADE METEO" && ?StationName !="TRINITE-CARAVEL" && ?StationName !="LAMENTIN-AERO"
-&& ?StationName !="SAINT LAURENT" && ?StationName !="JUAN DE NOVA" && ?StationName !="CAYENNE-MATOURY" && ?StationName !="SAINT GEORGES" && ?StationName !="MARIPASOULA" && ?StationName !="DUMONT D'URVILLE")
-
-FILTER (?date <= xsd:date(?end))
+FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationName !="La Réunion"@fr && ?StationName !="Martinique"@fr && ?StationName !="Guadeloupe"@fr)    FILTER (?date >= xsd:date(?start))
+    FILTER (?date <= xsd:date(?end))
       }
 
   GROUP BY ?StationName ?insee ?station ?latitude ?long

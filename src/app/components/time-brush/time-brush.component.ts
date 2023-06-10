@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {MatSliderChange} from '@angular/material/slider';
 
 @Component({
   selector: 'app-time-brush',
@@ -10,19 +11,30 @@ export class TimeBrushComponent implements OnInit {
   @Output() rangeChanged = new EventEmitter<Date[]>();
   @Input() startDate = 0;
   @Input() endDate = 0;
+  @Output() selectedYearChanged = new EventEmitter<number>();
   sliderValues: number[] = [];
   readonly stepOneDay = 86400000 * 30;
   readonly stepTenDays = 86400000 * 30;
   readonly oneMonth = 86400000 * 30;
   step: number;
+  years: number[] = [2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012];
+  selectedYear = 2022;
+
 
   constructor() {
     this.step = this.oneMonth;
   }
 
   ngOnInit(): void {
-    console.log([this.startDate, this.endDate]);
     this.sliderValues = [this.startDate, this.endDate];
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // Check if the 'startDate' input property has changed
+    if (changes['startDate']) {
+      this.sliderValues = [this.startDate, this.endDate];
+
+    }
   }
 
   /**
@@ -58,5 +70,9 @@ export class TimeBrushComponent implements OnInit {
     } else {
       this.step = this.stepTenDays;
     }
+  }
+
+  onYearChanged() {
+    this.selectedYearChanged.emit(this.selectedYear);
   }
 }
