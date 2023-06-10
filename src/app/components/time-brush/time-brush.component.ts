@@ -1,5 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatSliderChange} from '@angular/material/slider';
+import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'app-time-brush',
@@ -29,8 +28,11 @@ export class TimeBrushComponent implements OnInit {
     this.sliderValues = [this.startDate, this.endDate];
   }
 
+  /**
+   * Check if the 'startDate' input property has changed
+   * @param changes
+   */
   ngOnChanges(changes: SimpleChanges) {
-    // Check if the 'startDate' input property has changed
     if (changes['startDate']) {
       this.sliderValues = [this.startDate, this.endDate];
 
@@ -72,6 +74,9 @@ export class TimeBrushComponent implements OnInit {
     }
   }
 
+  /**
+   * this method is use to emit an event with the value of the year selected on the time brush
+   */
   onYearChanged() {
     this.selectedYearChanged.emit(this.selectedYear);
   }

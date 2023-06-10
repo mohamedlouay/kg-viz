@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {active} from "d3";
 
 @Component({
   selector: 'app-visualisation-page',
@@ -26,15 +27,19 @@ export class VisualisationPageComponent {
   legend: string = "";
   scaleUnit: string = "";
   link: string = "";
+  disabled: boolean = false;
 
 
   ngOnInit() {
     this.switchParameter("temperature");
+    this.switchActiveButton("region");
   }
 
   ngOnChanges() {
     this.switchParameter(this.activeLayer);
     this.getLegendScale([0, 1, 2, 3, 4]);
+    this.switchActiveButton(this.activeLayer);
+    console.log("activelayer,", this.activeLayer);
   }
 
   /**
@@ -46,6 +51,17 @@ export class VisualisationPageComponent {
     this.parameterChosen = $event;
     this.parameterSelected.emit(this.parameterChosen);
     this.legendColorGetter(this.parameterChosen);
+  }
+
+
+  switchActiveButton(layerSelected: string) {
+    console.log("activelayer,", this.activeLayer);
+    if (layerSelected == "station") {
+      this.disabled = false;
+    }
+    if (layerSelected == "region") {
+      this.disabled = true;
+    }
   }
 
   /**
@@ -104,6 +120,7 @@ export class VisualisationPageComponent {
   switchLayer($event: string) {
     this.activeLayer = $event;
     this.layerSelected.emit(this.activeLayer);
+    this.switchActiveButton(this.activeLayer);
   }
 
   /**

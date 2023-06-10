@@ -11,6 +11,7 @@ export class ParameterFilterComponent {
   @Output() layerSelected = new EventEmitter<string>();
   @Input() buttonColor!: string;
   public layerType: string | undefined;
+  @Input() disable: boolean = false;
 
 
   ngOnInit() {

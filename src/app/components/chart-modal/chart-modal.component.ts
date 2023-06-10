@@ -1,4 +1,4 @@
-import {Component, OnInit, ElementRef, ViewChild, Inject,} from '@angular/core';
+import {Component, ElementRef, ViewChild, Inject,} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import * as d3 from 'd3';
 import {ITemperature} from '../../models/data';
@@ -28,8 +28,13 @@ export class ChartModalComponent {
   width = 1150 - this.margin.left - this.margin.right;
   height = 300 - this.margin.top - this.margin.bottom;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService,
-              private mapperService: MapperService) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dataService: DataService,
+    private mapperService: MapperService,
+    public dialogRef: MatDialogRef<ChartModalComponent>
+  )
+  {
 
     this.getData(2022);
   }
@@ -220,4 +225,19 @@ export class ChartModalComponent {
   }
 
 
+  /**
+   * Method to get the selected year when changed
+   * @param selectedYear
+   */
+  handleSelectedYearChangedEvent(selectedYear: number) {
+    this.getData(selectedYear);
+  }
+
+
+  /**
+   * method used to close the dialog chart window
+   */
+  closeDialog() {
+    this.dialogRef.close();
+  }
 }

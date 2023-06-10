@@ -7,19 +7,73 @@
   border-radius: 5px;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-mat-dialog-container{
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+mat-dialog-container {
   opacity: 0.8;
 }
-.transparent-bg{
-  background: rgba(0,0,0,0.75);
+
+.transparent-bg {
+  background: rgba(0, 0, 0, 0.75);
 }
+
 .mdc-slider__value-indicator-text {
   white-space: nowrap;
- //padding-top: 150px;
+  /* padding-top: 150 px;*/
 }
 
 .mat-mdc-dialog-container .mdc-dialog__surface {
   overflow: hidden;
+}
+
+mat-label {
+  color: white;
+}
+
+.mdc-floating-label {
+  color: white;
+}
+
+.mat-mdc-select-value-text {
+  color: white;
+  font-size: 0.80em;
+}
+
+.mat-mdc-select-arrow {
+  color: white;
+}
+
+.mat-mdc-text-field-wrapper {
+  height: 0px
+}
+
+.mat-mdc-form-field {
+  padding-top: 40px;
+}
+
+.mat-mdc-text-field {
+  height: 30px
+}
+
+.mat-mdc-form-field-flex {
+  height: 40px;
+}
+
+.mat-mdc-form-field-infix {
+  padding-top: 0px
+}
+
+.mdc-list-item__primary-text {
+  color: white
+}
+
+.mat-mdc-select-panel {
+  background: rgba(0, 0, 0, 0.75);
 }

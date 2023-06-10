@@ -3,7 +3,7 @@
     <app-information-layer [unit]="scaleUnit" [linkedPage]="link" [informationDisplay]="legend"></app-information-layer>
   </div>
   <div id="filter">
-    <app-parameter-filter [buttonColor]="color3" (parameterSelected)="switchParameter($event)"
+    <app-parameter-filter [disable]="disabled" [buttonColor]="color3" (parameterSelected)="switchParameter($event)"
                           (layerSelected)="switchLayer($event)"></app-parameter-filter>
   </div>
   <div id="map">

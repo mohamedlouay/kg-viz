@@ -2,25 +2,23 @@
   padding: 5px 20px;
   background: rgba(0, 0, 0, 0.7);;
   opacity: 1;
-
 }
 
 mat-slider {
   min-width: 100%;
 }
 
+mat-form-field {
+  margin: 100px;
+  position: absolute;
+  z-index: 1001;
+}
+
+
 p {
   margin-block-start: 0.25em;
   margin-block-end: 0.25em;
   font-size: 1.5em;
-  color: white;
-  text-align: left;
-}
-
-h6 {
-  margin-block-start: 0.25em;
-  margin-block-end: 0.25em;
-  font-size: 0.85em;
   color: white;
   text-align: left;
 }

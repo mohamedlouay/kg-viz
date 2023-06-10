@@ -1,7 +1,7 @@
 <div class="slider-container" *ngIf="startDate > 0">
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
     <p>Time brush</p>
-    <mat-form-field>
+    <mat-form-field appearance="outline">
       <mat-label>Year</mat-label>
       <mat-select [(ngModel)]="selectedYear" (selectionChange)="onYearChanged()">
         <mat-option *ngFor="let year of years" [value]="year">
@@ -10,7 +10,7 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <div fxLayout="row" fxLayoutAlign="center center">
+  <div fxLayout="row" fxLayoutAlign="start center">
     <mat-slider class="custom-slider"
                 [min]="startDate"
                 [max]="endDate"
