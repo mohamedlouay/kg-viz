@@ -1,9 +1,11 @@
 <mat-button-toggle-group [(ngModel)]="layerType" appearance="legacy">
   <mat-button-toggle value="station" (click)="regionStation('station')"
-  >Station</mat-button-toggle
+  >Station
+  </mat-button-toggle
   >
   <mat-button-toggle value="région" (click)="regionStation('région')"
-  >Région</mat-button-toggle
+  >Region
+  </mat-button-toggle
   >
 </mat-button-toggle-group>
 <div class="box transparent-bg" fxLayout="row">
@@ -35,6 +37,7 @@
       matTooltip="Humidity"
       matTooltipPosition="right"
       fxFlexAlign="center"
+      [disabled] ="disable"
     >
       <span><i class="fa-solid fa-droplet"></i></span>
     </button>
@@ -45,6 +48,7 @@
       matTooltip="Wind"
       matTooltipPosition="right"
       fxFlexAlign="center"
+      [disabled] ="disable"
     >
       <span><i class="fa-solid fa-wind"></i></span>
     </button>

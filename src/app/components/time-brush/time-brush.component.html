@@ -1,28 +1,28 @@
 <div class="slider-container" *ngIf="startDate > 0">
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-  <p>Time brush</p>
-  <mat-form-field>
-    <mat-label>Year</mat-label>
-    <mat-select [(ngModel)]="selectedYear" (selectionChange)="onYearChanged()">
-      <mat-option *ngFor="let year of years" [value]="year">
-        {{ year }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <p>Time brush</p>
+    <mat-form-field appearance="outline">
+      <mat-label>Year</mat-label>
+      <mat-select [(ngModel)]="selectedYear" (selectionChange)="onYearChanged()">
+        <mat-option *ngFor="let year of years" [value]="year">
+          {{ year }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
-  <div fxLayout="row" fxLayoutAlign="center center" >
-  <mat-slider class="custom-slider" 
-    [min]="startDate"
-    [max]="endDate"
-    (input)="onSliderChange()"
-    [discrete]="true"
-    [displayWith]="display"
-    [step]="step"
-    [showTickMarks]="true"
-  >
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-slider class="custom-slider"
+                [min]="startDate"
+                [max]="endDate"
+                (input)="onSliderChange()"
+                [discrete]="true"
+                [displayWith]="display"
+                [step]="step"
+                [showTickMarks]="true"
+    >
 
-      <input matSliderStartThumb [(ngModel)]="sliderValues[0]" >
-      <input matSliderEndThumb    [(ngModel)]="sliderValues[1]">
+      <input matSliderStartThumb [(ngModel)]="sliderValues[0]">
+      <input matSliderEndThumb [(ngModel)]="sliderValues[1]">
     </mat-slider>
 
   </div>

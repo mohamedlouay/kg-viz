@@ -12,7 +12,17 @@ export interface IAvgTempPerRegion {
   region: string;
 }
 
+export interface RegionRain {
+  label: string;
+  insee: string
+  rain: number;
+}
 
+export interface IAvgTempPerRegion {
+  isee: string;
+  temp_avg: number;
+  region: string;
+}
 export interface Station {
   nom: string;
   longitude: number;

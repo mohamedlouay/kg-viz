@@ -2,24 +2,24 @@
   height: 100vh;
   z-index: 1;
 }
+
 .hexbin-hexagon {
   stroke: #000;
   stroke-width: 0.5px;
 }
+
 .custom-dialog .mat-dialog-container {
   background: blue;
 }
 
-.regionLabel{
-  background: rgba(0,0,0,0.75);
-  border:0;
+.regionLabel {
+  background: rgba(0, 0, 0, 0.75);
+  border: 0;
   box-shadow: 0 0px 0px;
   color: white;
 }
 
 .brush {
-  /*margin-top: 75%;
-  width: 85%;*/
   background-position: 0 0;
   width: 85%;
   position: absolute;

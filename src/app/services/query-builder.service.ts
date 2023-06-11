@@ -76,7 +76,7 @@ export class QueryBuilderService {
             PREFIX wdt: <http://www.wikidata.org/prop/direct/>
             PREFIX sosa: <http://www.w3.org/ns/sosa/>
 
-SELECT distinct ?Nstation (SUM(?rainfall24h)) as ?rain ?StationName ?insee ?latitude ?long WHERE
+SELECT distinct ?Nstation as ?StationName (SUM(?rainfall24h)) as ?rain ?insee ?latitude ?long WHERE
     {
         VALUES ?year  {"2021"^^xsd:gYear}
         VALUES ?start {'`+start+`'}
@@ -95,7 +95,10 @@ SELECT distinct ?Nstation (SUM(?rainfall24h)) as ?rain ?StationName ?insee ?lati
         ?item rdfs:label ?StationName ; wdt:P2585  ?insee .
 ?station geo:lat ?latitude .
 ?station geo:long ?long.
-FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationName !="La Réunion"@fr && ?StationName !="Martinique"@fr && ?StationName !="Guadeloupe"@fr)    FILTER (?date >= xsd:date(?start))
+FILTER (?Nstation != "ST-PIERRE" && ?Nstation !="NOUVELLE AMSTERDAM" && ?Nstation !="TROMELIN" && ?Nstation !="KERGUELEN"
+&& ?Nstation !="EUROPA" && ?Nstation !="PAMANDZI" && ?Nstation !="GLORIEUSES" && ?Nstation !="GILLOT-AEROPORT" && ?Nstation !="ST-BARTHELEMY METEO"
+&& ?Nstation !="LE RAIZET AERO" && ?Nstation !="LA DESIRADE METEO" && ?Nstation !="TRINITE-CARAVEL" && ?Nstation !="LAMENTIN-AERO"
+&& ?Nstation !="SAINT LAURENT" && ?Nstation !="JUAN DE NOVA" && ?Nstation !="CAYENNE-MATOURY" && ?Nstation !="SAINT GEORGES" && ?Nstation !="MARIPASOULA" && ?Nstation !="DUMONT D'URVILLE")
     FILTER(?date >= xsd:date(?start))
     FILTER(?date < xsd:date(?end))
     }
@@ -105,9 +108,10 @@ FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationNa
     `;
     return query;
   }
-/*
-  getAvgRainRegion(){
-    PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
+
+  getAvgRainRegion(start: string, end: string){
+    let query =
+      `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
     PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     PREFIX qb:  <http://purl.org/linked-data/cube#>
@@ -119,11 +123,11 @@ FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationNa
     PREFIX wdt: <http://www.wikidata.org/prop/direct/>
     PREFIX sosa: <http://www.w3.org/ns/sosa/>
 
-    SELECT distinct (SUM(?rainfall24h)/COUNT(?Nstation)) as ?rain ?label  WHERE
+    SELECT distinct (SUM(?rainfall24h)/COUNT(?Nstation)) as ?rain ?label ?insee WHERE
     {
       VALUES ?year  {"2021"^^xsd:gYear}
-      VALUES ?start {'2021-01-01'}
-      VALUES ?end {'2021-01-31'}
+  VALUES ?start {'`+start+`'}
+        VALUES ?end {'`+end+`'}
         ?s  a qb:Slice ;
       wes-dimension:station ?station ;
       wes-dimension:year ?year ;
@@ -145,10 +149,11 @@ FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationNa
       FILTER(?date < xsd:date(?end))
     }
 
-    GROUP BY ?label
-      ORDER BY ?label
-  } */
-    buildQuery_slices(insee: number, year: number) {
+    GROUP BY ?label ?insee
+      ORDER BY ?label `;
+    return query;
+  }
+  buildQuery_slices(insee: number, year: number) {
     let query =
       `PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
             PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
@@ -166,7 +171,9 @@ FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationNa
         VALUES ?insee  {'` +
       insee +
       `' }
-        VALUES ?year  {'`+year+`'^^xsd:gYear}
+        VALUES ?year  {'` +
+      year +
+      `'^^xsd:gYear}
         ?s  a qb:Slice ;
         wes-dimension:station ?station ;
         wes-dimension:year ?year ;
@@ -197,6 +204,7 @@ FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationNa
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
   PREFIX dct: <http://purl.org/dc/terms/>
   PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+  PREFIX wep: <http://ns.inria.fr/meteo/ontology/property/>
 
 SELECT ?insee ?StationName ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg)   WHERE {
    VALUES ?start {'`+start+`'}
@@ -207,13 +215,16 @@ SELECT ?insee ?StationName ?station ?latitude ?long (AVG(?temp_avg) as ?temp_avg
               wes-attribute:observationDate ?date ;
              wes-measure:avgDailyTemperature ?temp_avg
           ] .
-      ?station a weo:WeatherStation ; dct:spatial ?e ; rdfs:label ?Nstation.
-      ?e wdt:P131 ?item .
-      ?item rdfs:label ?StationName ; wdt:P2585 ?insee.
+      ?station a weo:WeatherStation ; dct:spatial ?e ; rdfs:label ?StationName.
+
 ?station geo:lat ?latitude .
 ?station geo:long ?long.
-FILTER (?StationName != "Guyane"@fr && ?StationName !="Mayotte"@fr && ?StationName !="La Réunion"@fr && ?StationName !="Martinique"@fr && ?StationName !="Guadeloupe"@fr)    FILTER (?date >= xsd:date(?start))
-    FILTER (?date <= xsd:date(?end))
+FILTER (?StationName != "ST-PIERRE" && ?StationName !="NOUVELLE AMSTERDAM" && ?StationName !="TROMELIN" && ?StationName !="KERGUELEN"
+&& ?StationName !="EUROPA" && ?StationName !="PAMANDZI" && ?StationName !="GLORIEUSES" && ?StationName !="GILLOT-AEROPORT" && ?StationName !="ST-BARTHELEMY METEO"
+&& ?StationName !="LE RAIZET AERO" && ?StationName !="LA DESIRADE METEO" && ?StationName !="TRINITE-CARAVEL" && ?StationName !="LAMENTIN-AERO"
+&& ?StationName !="SAINT LAURENT" && ?StationName !="JUAN DE NOVA" && ?StationName !="CAYENNE-MATOURY" && ?StationName !="SAINT GEORGES" && ?StationName !="MARIPASOULA" && ?StationName !="DUMONT D'URVILLE")
+
+FILTER (?date <= xsd:date(?end))
       }
 
   GROUP BY ?StationName ?insee ?station ?latitude ?long
@@ -299,7 +310,7 @@ FILTER(?time>= xsd:date("2021-01-01"))
 FILTER(?time < xsd:date("2021-12-31"))
 }
 GROUP BY ?stationID ?StationName ?latitude ?long
-ORDER BY ?stationID`
+ORDER BY ?stationID`;
     return query;
   }
 
@@ -333,7 +344,7 @@ ORDER BY ?stationID`
       FILTER(?time < xsd:date("2021-12-31"))
   }
 GROUP BY ?stationID ?StationName
-ORDER BY ?stationID`
+ORDER BY ?stationID`;
     return query;
   }
 
@@ -415,13 +426,11 @@ FILTER(?time>= xsd:date("2021-01-01"))
 FILTER(?time < xsd:date("2021-12-31"))
 }
 GROUP BY ?stationID ?StationName ?latitude ?long
-ORDER BY ?stationID`
+ORDER BY ?stationID`;
     return query;
   }
 
-
-
-  getAvgTempPerRegion(){
+  getAvgTempPerRegion() {
     let query = `
         PREFIX wes: <http://ns.inria.fr/meteo/observationslice/>
     PREFIX weo: <http://ns.inria.fr/meteo/ontology/>
@@ -455,7 +464,4 @@ ORDER BY ?stationID`
       ORDER BY ?temp_avg`;
     return query;
   }
-
-
-
 }
