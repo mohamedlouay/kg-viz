@@ -48,7 +48,21 @@ Assurez-vous de disposer des versions spécifiées de Node.js et d'Angular CLI p
 - Utilisez la commande `ng serve` pour exécuter le projet en mode développement.
 - Ouvrez votre navigateur et accédez à `http://localhost:4200` pour voir l'application en cours d'exécution.
 
+### Gestion du cache avec les Service Workers
 
+Pour gérer le cache dans l'application , vous pouvez configurer le fichier `ngsw-config.json` qui se trouve à la racine de votre projet.
+
+Dans la configuration actuelle, nous avons défini deux groupes d'actifs (assetGroups). Le groupe "app" utilise le mode d'installation "prefetch" et précharge les fichiers essentiels de l'application tels que index.html, les fichiers CSS et JavaScript, et manifest.webmanifest.
+
+Le groupe "assets" utilise le mode d'installation "lazy" et met en cache les fichiers du répertoire /assets ainsi que les fichiers d'images courants tels que les formats SVG, PNG, JPEG, etc.
+
+ous avons également défini deux groupes de données (dataGroups). Le groupe "map" met en cache des ressources provenant de différentes URL liées aux cartes, avec une taille maximale de cache de 50 et une durée de vie maximale de 24 heures. Le groupe "queries" met en cache les requêtes SPARQL provenant du serveur i3s.unice, avec une taille maximale de cache de 30 et une durée de vie maximale de 12 heures.
+
+Vous pouvez personnaliser cette configuration en fonction des besoins de votre application. Les paramètres tels que maxSize, maxAge et strategy peuvent être ajustés en fonction de vos préférences et des exigences 
+
+N'oubliez pas de générer à nouveau votre application pour prendre en compte les modifications de configuration des Service Workers.
+
+Pour en savoir plus sur la configuration des Service Workers en Angular, vous pouvez consulter [la documentation officielle](https://angular.io/guide/service-worker-config).
 ## Déploiement
 
 Avant de pouvoir déployer votre projet sur GitHub Pages, vous devez effectuer une configuration initiale dans les paramètres de votre référentiel. Voici les étapes à suivre :
