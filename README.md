@@ -51,7 +51,15 @@ Assurez-vous de disposer des versions spécifiées de Node.js et d'Angular CLI p
 
 ## Déploiement
 
-Pour déployer le projet sur GitHub Pages, nous avons ajouté un script personnalisé dans le fichier `package.json`. Vous pouvez exécuter ce script en utilisant la commande suivante :
+Avant de pouvoir déployer votre projet sur GitHub Pages, vous devez effectuer une configuration initiale dans les paramètres de votre référentiel. Voici les étapes à suivre :
+
+1. Accédez aux paramètres (Settings) de votre référentiel GitHub.
+2. Faites défiler jusqu'à la section "GitHub Pages".
+3. Sélectionnez la branche principale (main) comme source de votre site web.
+4. Choisissez le dossier racine (docs) comme source si votre fichier index.html se trouve à la racine de votre référentiel.
+5. Enregistrez les modifications. Cette configuration initiale n'a besoin d'être effectuée qu'une seule fois.
+
+Une fois que vous avez terminé cette étape initiale, vous pouvez passer au déploiement du projet . Nous avons ajouté un script personnalisé dans le fichier `package.json`. Vous pouvez exécuter ce script en utilisant la commande suivante :
 
 ```
 npm run deploy
@@ -59,7 +67,7 @@ npm run deploy
 
 Assurez-vous d'avoir configuré correctement les paramètres de déploiement dans le fichier `angular.json`. Vous devrez spécifier le nom du référentiel GitHub dans la propriété `"outputPath"` du `"deploy"` dans `"architect"`. Dans notre cas, pour ce projet, le dossier de sortie est configuré sur  `Docs`.
 
-Une fois le script exécuté avec succès, le projet sera déployé sur GitHub Pages et vous pourrez y accéder via le lien suivant : `https://votre-utilisateur-github.github.io/votre-repo/` . Dans le cas spécifique de ce projet, le lien de déploiement est : `https://mohamedlouay.github.io/kg-viz/`
+Une fois que le script a été exécuté avec succès et que le code a été poussé, votre projet sera déployé sur GitHub Pages. Vous pourrez y accéder en utilisant le lien suivant : `https://votre-utilisateur-github.github.io/votre-repo/`. Dans le cas spécifique de ce projet, le lien de déploiement est : `https://mohamedlouay.github.io/kg-viz/`.
 
 
 
