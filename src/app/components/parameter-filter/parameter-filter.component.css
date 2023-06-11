@@ -69,8 +69,8 @@ mat-button-toggle {
 }
 
 .active {
-  color: black;
-  background: var(--color);
+  color: black !important;
+  background: var(--color) !important;
 
 }
 
