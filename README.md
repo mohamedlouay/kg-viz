@@ -69,7 +69,14 @@ Assurez-vous d'avoir configuré correctement les paramètres de déploiement dan
 
 Une fois que le script a été exécuté avec succès et que le code a été poussé, votre projet sera déployé sur GitHub Pages. Vous pourrez y accéder en utilisant le lien suivant : `https://votre-utilisateur-github.github.io/votre-repo/`. Dans le cas spécifique de ce projet, le lien de déploiement est : `https://mohamedlouay.github.io/kg-viz/`.
 
+## Problèmes courants et solutions
 
+Si vous rencontrez des problèmes lors de l'exécution de la commande `npm install`, notamment liés au module `@angular/service-worker@15.2.9`, vous pouvez essayer la solution suivante :
+
+```shell
+npm install --force
+```
+Cette commande permet une installation forcée du module, ce qui peut aider à résoudre les problèmes liés à cette version spécifique du module.
 
 
 ## Contribution
