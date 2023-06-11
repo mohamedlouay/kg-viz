@@ -78,6 +78,7 @@ export class ChartModalComponent {
     // @ts-ignore
     const line = d3
       .line<ITemperature>()
+      .curve(d3.curveCardinal)
       .x((d) => x(new Date(d.date)))
       .y((d) => y(d.temp_avg));
 
