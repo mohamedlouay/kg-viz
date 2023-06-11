@@ -42,7 +42,7 @@ export class DataService {
     const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;
     return this.http.get<IWeather>(url);
   }
-  getTemperaturePerRegion(ResgionCode: number) {
+  getTemperaturePerRegion(ResgionCode: number, year: number) {
     const query = this.queryBuilderService.buildQuery_slices(ResgionCode, year);
     const url = `${this.apiUrl}?query=${encodeURIComponent(query)}`;
     return this.http.get<IWeather>(url);
