@@ -48,7 +48,7 @@ Assurez-vous de disposer des versions spécifiées de Node.js et d'Angular CLI p
 - Utilisez la commande `ng serve` pour exécuter le projet en mode développement.
 - Ouvrez votre navigateur et accédez à `http://localhost:4200` pour voir l'application en cours d'exécution.
 
-### Gestion du cache avec les Service Workers
+## Gestion du cache avec les Service Workers
 
 Pour gérer le cache dans l'application , vous pouvez configurer le fichier `ngsw-config.json` qui se trouve à la racine de votre projet.
 
