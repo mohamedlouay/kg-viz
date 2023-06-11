@@ -39,7 +39,6 @@ export class VisualisationPageComponent {
     this.switchParameter(this.activeLayer);
     this.getLegendScale([0, 1, 2, 3, 4]);
     this.switchActiveButton(this.activeLayer);
-    console.log("activelayer,", this.activeLayer);
   }
 
   /**
@@ -117,7 +116,6 @@ export class VisualisationPageComponent {
    * @param $event
    */
   switchLayer($event: string) {
-    console.log("activelayer,", this.activeLayer);
     this.activeLayer = $event;
     this.layerSelected.emit(this.activeLayer);
     this.switchActiveButton(this.activeLayer);

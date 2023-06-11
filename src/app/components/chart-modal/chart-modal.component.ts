@@ -134,7 +134,6 @@ export class ChartModalComponent {
    * @private
    */
   private addLegend() {
-    console.log("liste des stations:", this.listStations);
     const svg = d3.select(this.chartContainer.nativeElement).select('svg');
     const legendGroup = svg
       .append('g')

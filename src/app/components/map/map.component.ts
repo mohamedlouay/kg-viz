@@ -42,7 +42,6 @@ export class MapComponent {
   endDate: number = 1640908800000;
   start: string = '2021-01-01';
   end: string = '2021-12-31';
-  protected readonly console = console;
   enable: boolean = true;
 
   @Input() layerSelected: string | undefined;
@@ -680,7 +679,6 @@ export class MapComponent {
   }
 
   calculateLegendValues(data: any[]) {
-    console.log(' rain data  ', data.length);
 
     let numbers: number[] = [];
     data.forEach((num) => {
@@ -747,7 +745,6 @@ export class MapComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
       this.enable = true;
     });
   }
@@ -788,7 +785,6 @@ export class MapComponent {
 
   colorMapByRain(insee: string) {
     let rainData = this.dataService.initRainPerRegion!;
-    console.log('rainnnn : ', rainData);
     // Calculate the average temperature
     let avgRain =
       rainData.reduce((sum, data) => sum + Number(data.rain), 0) /
@@ -801,7 +797,6 @@ export class MapComponent {
         0
       ) / rainData.length
     );
-    console.log(' avg rain', standardDeviation);
     // Define the color scale
     const colorScale = d3
       .scaleLinear<string>()
@@ -811,7 +806,6 @@ export class MapComponent {
     let rain = rainData.find((region) => region.insee === insee)!.rain;
 
     // return the color
-    console.log('rain scale', colorScale(rain));
     return colorScale(rain);
   }
 

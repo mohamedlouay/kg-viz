@@ -33,7 +33,6 @@ export class LegendColorChartComponent {
       let topValue = this.counter + "px";
       this.indicators[x].setAttribute("style", "top:" + topValue);
       this.counter += barHeight / numberOfIndicators + 0;
-      console.log("counter: ", this.counter);
     }
     this.changeColor();
   }

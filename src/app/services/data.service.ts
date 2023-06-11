@@ -28,7 +28,6 @@ export class DataService {
 
     this.getRainPerRegion('2021-01-01', '2021-12-31').subscribe((data) => {
       this.initRainPerRegion = this.mapperService.weatherToRainPerRegion(data);
-      console.log(' RAIN DATA : ', this.initRainPerRegion);
     });
   }
 
