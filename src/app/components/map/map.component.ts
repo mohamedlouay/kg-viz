@@ -22,7 +22,7 @@ import {
 } from 'leaflet';
 import { DataService } from '../../services/data.service';
 import { MapperService } from '../../services/mapper.service';
-import { IAvgTempPerRegion, Station } from '../../models/data';
+import {IAvgTempPerRegion, RegionRain, Station} from '../../models/data';
 import { Observable, Subscriber } from 'rxjs';
 import { ParameterFilterComponent } from '../parameter-filter/parameter-filter.component';
 import { VisualisationPageComponent } from '../visualisation-page/visualisation-page.component';
@@ -44,6 +44,7 @@ export class MapComponent {
   hexLayerHumidity: any;
   stationsData: Station[] = [];
   regionLayer: any;
+  rainRegionLayer: any;
   mymap: any;
   startDate: number = 1609459200000;
   endDate: number = 1640908800000;
@@ -76,7 +77,9 @@ export class MapComponent {
   ngOnInit(): void {
     this.enable = true;
     this.dataService.getAvgTempPerRegion().subscribe(() => {
-      this.createMap();
+      this.dataService.getRainPerRegion('2021-01-01', '2021-12-31').subscribe(() => {
+        this.createMap();
+      })
     });
   }
 
@@ -108,11 +111,6 @@ export class MapComponent {
     )
       .then((response) => response.json())
       .then((data) => {
-        // Calcul de la valeur maximale de la densité de population
-        function getColor(d: number) {
-          return '#bd0327';
-        }
-        // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
         // Création d'une couche GeoJSON pour les régions
         this.regionLayer = L.geoJSON(data, {
           style: (feature) => {
@@ -138,6 +136,25 @@ export class MapComponent {
         });
         // Ajout de la couche à la carte
         this.regionLayer.addTo(this.mymap);
+
+        this.rainRegionLayer = L.geoJSON(data, {
+          style: (feature) => {
+            var regionIsee = feature!.properties.code;
+            return {
+              fillColor: this.colorMapByRain(regionIsee),
+              fillOpacity: 0.75,
+              weight: 1,
+              color: 'black',
+            };
+          },
+          onEachFeature: (feature, layer) => {
+            layer.bindTooltip(feature.properties.nom, {
+              permanent: false,
+              direction: 'center',
+              className: 'regionLabel',
+            });
+          },
+        });
       })
       .then(() => {
         // ---------------------query test---------------------
@@ -378,6 +395,29 @@ export class MapComponent {
     });
   }
 
+  async getRainPerRegion() {
+    return new Promise<RegionRain[]>((resolve, reject) => {
+      let data: any[] = [];
+      let tempData: RegionRain[];
+
+      this.dataService.getRainPerRegion(this.start, this.end).subscribe(
+        (weather) => {
+          tempData = this.mapperService.weatherToRainPerRegion(weather);
+          tempData.forEach((region) => {
+            data.push([
+              region.label,
+              region.rain,
+            ]);
+          });
+          resolve(data);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
   /**
    *
    */
@@ -529,6 +569,9 @@ export class MapComponent {
         if (this.mymap.hasLayer(this.hexLayerWind)) {
           this.mymap.removeLayer(this.hexLayerWind);
         }
+        if (this.mymap.hasLayer(this.rainRegionLayer)) {
+          this.mymap.removeLayer(this.rainRegionLayer);
+        }
         if (this.mymap.hasLayer(this.hexLayerHumidity)) {
           this.mymap.removeLayer(this.hexLayerHumidity);
         }
@@ -606,6 +649,9 @@ export class MapComponent {
         if (this.mymap.hasLayer(this.hexLayerRain)) {
           this.mymap.removeLayer(this.hexLayerRain);
         }
+        if (this.mymap.hasLayer(this.rainRegionLayer)) {
+          this.mymap.removeLayer(this.rainRegionLayer);
+        }
         if (this.mymap.hasLayer(this.hexLayer)) {
           this.mymap.removeLayer(this.hexLayer);
         }
@@ -613,8 +659,10 @@ export class MapComponent {
           this.mymap.removeLayer(this.regionLayer);
         }
         if (this.parameterSelected == 'rain') {
-          this.colors = ['white', '#7DF9FF', '#ADD8E6', '#0000FF', '#00008B'];
-          this.mymap.addLayer(this.hexLayerRain);
+          this.colors = ['#7DF9FF', '#ADD8E6', '#0000FF', '#00008B'];
+          this.mymap.addLayer(this.rainRegionLayer);
+          this.calculateLegendValues(this.rainRegionLayer._data);
+          this.legendScaleTest.emit(this.legendScale);
         }
         if (this.parameterSelected == 'temperature') {
           this.colors = [
@@ -627,6 +675,8 @@ export class MapComponent {
           ];
           //this.addRegionLayer();
           this.mymap.addLayer(this.regionLayer);
+          this.calculateLegendValues(this.regionLayer._data);
+          this.legendScaleTest.emit(this.legendScale);
         }
         //this.switchParameter(this.parameterSelected);
         break;
@@ -638,29 +688,20 @@ export class MapComponent {
 
     let numbers: number[] = [];
     data.forEach((num) => {
-      console.log(' NUMMM ', num);
       numbers.push(parseInt(num[2]));
     });
-    console.log(' LEGEND DATA ? ?? ', numbers);
 
     const minValue = Math.min(...numbers);
     const maxValue = Math.max(...numbers);
-    console.log(' MIN ? ', minValue);
-    console.log(' MAX ? ', maxValue);
 
     const range = maxValue - minValue;
     const interval = range / 5;
     const legendLabels: number[] = [];
     for (let i = 1; i <= 5; i++) {
       const average = minValue + interval * i;
-      console.log(
-        'average: ',
-        Math.round((average + Number.EPSILON) * 100) / 100
-      );
       legendLabels.push(Math.round((average + Number.EPSILON) * 100) / 100);
     }
     this.legendScale = legendLabels;
-    console.log(' LEGEND ', this.legendScale);
   }
 
   createTempValuesMarkers(stations: any[][], mymap: L.Map) {
@@ -742,6 +783,47 @@ export class MapComponent {
 
     // return the color
     return colorScale(temperature);
+  }
+
+  colorMapByRain(insee: string)  {
+    let rainData = this.dataService.initRainPerRegion!;
+    console.log('rainnnn : ', rainData);
+    // Calculate the average temperature
+    let avgRain =
+      rainData.reduce((sum, data) => sum + Number(data.rain), 0) /
+      rainData.length;
+
+    // Calculate the standard deviation of temperatures
+    const standardDeviation = Math.sqrt(
+      rainData.reduce(
+        (sum, data) => sum + Math.pow(data.rain - avgRain, 2),
+        0
+      ) / rainData.length
+    );
+    console.log(" avg rain", standardDeviation);
+    // Define the color scale
+    const colorScale = d3
+      .scaleLinear<string>()
+      .domain([
+        1.3 ,
+        1.6 ,
+        1.9 ,
+        2.1
+      ])
+      .range([
+        '#7DF9FF',
+        '#ADD8E6',
+        '#0000FF',
+        '#00008B',
+      ]);
+
+    let rain = rainData.find(
+      (region) => region.insee === insee
+    )!.rain;
+
+    // return the color
+    console.log("rain scale", colorScale(rain));
+    return colorScale(rain);
   }
 
   updateDates(range: Date) {

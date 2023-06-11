@@ -123,7 +123,7 @@ FILTER (?Nstation != "ST-PIERRE" && ?Nstation !="NOUVELLE AMSTERDAM" && ?Nstatio
     PREFIX wdt: <http://www.wikidata.org/prop/direct/>
     PREFIX sosa: <http://www.w3.org/ns/sosa/>
 
-    SELECT distinct (SUM(?rainfall24h)/COUNT(?Nstation)) as ?rain ?label  WHERE
+    SELECT distinct (SUM(?rainfall24h)/COUNT(?Nstation)) as ?rain ?label ?insee WHERE
     {
       VALUES ?year  {"2021"^^xsd:gYear}
   VALUES ?start {'`+start+`'}
@@ -149,7 +149,7 @@ FILTER (?Nstation != "ST-PIERRE" && ?Nstation !="NOUVELLE AMSTERDAM" && ?Nstatio
       FILTER(?date < xsd:date(?end))
     }
 
-    GROUP BY ?label
+    GROUP BY ?label ?insee
       ORDER BY ?label `;
     return query;
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {IAvgTempPerRegion, ITemperature, Station} from '../models/data';
+import {IAvgTempPerRegion, ITemperature, RegionRain, Station} from '../models/data';
 import { IWeather } from '../models/dataFromServeur';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class MapperService {
     if (weatherJson.results.bindings) {
       for (const binding of weatherJson.results.bindings) {
         const temperature: ITemperature = {
-          region: binding.label.value,
+          region: binding.StationName.value,
           temp_avg: binding.temp_avg.value,
           stationName:  null,
           station: binding.Nstation.value,
@@ -71,6 +71,19 @@ export class MapperService {
     return temperatures;
   }
 
-
+  weatherToRainPerRegion(weatherJson: IWeather): RegionRain[] {
+    const regionRains: RegionRain[] = [];
+    if (weatherJson.results.bindings) {
+      for (const binding of weatherJson.results.bindings) {
+        const regionRain: RegionRain = {
+          insee: binding.insee.value,
+          label: binding.label.value,
+          rain: binding.rain.value,
+        };
+        regionRains.push(regionRain);
+      }
+    }
+    return regionRains;
+  }
 
 }
