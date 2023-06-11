@@ -1,15 +1,6 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as d3 from 'd3';
-import * as hexbin from 'd3-hexbin';
-import { select } from 'd3-selection';
 import * as L from 'leaflet';
 import * as Ld3 from '@asymmetrik/leaflet-d3';
 import { ChartModalComponent } from '../chart-modal/chart-modal.component';
@@ -22,12 +13,13 @@ import {
 } from 'leaflet';
 import { DataService } from '../../services/data.service';
 import { MapperService } from '../../services/mapper.service';
-import {IAvgTempPerRegion, RegionRain, Station} from '../../models/data';
+import { IAvgTempPerRegion, RegionRain, Station } from '../../models/data';
 import { Observable, Subscriber } from 'rxjs';
 import { ParameterFilterComponent } from '../parameter-filter/parameter-filter.component';
 import { VisualisationPageComponent } from '../visualisation-page/visualisation-page.component';
 import { RotatedMarker } from 'leaflet-marker-rotation';
 import { text } from 'd3';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -71,15 +63,14 @@ export class MapComponent {
     this.legendScale = [11, 15, 20, 25];
   }
 
-  /**
-   *
-   */
   ngOnInit(): void {
     this.enable = true;
     this.dataService.getAvgTempPerRegion().subscribe(() => {
-      this.dataService.getRainPerRegion('2021-01-01', '2021-12-31').subscribe(() => {
-        this.createMap();
-      })
+      this.dataService
+        .getRainPerRegion('2021-01-01', '2021-12-31')
+        .subscribe(() => {
+          this.createMap();
+        });
     });
   }
 
@@ -111,6 +102,12 @@ export class MapComponent {
     )
       .then((response) => response.json())
       .then((data) => {
+        // Calcul de la valeur maximale de la densité de population
+        function getColor(d: number) {
+          return '#bd0327';
+        }
+
+        // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
         // Création d'une couche GeoJSON pour les régions
         this.regionLayer = L.geoJSON(data, {
           style: (feature) => {
@@ -123,7 +120,6 @@ export class MapComponent {
             };
           },
           onEachFeature: (feature, layer) => {
-            //this.openModal(feature);
             layer.on('click', () => {
               this.openModal(feature);
             });
@@ -331,6 +327,7 @@ export class MapComponent {
         this.regionLayer.addData(data);
         this.calculateLegendValues(this.regionLayer._data);
         this.legendScaleTest.emit(this.legendScale);
+
         // Création d'une fonction de couleur pour la choropleth map
         function getColor(d: number) {
           return d > maxPopulationDensity * 0.8
@@ -404,10 +401,7 @@ export class MapComponent {
         (weather) => {
           tempData = this.mapperService.weatherToRainPerRegion(weather);
           tempData.forEach((region) => {
-            data.push([
-              region.label,
-              region.rain,
-            ]);
+            data.push([region.label, region.rain]);
           });
           resolve(data);
         },
@@ -521,6 +515,7 @@ export class MapComponent {
       );
     });
   }
+
   /**
    *
    */
@@ -554,6 +549,7 @@ export class MapComponent {
    *
    */
   switchLayer() {
+    this.enable = true;
     switch (this.layerSelected) {
       case 'station':
         this.colors = ['white', 'yellow', 'orange', 'red'];
@@ -749,6 +745,11 @@ export class MapComponent {
       position: { bottom: '0px' },
       panelClass: 'full-width-dialog',
     });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      this.enable = true;
+    });
   }
 
   colorMapByTemperature(isee: string) {
@@ -785,7 +786,7 @@ export class MapComponent {
     return colorScale(temperature);
   }
 
-  colorMapByRain(insee: string)  {
+  colorMapByRain(insee: string) {
     let rainData = this.dataService.initRainPerRegion!;
     console.log('rainnnn : ', rainData);
     // Calculate the average temperature
@@ -800,29 +801,17 @@ export class MapComponent {
         0
       ) / rainData.length
     );
-    console.log(" avg rain", standardDeviation);
+    console.log(' avg rain', standardDeviation);
     // Define the color scale
     const colorScale = d3
       .scaleLinear<string>()
-      .domain([
-        1.3 ,
-        1.6 ,
-        1.9 ,
-        2.1
-      ])
-      .range([
-        '#7DF9FF',
-        '#ADD8E6',
-        '#0000FF',
-        '#00008B',
-      ]);
+      .domain([1.3, 1.6, 1.9, 2.1])
+      .range(['#7DF9FF', '#ADD8E6', '#0000FF', '#00008B']);
 
-    let rain = rainData.find(
-      (region) => region.insee === insee
-    )!.rain;
+    let rain = rainData.find((region) => region.insee === insee)!.rain;
 
     // return the color
-    console.log("rain scale", colorScale(rain));
+    console.log('rain scale', colorScale(rain));
     return colorScale(rain);
   }
 
@@ -833,6 +822,7 @@ export class MapComponent {
     const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
+
   handleRangeChangedEvent(range: Date[]) {
     this.start = this.updateDates(range[0]);
     this.end = this.updateDates(range[1]);

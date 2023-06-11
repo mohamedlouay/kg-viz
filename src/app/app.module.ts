@@ -23,6 +23,8 @@ import { NpnSliderModule } from 'npn-slider';
 import { Ng5SliderModule } from 'ng5-slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import {MatSelectModule} from "@angular/material/select";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -35,26 +37,28 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     TimeBrushComponent,
     LegendColorChartComponent,
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatDialogModule,
-    FlexLayoutModule,
-    LeafletD3Module,
-    LeafletModule,
-    MatTooltipModule,
-    MatInputModule,
-    MatSliderModule,
-    FormsModule,
-    MatButtonToggleModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    })
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatDialogModule,
+        FlexLayoutModule,
+        LeafletD3Module,
+        LeafletModule,
+        MatTooltipModule,
+        MatInputModule,
+        MatSliderModule,
+        FormsModule,
+        MatButtonToggleModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            // Register the ServiceWorker as soon as the application is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000'
+        }),
+        MatSelectModule,
+        MatIconModule
+    ],
   providers: [],
   bootstrap: [AppComponent],
 })

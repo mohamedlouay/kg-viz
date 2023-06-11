@@ -3,39 +3,27 @@
   padding: 1.5px 2px;
 }
 
-p{
+p {
   font-size: 1em;
-}
-a {
-  font-size: 1em;
-  color:white;
 }
 
-h6{
+a {
+  font-size: 1em;
+  color: white;
+}
+
+h6 {
   margin-block-start: 0.15em;
   margin-block-end: 0.15em;
   font-size: 0.75em;
-  color:white;
+  color: white;
 }
 
 .dropper {
   width: 500px;
   background-color: black;
   color: white;
-}
-
-.dropper-content {
-  /*display: none;*/
   text-align: center;
-  position: absolute;
-  background-color: black;
-  color: white;
-  width: 484px;
-  box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
-  padding: 6px 8px;
-  z-index: 1001;
 }
 
-/*.dropper:hover .dropdown-content {
-  display: block;
-}*/
+
