@@ -15,7 +15,8 @@ export class DataService {
 
   initAvgTempPerRegionData: IAvgTempPerRegion[] | undefined;
   initRainPerRegion: RegionRain[] | undefined;
-
+  start: string = '2021-01-01';
+  end: string = '2021-12-31';  
   constructor(
     private mapperService: MapperService,
     private queryBuilderService: QueryBuilderService,
@@ -26,10 +27,26 @@ export class DataService {
         this.mapperService.weatherToAvgTempPerRegion(data);
     });
 
-    this.getRainPerRegion('2021-01-01', '2021-12-31').subscribe((data) => {
+    this.getRainPerRegion(this.start, this.end).subscribe((data) => {
       this.initRainPerRegion = this.mapperService.weatherToRainPerRegion(data);
     });
   }
+
+  refreshRainData(){
+    this.getRainPerRegion(this.start, this.end).subscribe((data) => {
+      this.initRainPerRegion = this.mapperService.weatherToRainPerRegion(data);
+      
+    });
+  }
+
+  refreshTempData(){
+    this.getAvgTempPerRegion().subscribe((data) => {
+      this.initAvgTempPerRegionData =
+        this.mapperService.weatherToAvgTempPerRegion(data);
+    });
+    
+  }
+
 
   getAvgTempPerRegion() {
     const query = this.queryBuilderService.getAvgTempPerRegion();

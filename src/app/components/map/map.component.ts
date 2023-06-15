@@ -43,6 +43,8 @@ export class MapComponent {
   start: string = '2021-01-01';
   end: string = '2021-12-31';
   enable: boolean = true;
+  rainByRegion: any[] = [];
+  tempByRegion: any[] = [];
 
   @Input() layerSelected: string | undefined;
   @Input() parameterSelected!: string;
@@ -66,14 +68,27 @@ export class MapComponent {
     this.enable = true;
     this.dataService.getAvgTempPerRegion().subscribe(() => {
       this.dataService
-        .getRainPerRegion('2021-01-01', '2021-12-31')
+        .getRainPerRegion(this.start, this.end)
         .subscribe(() => {
           this.createMap();
         });
     });
   }
+ printFunctions(obj: any) {
+  const functionNames = Object.getOwnPropertyNames(obj)
+    .filter(prop => typeof obj[prop] === 'function');
+  
+  console.log('Functions:');
+  for (const functionName of functionNames) {
+    console.log(functionName);
+  }
+}
 
   private createMap() {
+
+    this.createRegionsLayers();
+
+
     this.hexbinOptions = {
       radius: 10,
       opacity: 0.7,
@@ -94,70 +109,7 @@ export class MapComponent {
 
     //ajustement de la luminosité de la map
     layer.getContainer()!.style.filter = 'brightness(75%)';
-    // Chargement des données des régions
-
-    fetch(
-      'https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions.geojson'
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        // Calcul de la valeur maximale de la densité de population
-        function getColor(d: number) {
-          return '#bd0327';
-        }
-
-        // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
-        // Création d'une couche GeoJSON pour les régions
-        this.regionLayer = L.geoJSON(data, {
-          style: (feature) => {
-            var regionIsee = feature!.properties.code;
-            return {
-              fillColor: this.colorMapByTemperature(regionIsee),
-              fillOpacity: 0.75,
-              weight: 1,
-              color: 'black',
-            };
-          },
-          onEachFeature: (feature, layer) => {
-            layer.on('click', () => {
-              this.openModal(feature);
-            });
-            layer.bindTooltip(feature.properties.nom, {
-              permanent: false,
-              direction: 'center',
-              className: 'regionLabel',
-            });
-          },
-        });
-        // Ajout de la couche à la carte
-        this.regionLayer.addTo(this.mymap);
-
-        this.rainRegionLayer = L.geoJSON(data, {
-          style: (feature) => {
-            var regionIsee = feature!.properties.code;
-            return {
-              fillColor: this.colorMapByRain(regionIsee),
-              fillOpacity: 0.75,
-              weight: 1,
-              color: 'black',
-            };
-          },
-          onEachFeature: (feature, layer) => {
-            layer.bindTooltip(feature.properties.nom, {
-              permanent: false,
-              direction: 'center',
-              className: 'regionLabel',
-            });
-          },
-        });
-      })
-      .then(() => {
-        // ---------------------query test---------------------
-        this.options = {
-          radius: 10,
-          opacity: 0.7,
-          duration: 500,
-        };
+    // Chargement des données des régions    
         // @ts-ignore
         (this.franceBounds = L.latLngBounds([
           [41, -5],
@@ -247,7 +199,6 @@ export class MapComponent {
           .radiusValue(function (d: any[]) {
             return parseInt(d[0]['o'][2]);
           });
-      });
 
     this.hexLayerHumidity = L.hexbinLayer(this.hexbinOptions);
     this.hexLayerHumidity.colorRange([
@@ -305,6 +256,79 @@ export class MapComponent {
       });
   }
 
+  createRegionsLayers(){
+    fetch(
+      'https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions.geojson'
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // Calcul de la valeur maximale de la densité de population
+        function getColor(d: number) {
+          return '#bd0327';
+        }
+
+        // Création d'une couche GeoJSON pour les régions avec une couleur de remplissage basée sur la densité de population
+        // Création d'une couche GeoJSON pour les régions
+        this.regionLayer = L.geoJSON(data, {
+          style: (feature) => {
+            var regionIsee = feature!.properties.code;
+            return {
+              fillColor: this.colorMapByTemperature(regionIsee),
+              fillOpacity: 0.75,
+              weight: 1,
+              color: 'black',
+            };
+          },
+          onEachFeature: (feature, layer) => {
+            layer.on('click', () => {
+              this.openModal(feature);
+            });
+            layer.bindTooltip(feature.properties.nom, {
+              permanent: false,
+              direction: 'center',
+              className: 'regionLabel',
+            });
+          },
+        });
+        // Ajout de la couche à la carte
+
+        this.rainRegionLayer = L.geoJSON(data, {
+          style: (feature) => {
+            var regionIsee = feature!.properties.code;
+            return {
+              fillColor: this.colorMapByRain(regionIsee),
+              fillOpacity: 0.75,
+              weight: 1,
+              color: 'black',
+            };
+          },
+          onEachFeature: (feature, layer) => {
+            layer.bindTooltip(feature.properties.nom, {
+              permanent: false,
+              direction: 'center',
+              className: 'regionLabel',
+            });
+          },
+        });
+      })
+      .then(() => {
+        // ---------------------query test---------------------
+        this.options = {
+          radius: 10,
+          opacity: 0.7,
+          duration: 500,
+        };
+        if (this.parameterSelected == 'rain'){        
+          this.rainRegionLayer.addTo(this.mymap);
+        }
+        if (this.parameterSelected == 'temperature'){        
+          this.regionLayer.addTo(this.mymap);
+        }
+
+  }
+  
+)}
+
   /**
    *
    */
@@ -324,7 +348,7 @@ export class MapComponent {
         });
         //alimentation de la légende
         this.regionLayer.addData(data);
-        this.calculateLegendValues(this.regionLayer._data);
+        this.calculateLegendValues(this.tempByRegion);
         this.legendScaleTest.emit(this.legendScale);
 
         // Création d'une fonction de couleur pour la choropleth map
@@ -400,7 +424,7 @@ export class MapComponent {
         (weather) => {
           tempData = this.mapperService.weatherToRainPerRegion(weather);
           tempData.forEach((region) => {
-            data.push([region.label, region.rain]);
+            data.push([region.insee, region.label, region.rain]);
           });
           resolve(data);
         },
@@ -655,9 +679,17 @@ export class MapComponent {
         }
         if (this.parameterSelected == 'rain') {
           this.colors = ['#7DF9FF', '#ADD8E6', '#0000FF', '#00008B'];
-          this.mymap.addLayer(this.rainRegionLayer);
-          this.calculateLegendValues(this.rainRegionLayer._data);
-          this.legendScaleTest.emit(this.legendScale);
+          
+          this.dataService
+          .getRainPerRegion(this.start, this.end)
+          .subscribe(() => {
+            this.dataService.refreshRainData();
+            this.createRegionsLayers();
+            this.mymap.addLayer(this.rainRegionLayer);
+            this.calculateLegendValues(this.rainByRegion);
+            this.legendScaleTest.emit(this.legendScale);
+          });
+
         }
         if (this.parameterSelected == 'temperature') {
           this.colors = [
@@ -670,7 +702,7 @@ export class MapComponent {
           ];
           //this.addRegionLayer();
           this.mymap.addLayer(this.regionLayer);
-          this.calculateLegendValues(this.regionLayer._data);
+          this.calculateLegendValues(this.tempByRegion);
           this.legendScaleTest.emit(this.legendScale);
         }
         //this.switchParameter(this.parameterSelected);
@@ -679,7 +711,6 @@ export class MapComponent {
   }
 
   calculateLegendValues(data: any[]) {
-
     let numbers: number[] = [];
     data.forEach((num) => {
       numbers.push(parseInt(num[2]));
@@ -752,6 +783,10 @@ export class MapComponent {
   colorMapByTemperature(isee: string) {
     let temperatureData: IAvgTempPerRegion[] =
       this.dataService.initAvgTempPerRegionData!;
+    
+      temperatureData.forEach(region => {
+        this.tempByRegion?.push([region.isee, region.region, region.temp_avg.toString()]);
+      });
     // Calculate the average temperature
     let averageTemperature =
       temperatureData.reduce((sum, data) => sum + Number(data.temp_avg), 0) /
@@ -785,6 +820,11 @@ export class MapComponent {
 
   colorMapByRain(insee: string) {
     let rainData = this.dataService.initRainPerRegion!;
+    
+    rainData.forEach(region => {
+      this.rainByRegion?.push([region.insee, region.label, region.rain.toString()]);
+    });
+    this.rainByRegion
     // Calculate the average temperature
     let avgRain =
       rainData.reduce((sum, data) => sum + Number(data.rain), 0) /
