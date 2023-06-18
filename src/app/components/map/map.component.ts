@@ -20,6 +20,7 @@ import { VisualisationPageComponent } from '../visualisation-page/visualisation-
 import { RotatedMarker } from 'leaflet-marker-rotation';
 import { text } from 'd3';
 import { finalize } from 'rxjs';
+import {IWeather} from "../../models/dataFromServeur";
 
 @Component({
   selector: 'app-map',
@@ -45,6 +46,7 @@ export class MapComponent {
   enable: boolean = true;
   rainByRegion: any[] = [];
   tempByRegion: any[] = [];
+  regionRain: RegionRain[] = [];
 
   @Input() layerSelected: string | undefined;
   @Input() parameterSelected!: string;
@@ -54,6 +56,7 @@ export class MapComponent {
   @Output() legendScaleTest = new EventEmitter<number[]>();
 
   private hexbinOptions!: HexbinLayerConfig;
+  private dataRainRegion!: IWeather;
 
   constructor(
     private dialog: MatDialog,
@@ -74,19 +77,10 @@ export class MapComponent {
         });
     });
   }
- printFunctions(obj: any) {
-  const functionNames = Object.getOwnPropertyNames(obj)
-    .filter(prop => typeof obj[prop] === 'function');
-  
-  console.log('Functions:');
-  for (const functionName of functionNames) {
-    console.log(functionName);
-  }
-}
+
 
   private createMap() {
 
-    this.createRegionsLayers();
 
 
     this.hexbinOptions = {
@@ -109,7 +103,7 @@ export class MapComponent {
 
     //ajustement de la luminosité de la map
     layer.getContainer()!.style.filter = 'brightness(75%)';
-    // Chargement des données des régions    
+    // Chargement des données des régions
         // @ts-ignore
         (this.franceBounds = L.latLngBounds([
           [41, -5],
@@ -120,7 +114,11 @@ export class MapComponent {
         this.getData().then((data) => {
           this.hexLayer._data = data;
         });
-        this.hexLayer
+
+    this.createRegionsLayers();
+
+
+    this.hexLayer
           .radiusRange([12, 18, 25, 30])
           .lng(function (d: any[]) {
             return d[0];
@@ -318,15 +316,15 @@ export class MapComponent {
           opacity: 0.7,
           duration: 500,
         };
-        if (this.parameterSelected == 'rain'){        
+        if (this.parameterSelected == 'rain'){
           this.rainRegionLayer.addTo(this.mymap);
         }
-        if (this.parameterSelected == 'temperature'){        
+        if (this.parameterSelected == 'temperature'){
           this.regionLayer.addTo(this.mymap);
         }
 
   }
-  
+
 )}
 
   /**
@@ -679,11 +677,14 @@ export class MapComponent {
         }
         if (this.parameterSelected == 'rain') {
           this.colors = ['#7DF9FF', '#ADD8E6', '#0000FF', '#00008B'];
-          
+
           this.dataService
           .getRainPerRegion(this.start, this.end)
-          .subscribe(() => {
-            this.dataService.refreshRainData();
+          .subscribe(async (data) => {
+            this.mymap.removeLayer(this.rainRegionLayer);
+            let rain: RegionRain[] = this.mapperService.weatherToRainPerRegion(data);
+            await this.dataService.refreshRainData();
+            this.regionRain = rain;
             this.createRegionsLayers();
             this.mymap.addLayer(this.rainRegionLayer);
             this.calculateLegendValues(this.rainByRegion);
@@ -783,7 +784,7 @@ export class MapComponent {
   colorMapByTemperature(isee: string) {
     let temperatureData: IAvgTempPerRegion[] =
       this.dataService.initAvgTempPerRegionData!;
-    
+
       temperatureData.forEach(region => {
         this.tempByRegion?.push([region.isee, region.region, region.temp_avg.toString()]);
       });
@@ -820,7 +821,6 @@ export class MapComponent {
 
   colorMapByRain(insee: string) {
     let rainData = this.dataService.initRainPerRegion!;
-    
     rainData.forEach(region => {
       this.rainByRegion?.push([region.insee, region.label, region.rain.toString()]);
     });
@@ -840,7 +840,7 @@ export class MapComponent {
     // Define the color scale
     const colorScale = d3
       .scaleLinear<string>()
-      .domain([1.3, 1.6, 1.9, 2.1])
+      .domain([1.3, 1.6, 2.1, 2.5])
       .range(['#7DF9FF', '#ADD8E6', '#0000FF', '#00008B']);
 
     let rain = rainData.find((region) => region.insee === insee)!.rain;
